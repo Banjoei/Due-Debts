@@ -1,0 +1,306 @@
+{
+  "version": "1.0.0",
+  "name": "Boyfriend (Blazin')",
+  "assetPath": "characters/bfBlazin",
+  "startingAnimation": "danceRight",
+  "singTime": 999.0,
+  "flipX": true,
+  "isPixel": false,
+  "healthIcon": {
+    "id": "bf"
+  },
+  "animations": [
+    {
+      "name": "danceLeft",
+      "prefix": "nodLeft",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": true
+    },
+    {
+      "name": "danceRight",
+      "prefix": "nodRight",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": true
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "singRight",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singUP",
+      "prefix": "singUp",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "singLeft",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "singDown",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singRIGHT-alt",
+      "prefix": "singDodgeRight",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singUP-alt",
+      "prefix": "singDodgeUp",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singLEFT-alt",
+      "prefix": "singDodgeLeft",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "singDOWN-alt",
+      "prefix": "singDodgeDown",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "punchHigh1",
+      "prefix": "highPunch",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "punchLow1",
+      "prefix": "lowPunch",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "punchHigh2",
+      "prefix": "otherHigh",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "punchLow2",
+      "prefix": "otherLow",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "block",
+      "prefix": "block",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "dodge",
+      "prefix": "dodge",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "hitSpin",
+      "prefix": "spinMe",
+      "frameIndices": [],
+      "frameRate": 24,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": true
+    },
+    {
+      "name": "uppercutHit",
+      "prefix": "fucked",
+      "frameIndices": [
+        0,
+        1,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "fakeout",
+      "prefix": "hey",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "hey",
+      "prefix": "hey",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "hitHigh",
+      "prefix": "backhurt",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "hitLow",
+      "prefix": "stomHurt",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "uppercut",
+      "prefix": "uppercut",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    },
+    {
+      "name": "uppercutFreeze",
+      "prefix": "uppercut",
+      "frameIndices": [
+        2
+      ],
+      "frameRate": 1,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": true
+    },
+    {
+      "name": "uppercutPrep",
+      "prefix": "preUpper",
+      "frameIndices": [],
+      "frameRate": 12,
+      "offsets": [
+        0,
+        0
+      ],
+      "looped": false
+    }
+  ],
+  "cameraOffsets": [
+    460,
+    -335
+  ],
+  "scale": 1.00
+}

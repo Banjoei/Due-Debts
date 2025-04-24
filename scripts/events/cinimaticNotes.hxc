@@ -1,0 +1,185 @@
+import funkin.play.PlayState;
+import funkin.play.event.SongEvent;
+import funkin.play.notes.Strumline;
+import funkin.play.notes.notestyle.NoteStyle;
+import funkin.data.notestyle.NoteStyleRegistry;
+import funkin.Preferences;
+import funkin.util.Constants;
+
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
+
+import funkin.modding.module.ScriptedModule;
+import funkin.modding.module.ModuleHandler;
+
+class CinematicNoteModule extends ScriptedModule
+{
+    var originalPlayerX:Float = Math.NaN;
+    public var cinematicEnabled:Bool = false;
+    public var cinematicEase:Dynamic = FlxEase.quadOut;
+    public var deltaX:Float = 0;
+    public var noteStyle:NoteStyle;
+
+    public function new()
+    {
+        super('CinematicNoteModule');
+    }
+
+    public function applyCinematic(enable:Bool, ease:String):Void
+    {
+        var game = PlayState.instance;
+        if (game == null || game.currentStage == null) return;
+
+        var player:Strumline = game.playerStrumline;
+        var opp:Strumline = game.opponentStrumline;
+        if (player == null || opp == null) return;
+
+        if (Math.isNaN(originalPlayerX))
+            originalPlayerX = player.x;
+
+        this.cinematicEnabled = enable;
+
+        if (noteStyle == null) noteStyle = NoteStyleRegistry.instance.fetchEntry(game.currentChart.noteStyle);
+        if (noteStyle == null) noteStyle = NoteStyleRegistry.instance.fetchDefault();
+
+        var easeKey = ease != null ? ease.toLowerCase() : "quadout";
+        this.cinematicEase = switch (easeKey) {
+            case "linear": FlxEase.linear;
+            case "quadin": FlxEase.quadIn;
+            case "quadout": FlxEase.quadOut;
+            case "quadinout": FlxEase.quadInOut;
+            case "cubein": FlxEase.cubeIn;
+            case "cubeout": FlxEase.cubeOut;
+            case "cubeinout": FlxEase.cubeInOut;
+            case "quartin": FlxEase.quartIn;
+            case "quartout": FlxEase.quartOut;
+            case "quartinout": FlxEase.quartInOut;
+            case "quintin": FlxEase.quintIn;
+            case "quintout": FlxEase.quintOut;
+            case "quintinout": FlxEase.quintInOut;
+            case "sinein": FlxEase.sineIn;
+            case "sineout": FlxEase.sineOut;
+            case "sineinout": FlxEase.sineInOut;
+            case "expoin": FlxEase.expoIn;
+            case "expoout": FlxEase.expoOut;
+            case "expoinout": FlxEase.expoInOut;
+            case "circin": FlxEase.circIn;
+            case "circout": FlxEase.circOut;
+            case "circinout": FlxEase.circInOut;
+            case "backin": FlxEase.backIn;
+            case "backout": FlxEase.backOut;
+            case "backinout": FlxEase.backInOut;
+            case "bouncein": FlxEase.bounceIn;
+            case "bounceout": FlxEase.bounceOut;
+            case "bounceinout": FlxEase.bounceInOut;
+            case "elasticin": FlxEase.elasticIn;
+            case "elasticout": FlxEase.elasticOut;
+            case "elasticinout": FlxEase.elasticInOut;
+            case "smoothstepin": FlxEase.smoothStepIn;
+            case "smoothstepout": FlxEase.smoothStepOut;
+            case "smoothstepinout": FlxEase.smoothStepInOut;
+            case "smootherstepin": FlxEase.smootherStepIn;
+            case "smootherstepout": FlxEase.smootherStepOut;
+            case "smootherstepinout": FlxEase.smootherStepInOut;
+            default:
+                trace('[CinematicNotes] Unknown easing "' + ease + '"! Defaulting to quadOut.');
+                FlxEase.quadOut;
+        };
+
+        var targetX:Float = enable
+            ? (FlxG.width * 0.5 - player.width * 0.5)
+            : originalPlayerX;
+
+        this.deltaX = targetX - player.x;
+
+        FlxTween.tween(player, { x: targetX }, 0.5, { ease: cinematicEase });
+
+        for (note in player.strumlineNotes.members)
+        {
+            FlxTween.tween(note, { x: note.x + deltaX }, 0.5, { ease: cinematicEase });
+        }
+
+		var goalAlpha:Float = enable ? 0 : 1;
+
+        for (n in player.notes.members)
+        {
+            if (n != null && n.alive)
+                FlxTween.tween(n, { x: n.x + deltaX }, 0.5, { ease: cinematicEase });
+        }
+
+        if (opp.background != null)
+            opp.background.visible = false;
+
+        if (!enable)
+        {
+            opp.visible = true;
+            opp.alpha = 0;
+        }
+
+        FlxTween.tween(opp, { alpha: goalAlpha }, 0.5, { ease: FlxEase.linear });
+
+        var hideOpp:Bool = enable;
+
+        new FlxTimer().start(0.5, function(_:FlxTimer):Void
+        {
+            opp.visible = hideOpp ? false : true;
+        });
+    }
+
+	override function onUpdate(delta:Float):Void
+	{
+		super.onUpdate(delta);
+		var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+
+		if (cinematicEnabled)
+		{
+			var player:Strumline = PlayState.instance.playerStrumline;
+			for (n in player.noteHoldCovers.members)
+			{
+				if (n != null && n.alive)
+					n.alpha = goalAlpha;
+			}
+		}
+	}
+}
+
+class CinematicNotesEvent extends SongEvent
+{
+    public function new()
+    {
+        super('CinimaticNotes');
+    }
+
+    override function handleEvent(data)
+    {
+        var enable:Bool  = data.getBool('enabled');
+        var easing:String = data.getString('easing');
+
+        var mod = ModuleHandler.getModule('CinematicNoteModule');
+        if (mod != null)
+        {
+            mod.scriptSet('cinematicEnabled', enable);
+            mod.scriptSet('cinematicEase', easing);
+            mod.scriptCall('applyCinematic', [enable, easing]);
+        }
+        else
+        {
+            trace('[CinimaticNotesEvent] Module not found');
+        }
+    }
+
+    override function getEventSchema()
+    {
+        return [
+            { name:'enabled', title:'Enable Cinematic', defaultValue:true,  type:'bool' },
+            { name:'easing',  title:'Tween Easing',     defaultValue:'quadOut', type:'string' }
+        ];
+    }
+
+    override function getTitle()
+    {
+        return 'CinimaticNotes';
+    }
+}

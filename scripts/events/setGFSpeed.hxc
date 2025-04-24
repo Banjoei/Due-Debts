@@ -1,0 +1,64 @@
+import funkin.play.event.SongEvent;
+import funkin.play.PlayState;
+import funkin.modding.module.ScriptedModule;
+import funkin.modding.module.ModuleHandler;
+
+class GFSpeedFixes extends ScriptedModule {
+	public var defaultDanceEvery:Float;
+	public var divisor:Float = 1;
+
+    override function onSongLoaded(event:ScriptEvent):Void {
+        if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+        var gf = PlayState.instance.currentStage.getGirlfriend();
+
+        defaultDanceEvery = gf.danceEvery;
+    }
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+
+		var gf = PlayState.instance.currentStage.getGirlfriend();
+		gf.danceEvery = defaultDanceEvery;
+	}
+
+	public function applyDivisor(newDiv:Float) {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+
+		var gf = PlayState.instance.currentStage.getGirlfriend();
+
+		divisor = newDiv;
+		gf.danceEvery = defaultDanceEvery * divisor;
+	}
+}
+
+class SetGFSpeedEvent extends SongEvent {
+	function new() {
+		super('SetGFSpeed');
+	}
+
+	override function handleEvent(data) {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+		if (PlayState.instance.isMinimalMode) return;
+
+		var speed = Math.round(data.getFloat('divisor'));
+		var fixes = ModuleHandler.getModule('GFSpeedFixes');
+
+		fixes.scriptCall('applyDivisor', [speed]);
+	}
+
+	override function getEventSchema() {
+		return [
+			{
+				name: "divisor",
+				title: "Divisor",
+				defaultValue: 1,
+				step: 1,
+				type: "float"
+			}
+		];
+	}
+
+	override function getTitle() {
+		return "Set GF Speed";
+	}
+}

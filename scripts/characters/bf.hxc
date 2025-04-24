@@ -1,0 +1,118 @@
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
+import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.character.CharacterType;
+import funkin.play.PlayState;
+import funkin.play.GameOverSubState;
+
+class BoyfriendCharacter extends MultiSparrowCharacter {
+	function new() {
+		super('bf');
+
+		ignoreExclusionPref.push("attack");
+	}
+
+	override function playAnimation(name:String, restart:Bool, ignoreOther:Bool) {
+		if (name == "fakeoutDeath" && !this.debug) {
+			doFakeoutDeath();
+		} else {
+			super.playAnimation(name, restart, ignoreOther);
+		}
+	}
+
+	function doFakeoutDeath():Void {
+		FunkinSound.playOnce(Paths.sound("gameplay/gameover/fakeout_death"), 1.0);
+
+		var bfFakeout:FlxAtlasSprite = new FlxAtlasSprite(this.x - 440, this.y - 240, Paths.animateAtlas("characters/bfFakeOut", "shared"));
+    FlxG.state.subState.add(bfFakeout);
+		bfFakeout.zIndex = 1000;
+    bfFakeout.playAnimation('');
+		// We don't want people to miss this.
+		FlxG.state.subState.mustNotExit = true;
+    bfFakeout.onAnimationComplete.add(() -> {
+      bfFakeout.visible = false;
+      this.visible = true;
+			FlxG.state.subState.mustNotExit = false;
+      this.playAnimation('firstDeath', true, true);
+      // Play the "blue balled" sound. May play a variant if one has been assigned.
+      GameOverSubState.playBlueBalledSFX();
+    });
+    bfFakeout.visible = true;
+		this.visible = false;
+	}
+
+	var game = PlayState.instance;
+
+    var bfFade:FunkinSprite;
+
+	function onNoteHit(event:HitNoteScriptEvent)
+	{
+		if (event.eventCanceled) {
+			// onNoteHit event was cancelled by the gameplay module.
+			return;
+		}
+
+		var dir = event.note.noteData.getDirection();
+
+		if (event.note.noteData.getMustHitNote() && characterType == CharacterType.BF) {
+			// Override the hit note animation.
+			switch(event.note.kind) {
+				case "weekend-1-cockgun": // HE'S PULLING HIS COCK OUT
+					holdTimer = 0;
+					playCockGunAnim();
+				case "weekend-1-firegun":
+					holdTimer = 0;
+					playFireGunAnim();
+				case "weekend-1-altbfnote":
+					playSingingAnims(dir, false, 'alt');
+				case "nothing":
+					return;
+				default:
+					super.onNoteHit(event);
+			}
+		}
+	}
+
+	function playCockGunAnim() {
+		this.playAnimation('preAttack', true, true);
+
+		bfFade = new FlxSprite(0, 0);
+		bfFade.frames = this.frames;
+		bfFade.frame = this.frame;
+		bfFade.updateHitbox();
+		bfFade.x = this.x;
+		bfFade.y = this.y;
+		// bfFade.stamp(this, 0, 0);
+		bfFade.alpha = 0.3;
+		bfFade.zIndex = this.zIndex - 3;
+		addToStage(bfFade);
+		FlxTween.tween(bfFade.scale, {x: 1.3, y: 1.3}, 0.4);
+		FlxTween.tween(bfFade, {alpha: 0}, 0.4);
+	}
+
+	function playFireGunAnim() {
+		this.playAnimation('attack', true, true);
+		FunkinSound.playOnce(Paths.soundRandom('shot', 1, 4));
+	}
+
+	function playSingingAnims(dir:NoteDirection, missed:Bool, suffix:String):Void
+	{
+		this.playSingAnimation(dir, missed, suffix);
+		this.holdTimer = 0;
+	}
+
+    function addToStage(sprite:FlxSprite) {
+		if (this.debug) {
+			// We are in the chart editor or something.
+			// TODO: Make this work properly.
+		} else if (game != null && game.currentStage != null) {
+			game.currentStage.add(sprite);
+		} else {
+			trace('Could not add Boyfriend sprite to stage.');
+		}
+	}
+}

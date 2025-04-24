@@ -1,0 +1,87 @@
+[
+  {
+    "op": "replace",
+    "path": "/animations/10/offsets",
+    "value": [294, 267]
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singUP-alt",
+      "prefix": "upAlt",
+      "offsets": [-23, 18],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singDOWN-alt",
+      "prefix": "downAlt",
+      "offsets": [-2, -44],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singLEFT-alt",
+      "prefix": "leftAlt",
+      "offsets": [25, -8],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singRIGHT-alt",
+      "prefix": "rightAlt",
+      "offsets": [-52, -5],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singLEFTmiss-alt",
+      "prefix": "singLEFTmiss-alt",
+      "offsets": [6, 18],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singDOWNmiss-alt",
+      "prefix": "singDOWNmiss-alt",
+      "offsets": [-18, -21],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singUPmiss-alt",
+      "prefix": "singUPmiss-alt",
+      "offsets": [-44, 27],
+      "assetPath": "characters/Alt anims"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "singRIGHTmiss-alt",
+      "prefix": "singRIGHTmiss-alt",
+      "offsets": [-44, 22],
+      "assetPath": "characters/Alt anims"
+    }
+  }
+]

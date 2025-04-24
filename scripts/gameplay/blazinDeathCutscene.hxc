@@ -1,0 +1,187 @@
+import flixel.FlxG;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.util.FlxTimer;
+import flixel.effects.FlxFlicker;
+import flixel.group.FlxTypedGroup;
+import flixel.math.FlxMath;
+import flixel.sound.FlxSound;
+import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxSave;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+
+import funkin.audio.FunkinSound;
+import funkin.Conductor;
+import funkin.data.story.level.LevelRegistry;
+import funkin.data.song.SongRegistry;
+import funkin.graphics.FunkinSprite;
+import funkin.graphics.video.FunkinVideoSprite;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.Paths;
+import funkin.PlayerSettings;
+import funkin.play.character.BaseCharacter;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.play.Countdown;
+import funkin.play.song.Song;
+import funkin.play.stage.Stage;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.MusicBeatSubState;
+import funkin.ui.MusicBeatState;
+import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.transition.StickerSubState;
+import funkin.ui.transition.LoadingState;
+import funkin.util.WindowUtil;
+import funkin.util.Constants;
+import funkin.input.Controls;
+
+import openfl.Lib;
+
+class blazinDeathCutscene extends Module {
+    function new() {
+        super('blazinDeathCutscene');
+    }
+
+    public static var finished:Bool = false;
+
+    public function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+        var game = PlayState.instance;
+        if (game == null || game.currentStage == null) return;
+
+        // Only run this module if the current variation is "bf" and current song is "blazin"
+        if (game.currentVariation != "bf" || game.currentSong.id != "blazin")
+            return;
+
+        if (PlayerSettings.player1.controls.RESET){
+            var health = game.health;
+            game.isPlayerDying = true;
+            new FlxTimer().start(0.01, function(tmr:FlxTimer)
+                {
+                    game.health = health;
+                    game.isPlayerDying = false;        
+                });
+            Countdown.pauseCountdown();
+        }
+
+        if (game.health <= 0) {
+            game.health = 1;
+
+            // pause gameplay updates/draws, pause music and vocals, and stop scrolling tweens
+            game.persistentUpdate = false;
+            game.persistentDraw = true;
+            
+            if (FlxG.sound.music != null) {
+                FlxG.sound.music.stop();
+            }
+            if (game.vocals != null) {
+                game.vocals.stop();
+            }
+            
+            for (tween in game.scrollSpeedTweens) {
+                if (tween != null && tween.active) {
+                    tween.active = false;
+                    game.cameraTweensPausedBySubState.add(tween);
+                }
+            }
+            
+            // Initialize the death substate to handle the video cutscene / death sequence.
+            var deathSubState = ScriptedMusicBeatSubState.init('blazinDeathSubState');
+
+            // Set the substate to use the cutscene camera.
+            deathSubState.camera = game.camCutscene;
+            game.camCutscene.visible = true;
+
+            // Open the death substate.
+            game.openSubState(deathSubState);
+        }
+    }
+}
+
+class blazinDeathSubState extends MusicBeatSubState {
+    var video:FunkinVideoSprite;
+    var sound:FlxSound;
+    var game = PlayState.instance;
+
+    function scaleAndCenter(video:FunkinVideoSprite) {
+        var scale = Math.min(FlxG.width / video.bitmap.bitmapData.width, FlxG.height / video.bitmap.bitmapData.height);
+        video.setGraphicSize((video.bitmap.bitmapData.width * scale) + 10, video.bitmap.bitmapData.height * scale);
+        video.updateHitbox();
+        video.screenCenter();
+    }
+
+    public function new() {
+        super();
+
+        video = new FunkinVideoSprite(0, 0, Paths.videos("BlazinGameOver"));
+        sound = FlxG.sound.load(Paths.sound("Mornin"));
+        var module = ModuleHandler.getModule('blazinDeathCutscene');
+        
+        module.scriptSet("finished", false);
+
+        video.camera = game.camCutscene;
+
+        game.add(video);
+        game.refresh();
+
+        video.bitmap.onFormatSetup.add(() -> scaleAndCenter(video));
+
+        // When the video ends, exit the cutscene.
+        video.bitmap.onEndReached.add(() -> {
+            exitCutscene();
+        }, true);
+
+        if (video.load(Assets.getBytes(Paths.videos("BlazinGameOver")))) {
+            video.play();
+            sound.play();
+        } else {
+            // If video fails to load, exit the cutscene immediately.
+            exitCutscene();
+        }
+    }
+
+    override function update(elapsed:Float):Void {
+        super.update(elapsed);
+        if (controls.BACK) {
+            exitToMenu();
+        }
+        if (controls.ACCEPT) {
+            exitCutscene();
+        }
+    }
+
+    function exitToMenu():Void {
+        if (PlayState.instance == null) return;
+        if (video != null) video.destroy();
+        if (sound != null) sound.destroy();
+    
+        var targetState:funkin.ui.transition.StickerSubState->FlxState = (sticker) -> FreeplayState.build(sticker);
+    
+        PlayState.instance.openSubState(new funkin.ui.transition.StickerSubState({
+            targetState: targetState,
+            stickerSet: "stickers-set-1",
+            stickerPack: "all"
+        }));
+    }
+    
+
+    function exitCutscene():Void {
+        if (video != null) video.destroy();
+        if (sound != null) sound.destroy();
+        var module = ModuleHandler.getModule('blazinDeathCutscene');
+    
+        if (FlxG.sound.music != null) FlxG.sound.music.stop();
+        if (game.vocals != null) game.vocals.stop();
+        game.musicPausedBySubState = false;
+    
+        game.deathCounter++;
+        game.needsReset = true;
+        module.scriptSet("finished", true);
+        this.close();
+    }
+}

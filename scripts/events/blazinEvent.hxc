@@ -1,0 +1,39 @@
+import funkin.play.event.SongEvent;
+import funkin.play.PlayState;
+
+class BlazinEvent extends SongEvent {
+    function new() {
+        super('BlazinEvent');
+    }
+
+    var game;
+
+    override function handleEvent(data) {
+        if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+        if (PlayState.instance.isMinimalMode) return;
+        game = PlayState.instance;
+    }
+
+    override function getEventSchema() {
+        return [
+            {
+                name: "blazinType",
+                title: "Blazin' Event Type",
+                defaultValue: 0,
+                type: "enum",
+                keys: [
+                    "fade in start" => 0,
+                    "HUD fade in" => 1,
+                    "fade out game" => 2,
+                    "swap fake Darnell" => 3,
+                    "fade in & cam zoom" => 4,
+                    "restore Darnell" => 5
+                ]
+            }
+        ];
+    }
+
+    override function getTitle() {
+        return "Blazin' Event";
+    }
+}

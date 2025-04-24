@@ -1,0 +1,39 @@
+{
+  "version": "2.2.4",
+  "songName": "2hot (BF Mix)",
+  "artist": "RixFX",
+  "charter": "LeGooey",
+  "playData": {
+    "difficulties": ["hard"],
+    "characters": {
+      "player": "bf",
+      "girlfriend": "gf",
+      "opponent": "darnell",
+      "instrumental": "bf"
+    },
+    "stage": "phillyStreetsErect",
+    "noteStyle": "funkin",
+    "ratings": {
+      "hard": 9
+    },
+    "previewStart": 0,
+    "previewEnd": 0
+  },
+  "generatedBy": "Friday Night Funkin' - v0.6.2",
+  "timeFormat": "ms",
+  "timeChanges": [
+    {
+      "t": 0,
+      "b": 0,
+      "bpm": 182,
+      "n": 4,
+      "d": 4,
+      "bt": [
+        4,
+        4,
+        4,
+        4
+      ]
+    }
+  ]
+}

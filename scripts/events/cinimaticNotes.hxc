@@ -96,17 +96,24 @@ class CinematicNoteModule extends ScriptedModule
 
         FlxTween.tween(player, { x: targetX }, 0.5, { ease: cinematicEase });
 
-        for (note in player.strumlineNotes.members)
+        if (player.strumlineNotes != null && player.strumlineNotes.members != null)
         {
-            FlxTween.tween(note, { x: note.x + deltaX }, 0.5, { ease: cinematicEase });
+            for (note in player.strumlineNotes.members)
+            {
+                if (note != null)
+                    FlxTween.tween(note, { x: note.x + deltaX }, 0.5, { ease: cinematicEase });
+            }
         }
 
-		var goalAlpha:Float = enable ? 0 : 1;
+        var goalAlpha:Float = enable ? 0 : 1;
 
-        for (n in player.notes.members)
+        if (player.notes != null && player.notes.members != null)
         {
-            if (n != null && n.alive)
-                FlxTween.tween(n, { x: n.x + deltaX }, 0.5, { ease: cinematicEase });
+            for (n in player.notes.members)
+            {
+                if (n != null && n.alive)
+                    FlxTween.tween(n, { x: n.x + deltaX }, 0.5, { ease: cinematicEase });
+            }
         }
 
         if (opp.background != null)
@@ -124,25 +131,31 @@ class CinematicNoteModule extends ScriptedModule
 
         new FlxTimer().start(0.5, function(_:FlxTimer):Void
         {
-            opp.visible = hideOpp ? false : true;
+            if (opp != null)
+                opp.visible = hideOpp ? false : true;
         });
     }
 
-	override function onUpdate(delta:Float):Void
-	{
-		super.onUpdate(delta);
-		var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+    override function onUpdate(delta:Float):Void
+    {
+        super.onUpdate(delta);
+        var goalAlpha:Float = cinematicEnabled ? 0 : 1;
 
-		if (cinematicEnabled)
-		{
-			var player:Strumline = PlayState.instance.playerStrumline;
-			for (n in player.noteHoldCovers.members)
-			{
-				if (n != null && n.alive)
-					n.alpha = goalAlpha;
-			}
-		}
-	}
+        if (cinematicEnabled)
+        {
+            var player:Strumline = PlayState.instance.playerStrumline;
+            if (player == null) return;
+
+            if (player.noteHoldCovers != null && player.noteHoldCovers.members != null)
+            {
+                for (n in player.noteHoldCovers.members)
+                {
+                    if (n != null && n.alive)
+                        n.alpha = goalAlpha;
+                }
+            }
+        }
+    }
 }
 
 class CinematicNotesEvent extends SongEvent

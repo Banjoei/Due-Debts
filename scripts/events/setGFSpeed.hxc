@@ -10,14 +10,16 @@ class GFSpeedFixes extends ScriptedModule {
     override function onSongLoaded(event:ScriptEvent):Void {
         if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
         var gf = PlayState.instance.currentStage.getGirlfriend();
+		if (gf == null) return;
 
         defaultDanceEvery = gf.danceEvery;
     }
 
 	override function onSongRetry(event:ScriptEvent):Void {
 		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-
 		var gf = PlayState.instance.currentStage.getGirlfriend();
+		if (gf == null) return;
+
 		gf.danceEvery = defaultDanceEvery;
 	}
 
@@ -25,6 +27,7 @@ class GFSpeedFixes extends ScriptedModule {
 		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
 		var gf = PlayState.instance.currentStage.getGirlfriend();
+		if (gf == null) return;
 
 		divisor = newDiv;
 		gf.danceEvery = defaultDanceEvery * divisor;

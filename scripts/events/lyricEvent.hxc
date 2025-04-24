@@ -1,0 +1,86 @@
+import StringTools;
+import funkin.play.PlayState;
+import funkin.play.event.SongEvent;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.FlxG;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.modding.events.ScriptEvent;
+
+class LyricsEvent extends SongEvent {
+	public function new() {
+		super('lyrics');
+	}
+
+	override public function getTitle():String {
+		return 'Lyrics';
+	}
+
+    public override function handleEvent(data) {}
+
+	override public function getEventSchema():Array<Dynamic> {
+		return [
+			{
+				name: 'lyric',
+				title: 'Text',
+				defaultValue: '',
+				type: 'string'
+			},
+			{
+				name: 'color',
+				title: 'Hex Color',
+				defaultValue: 'FFFFFF',
+				type: 'string'
+			}
+		];
+	}
+}
+
+class LyricsObject extends Module {
+	var lyricText:FlxText;
+
+	public function new() {
+		super('LyricsObject');
+	}
+
+	override function onSongLoaded(event:ScriptEvent) {
+		super.onSongLoaded(event);
+
+		lyricText = new FlxText(0, 550, FlxG.width, '');
+		lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
+		lyricText.borderSize = 5;
+		lyricText.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(lyricText);
+	}
+
+	override function onSongEvent(event:SongEventScriptEvent) {
+		super.onSongEvent(event);
+
+		if (event.eventData.eventKind == 'lyrics') {
+			var text:String = event.eventData.value.lyric;
+			var color:String = event.eventData.value.color;
+
+			showLyric(text, color);
+		}
+	}
+
+	public function showLyric(text:String, color:String) {
+		lyricText.text = text;
+		lyricText.scale.set(1.1, 1.1);
+
+		if (color != null && StringTools.trim(color) != '') {
+            try {
+                lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
+            } catch (e:Dynamic) {
+                lyricText.color = 0xFFFFFFFF;
+            }
+        } else {
+            lyricText.color = 0xFFFFFFFF;
+        }        
+
+		FlxTween.tween(lyricText.scale, { x: 1, y: 1 }, 0.2, { ease: FlxEase.quartOut });
+	}
+}

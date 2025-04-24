@@ -918,11 +918,11 @@
     },
     {
       "e": "lyrics",
-      "t": 69890.1098901099,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 69890.1098901099,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -945,11 +945,11 @@
     },
     {
       "e": "lyrics",
-      "t": 70219.7802197802,
-      "v": {
-        "value1": "you not",
-        "value2": ""
-      }
+"t": 70219.7802197802,
+"v": {
+  "lyric": "you not",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -961,35 +961,35 @@
     },
     {
       "e": "lyrics",
-      "t": 70549.4505494505,
-      "v": {
-        "value1": "you not get",
-        "value2": ""
-      }
+"t": 70549.4505494505,
+"v": {
+  "lyric": "you not get",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 70714.2857142857,
-      "v": {
-        "value1": "you not getting",
-        "value2": ""
-      }
+"t": 70714.2857142857,
+"v": {
+  "lyric": "you not getting",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 70879.1208791208,
-      "v": {
-        "value1": "you not getting through",
-        "value2": ""
-      }
+"t": 70879.1208791208,
+"v": {
+  "lyric": "you not getting through",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 71043.956043956,
-      "v": {
-        "value1": "you not getting through me",
-        "value2": ""
-      }
+"t": 71043.956043956,
+"v": {
+  "lyric": "you not getting through me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1001,43 +1001,43 @@
     },
     {
       "e": "lyrics",
-      "t": 71208.7912087912,
-      "v": {
-        "value1": "quit",
-        "value2": ""
-      }
+"t": 71208.7912087912,
+"v": {
+  "lyric": "quit",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 71373.6263736263,
-      "v": {
-        "value1": "quit chas",
-        "value2": ""
-      }
+"t": 71373.6263736263,
+"v": {
+  "lyric": "quit chas",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 71538.4615384615,
-      "v": {
-        "value1": "quit chasing",
-        "value2": ""
-      }
+"t": 71538.4615384615,
+"v": {
+  "lyric": "quit chasing",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 71703.2967032967,
-      "v": {
-        "value1": "quit chasing a",
-        "value2": ""
-      }
+"t": 71703.2967032967,
+"v": {
+  "lyric": "quit chasing a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 71868.1318681318,
-      "v": {
-        "value1": "lost",
-        "value2": ""
-      }
+"t": 71868.1318681318,
+"v": {
+  "lyric": "lost",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1049,27 +1049,27 @@
     },
     {
       "e": "lyrics",
-      "t": 72032.967032967,
-      "v": {
-        "value1": "lost cause",
-        "value2": ""
-      }
+"t": 72032.967032967,
+"v": {
+  "lyric": "lost cause",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 72197.8021978022,
-      "v": {
-        "value1": "lost cause to",
-        "value2": ""
-      }
+"t": 72197.8021978022,
+"v": {
+  "lyric": "lost cause to",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 72362.6373626373,
-      "v": {
-        "value1": "lost cause to sur",
-        "value2": ""
-      }
+"t": 72362.6373626373,
+"v": {
+  "lyric": "lost cause to sur",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1081,19 +1081,19 @@
     },
     {
       "e": "lyrics",
-      "t": 72527.4725274725,
-      "v": {
-        "value1": "lost cause to survive",
-        "value2": ""
-      }
+"t": 72527.4725274725,
+"v": {
+  "lyric": "lost cause to survive",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 72857.1428571428,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 72857.1428571428,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1105,43 +1105,43 @@
     },
     {
       "e": "lyrics",
-      "t": 73186.8131868132,
-      "v": {
-        "value1": "you bet",
-        "value2": ""
-      }
+"t": 73186.8131868132,
+"v": {
+  "lyric": "you bet",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 73351.6483516483,
-      "v": {
-        "value1": "you better",
-        "value2": ""
-      }
+"t": 73351.6483516483,
+"v": {
+  "lyric": "you better",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 73516.4835164835,
-      "v": {
-        "value1": "you better know",
-        "value2": ""
-      }
+"t": 73516.4835164835,
+"v": {
+  "lyric": "you better know",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 73681.3186813187,
-      "v": {
-        "value1": "you better know you",
-        "value2": ""
-      }
+"t": 73681.3186813187,
+"v": {
+  "lyric": "you better know you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 73846.1538461538,
-      "v": {
-        "value1": "wont",
-        "value2": ""
-      }
+"t": 73846.1538461538,
+"v": {
+  "lyric": "wont",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1153,27 +1153,27 @@
     },
     {
       "e": "lyrics",
-      "t": 74010.989010989,
-      "v": {
-        "value1": "wont catch",
-        "value2": ""
-      }
+"t": 74010.989010989,
+"v": {
+  "lyric": "wont catch",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 74175.8241758242,
-      "v": {
-        "value1": "wont catch me",
-        "value2": ""
-      }
+"t": 74175.8241758242,
+"v": {
+  "lyric": "wont catch me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 74340.6593406593,
-      "v": {
-        "value1": "wont catch me dead",
-        "value2": ""
-      }
+"t": 74340.6593406593,
+"v": {
+  "lyric": "wont catch me dead",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1185,27 +1185,27 @@
     },
     {
       "e": "lyrics",
-      "t": 74505.4945054945,
-      "v": {
-        "value1": "wont catch me dead or",
-        "value2": ""
-      }
+"t": 74505.4945054945,
+"v": {
+  "lyric": "wont catch me dead or",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 74670.3296703297,
-      "v": {
-        "value1": "wont catch me dead or al",
-        "value2": ""
-      }
+"t": 74670.3296703297,
+"v": {
+  "lyric": "wont catch me dead or al",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 74835.1648351648,
-      "v": {
-        "value1": "wont catch me dead or alive",
-        "value2": ""
-      }
+"t": 74835.1648351648,
+"v": {
+  "lyric": "wont catch me dead or alive",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1217,11 +1217,11 @@
     },
     {
       "e": "lyrics",
-      "t": 75494.5054945055,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 75494.5054945055,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1233,43 +1233,43 @@
     },
     {
       "e": "lyrics",
-      "t": 75824.1758241758,
-      "v": {
-        "value1": "you out",
-        "value2": ""
-      }
+"t": 75824.1758241758,
+"v": {
+  "lyric": "you out",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 75989.010989011,
-      "v": {
-        "value1": "you outa",
-        "value2": ""
-      }
+"t": 75989.010989011,
+"v": {
+  "lyric": "you outa",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 76153.8461538461,
-      "v": {
-        "value1": "you outa luck",
-        "value2": ""
-      }
+"t": 76153.8461538461,
+"v": {
+  "lyric": "you outa luck",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 76318.6813186813,
-      "v": {
-        "value1": "aint",
-        "value2": ""
-      }
+"t": 76318.6813186813,
+"v": {
+  "lyric": "aint",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 76483.5164835165,
-      "v": {
-        "value1": "aint no",
-        "value2": ""
-      }
+"t": 76483.5164835165,
+"v": {
+  "lyric": "aint no",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1281,35 +1281,35 @@
     },
     {
       "e": "lyrics",
-      "t": 76648.3516483516,
-      "v": {
-        "value1": "aint no pay",
-        "value2": ""
-      }
+"t": 76648.3516483516,
+"v": {
+  "lyric": "aint no pay",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 76813.1868131868,
-      "v": {
-        "value1": "aint no paycheck",
-        "value2": ""
-      }
+"t": 76813.1868131868,
+"v": {
+  "lyric": "aint no paycheck",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 76978.021978022,
-      "v": {
-        "value1": "will",
-        "value2": ""
-      }
+"t": 76978.021978022,
+"v": {
+  "lyric": "will",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 77142.8571428571,
-      "v": {
-        "value1": "will make",
-        "value2": ""
-      }
+"t": 77142.8571428571,
+"v": {
+  "lyric": "will make",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1321,35 +1321,35 @@
     },
     {
       "e": "lyrics",
-      "t": 77307.6923076923,
-      "v": {
-        "value1": "will make me",
-        "value2": ""
-      }
+"t": 77307.6923076923,
+"v": {
+  "lyric": "will make me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 77472.5274725275,
-      "v": {
-        "value1": "will make me meet",
-        "value2": ""
-      }
+"t": 77472.5274725275,
+"v": {
+  "lyric": "will make me meet",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 77637.3626373626,
-      "v": {
-        "value1": "will make me meet my",
-        "value2": ""
-      }
+"t": 77637.3626373626,
+"v": {
+  "lyric": "will make me meet my",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 77802.1978021978,
-      "v": {
-        "value1": "will make me meet my end",
-        "value2": ""
-      }
+"t": 77802.1978021978,
+"v": {
+  "lyric": "will make me meet my end",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1361,11 +1361,11 @@
     },
     {
       "e": "lyrics",
-      "t": 78131.8681318681,
-      "v": {
-        "value1": "just",
-        "value2": ""
-      }
+"t": 78131.8681318681,
+"v": {
+  "lyric": "just",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1377,43 +1377,43 @@
     },
     {
       "e": "lyrics",
-      "t": 78461.5384615385,
-      "v": {
-        "value1": "just bar",
-        "value2": ""
-      }
+"t": 78461.5384615385,
+"v": {
+  "lyric": "just bar",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 78626.3736263736,
-      "v": {
-        "value1": "just barely",
-        "value2": ""
-      }
+"t": 78626.3736263736,
+"v": {
+  "lyric": "just barely",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 78791.2087912088,
-      "v": {
-        "value1": "just barely out",
-        "value2": ""
-      }
+"t": 78791.2087912088,
+"v": {
+  "lyric": "just barely out",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 78956.043956044,
-      "v": {
-        "value1": "just barely out of",
-        "value2": ""
-      }
+"t": 78956.043956044,
+"v": {
+  "lyric": "just barely out of",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 79120.8791208791,
-      "v": {
-        "value1": "just barely out of reach",
-        "value2": ""
-      }
+"t": 79120.8791208791,
+"v": {
+  "lyric": "just barely out of reach",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1433,35 +1433,35 @@
     },
     {
       "e": "lyrics",
-      "t": 79285.7142857143,
-      "v": {
-        "value1": "al",
-        "value2": ""
-      }
+"t": 79285.7142857143,
+"v": {
+  "lyric": "al",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 79450.5494505495,
-      "v": {
-        "value1": "always",
-        "value2": ""
-      }
+"t": 79450.5494505495,
+"v": {
+  "lyric": "always",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 79615.3846153846,
-      "v": {
-        "value1": "always a",
-        "value2": ""
-      }
+"t": 79615.3846153846,
+"v": {
+  "lyric": "always a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 79780.2197802198,
-      "v": {
-        "value1": "always a step",
-        "value2": ""
-      }
+"t": 79780.2197802198,
+"v": {
+  "lyric": "always a step",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1473,19 +1473,19 @@
     },
     {
       "e": "lyrics",
-      "t": 79945.0549450549,
-      "v": {
-        "value1": "always a step a",
-        "value2": ""
-      }
+"t": 79945.0549450549,
+"v": {
+  "lyric": "always a step a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 80109.8901098901,
-      "v": {
-        "value1": "always a step ahead",
-        "value2": ""
-      }
+"t": 80109.8901098901,
+"v": {
+  "lyric": "always a step ahead",
+  "color": "FFFFFF"
+}
     },
     {
       "t": 80439.56043956,
@@ -1508,11 +1508,11 @@
     },
     {
       "e": "lyrics",
-      "t": 81098.9010989011,
-      "v": {
-        "value1": "",
-        "value2": ""
-      }
+"t": 81098.9010989011,
+"v": {
+  "lyric": "",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1888,67 +1888,67 @@
     },
     {
       "e": "lyrics",
-      "t": 99065.9340659341,
-      "v": {
-        "value1": "i",
-        "value2": ""
-      }
+"t": 99065.9340659341,
+"v": {
+  "lyric": "i",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 99230.7692307693,
-      "v": {
-        "value1": "i get",
-        "value2": ""
-      }
+"t": 99230.7692307693,
+"v": {
+  "lyric": "i get",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 99395.6043956045,
-      "v": {
-        "value1": "i get the",
-        "value2": ""
-      }
+"t": 99395.6043956045,
+"v": {
+  "lyric": "i get the",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 99560.4395604396,
-      "v": {
-        "value1": "i get the mo",
-        "value2": ""
-      }
+"t": 99560.4395604396,
+"v": {
+  "lyric": "i get the mo",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 99725.2747252748,
-      "v": {
-        "value1": "i get the money",
-        "value2": ""
-      }
+"t": 99725.2747252748,
+"v": {
+  "lyric": "i get the money",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 99890.10989011,
-      "v": {
-        "value1": "i get the money and",
-        "value2": ""
-      }
+"t": 99890.10989011,
+"v": {
+  "lyric": "i get the money and",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 100054.945054945,
-      "v": {
-        "value1": "i get the money and it's",
-        "value2": ""
-      }
+"t": 100054.945054945,
+"v": {
+  "lyric": "i get the money and it's",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 100219.78021978,
-      "v": {
-        "value1": "right",
-        "value2": ""
-      }
+"t": 100219.78021978,
+"v": {
+  "lyric": "right",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1960,27 +1960,27 @@
     },
     {
       "e": "lyrics",
-      "t": 100549.450549451,
-      "v": {
-        "value1": "right on",
-        "value2": ""
-      }
+"t": 100549.450549451,
+"v": {
+  "lyric": "right on",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 100879.120879121,
-      "v": {
-        "value1": "right on cue",
-        "value2": ""
-      }
+"t": 100879.120879121,
+"v": {
+  "lyric": "right on cue",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 101538.461538462,
-      "v": {
-        "value1": "keep",
-        "value2": ""
-      }
+"t": 101538.461538462,
+"v": {
+  "lyric": "keep",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -1992,59 +1992,59 @@
     },
     {
       "e": "lyrics",
-      "t": 101703.296703297,
-      "v": {
-        "value1": "keep the",
-        "value2": ""
-      }
+"t": 101703.296703297,
+"v": {
+  "lyric": "keep the",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 101868.131868132,
-      "v": {
-        "value1": "keep the duf",
-        "value2": ""
-      }
+"t": 101868.131868132,
+"v": {
+  "lyric": "keep the duf",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 102032.967032967,
-      "v": {
-        "value1": "keep the duffel",
-        "value2": ""
-      }
+"t": 102032.967032967,
+"v": {
+  "lyric": "keep the duffel",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 102197.802197802,
-      "v": {
-        "value1": "keep the duffel bag",
-        "value2": ""
-      }
+"t": 102197.802197802,
+"v": {
+  "lyric": "keep the duffel bag",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 102527.472527473,
-      "v": {
-        "value1": "up",
-        "value2": ""
-      }
+"t": 102527.472527473,
+"v": {
+  "lyric": "up",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 102692.307692308,
-      "v": {
-        "value1": "up in",
-        "value2": ""
-      }
+"t": 102692.307692308,
+"v": {
+  "lyric": "up in",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 102857.142857143,
-      "v": {
-        "value1": "up inside",
-        "value2": ""
-      }
+"t": 102857.142857143,
+"v": {
+  "lyric": "up inside",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2056,27 +2056,27 @@
     },
     {
       "e": "lyrics",
-      "t": 103186.813186813,
-      "v": {
-        "value1": "up inside my",
-        "value2": ""
-      }
+"t": 103186.813186813,
+"v": {
+  "lyric": "up inside my",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 103516.483516484,
-      "v": {
-        "value1": "up inside my coop",
-        "value2": ""
-      }
+"t": 103516.483516484,
+"v": {
+  "lyric": "up inside my coop",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 104175.824175824,
-      "v": {
-        "value1": "hold",
-        "value2": ""
-      }
+"t": 104175.824175824,
+"v": {
+  "lyric": "hold",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2088,59 +2088,59 @@
     },
     {
       "e": "lyrics",
-      "t": 104340.659340659,
-      "v": {
-        "value1": "hold a",
-        "value2": ""
-      }
+"t": 104340.659340659,
+"v": {
+  "lyric": "hold a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 104505.494505495,
-      "v": {
-        "value1": "hold a co",
-        "value2": ""
-      }
+"t": 104505.494505495,
+"v": {
+  "lyric": "hold a co",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 104670.32967033,
-      "v": {
-        "value1": "hold a couple",
-        "value2": ""
-      }
+"t": 104670.32967033,
+"v": {
+  "lyric": "hold a couple",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 104835.164835165,
-      "v": {
-        "value1": "hold a couple racks",
-        "value2": ""
-      }
+"t": 104835.164835165,
+"v": {
+  "lyric": "hold a couple racks",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 105164.835164835,
-      "v": {
-        "value1": "tell",
-        "value2": ""
-      }
+"t": 105164.835164835,
+"v": {
+  "lyric": "tell",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 105329.67032967,
-      "v": {
-        "value1": "tell them",
-        "value2": ""
-      }
+"t": 105329.67032967,
+"v": {
+  "lyric": "tell them",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 105494.505494506,
-      "v": {
-        "value1": "tell them \"I\"",
-        "value2": ""
-      }
+"t": 105494.505494506,
+"v": {
+  "lyric": "tell them \"I\"",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2152,35 +2152,35 @@
     },
     {
       "e": "lyrics",
-      "t": 105824.175824176,
-      "v": {
-        "value1": "tell them \"I love\"",
-        "value2": ""
-      }
+"t": 105824.175824176,
+"v": {
+  "lyric": "tell them \"I love\"",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 106153.846153846,
-      "v": {
-        "value1": "tell them \"I love you\"",
-        "value2": ""
-      }
+"t": 106153.846153846,
+"v": {
+  "lyric": "tell them \"I love you\"",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 106648.351648352,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 106648.351648352,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 106813.186813187,
-      "v": {
-        "value1": "you wan",
-        "value2": ""
-      }
+"t": 106813.186813187,
+"v": {
+  "lyric": "you wan",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2192,59 +2192,59 @@
     },
     {
       "e": "lyrics",
-      "t": 106978.021978022,
-      "v": {
-        "value1": "you wanna",
-        "value2": ""
-      }
+"t": 106978.021978022,
+"v": {
+  "lyric": "you wanna",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 107142.857142857,
-      "v": {
-        "value1": "you wanna be",
-        "value2": ""
-      }
+"t": 107142.857142857,
+"v": {
+  "lyric": "you wanna be",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 107307.692307692,
-      "v": {
-        "value1": "you wanna be a",
-        "value2": ""
-      }
+"t": 107307.692307692,
+"v": {
+  "lyric": "you wanna be a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 107472.527472528,
-      "v": {
-        "value1": "you wanna be a boss?",
-        "value2": ""
-      }
+"t": 107472.527472528,
+"v": {
+  "lyric": "you wanna be a boss?",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 107802.197802198,
-      "v": {
-        "value1": "do",
-        "value2": ""
-      }
+"t": 107802.197802198,
+"v": {
+  "lyric": "do",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 107967.032967033,
-      "v": {
-        "value1": "do it",
-        "value2": ""
-      }
+"t": 107967.032967033,
+"v": {
+  "lyric": "do it",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 108131.868131868,
-      "v": {
-        "value1": "do it like",
-        "value2": ""
-      }
+"t": 108131.868131868,
+"v": {
+  "lyric": "do it like",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2256,11 +2256,11 @@
     },
     {
       "e": "lyrics",
-      "t": 108461.538461539,
-      "v": {
-        "value1": "do it like i",
-        "value2": ""
-      }
+"t": 108461.538461539,
+"v": {
+  "lyric": "do it like i",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2272,11 +2272,11 @@
     },
     {
       "e": "lyrics",
-      "t": 108791.208791209,
-      "v": {
-        "value1": "do it like i do",
-        "value2": ""
-      }
+"t": 108791.208791209,
+"v": {
+  "lyric": "do it like i do",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2296,11 +2296,11 @@
     },
     {
       "e": "lyrics",
-      "t": 109450.54945055,
-      "v": {
-        "value1": "",
-        "value2": ""
-      }
+"t": 109450.54945055,
+"v": {
+  "lyric": "",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -2978,43 +2978,43 @@
     },
     {
       "e": "lyrics",
-      "t": 186263.736263736,
-      "v": {
-        "value1": "round",
-        "value2": ""
-      }
+"t": 186263.736263736,
+"v": {
+  "lyric": "round",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 186593.406593406,
-      "v": {
-        "value1": "round 2",
-        "value2": ""
-      }
+"t": 186593.406593406,
+"v": {
+  "lyric": "round 2",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 186923.076923076,
-      "v": {
-        "value1": "and",
-        "value2": ""
-      }
+"t": 186923.076923076,
+"v": {
+  "lyric": "and",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 187087.912087912,
-      "v": {
-        "value1": "and im",
-        "value2": ""
-      }
+"t": 187087.912087912,
+"v": {
+  "lyric": "and im",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 187252.747252747,
-      "v": {
-        "value1": "and im back",
-        "value2": ""
-      }
+"t": 187252.747252747,
+"v": {
+  "lyric": "and im back",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Change Character",
@@ -3042,11 +3042,11 @@
     },
     {
       "e": "lyrics",
-      "t": 187582.417582417,
-      "v": {
-        "value1": "can't",
-        "value2": ""
-      }
+"t": 187582.417582417,
+"v": {
+  "lyric": "can't",
+  "color": "FFFFFF"
+}
     },
 	{
       "t": 187747.252747252,
@@ -3058,27 +3058,27 @@
     },
     {
       "e": "lyrics",
-      "t": 187912.087912088,
-      "v": {
-        "value1": "can't beat",
-        "value2": ""
-      }
+"t": 187912.087912088,
+"v": {
+  "lyric": "can't beat",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 188241.758241758,
-      "v": {
-        "value1": "can't beat me",
-        "value2": ""
-      }
+"t": 188241.758241758,
+"v": {
+  "lyric": "can't beat me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 188571.428571428,
-      "v": {
-        "value1": "so",
-        "value2": ""
-      }
+"t": 188571.428571428,
+"v": {
+  "lyric": "so",
+  "color": "FFFFFF"
+}
     },
     {
       "t": 188571.42857143,
@@ -3093,323 +3093,323 @@
     },
     {
       "e": "lyrics",
-      "t": 188736.263736263,
-      "v": {
-        "value1": "so know",
-        "value2": ""
-      }
+"t": 188736.263736263,
+"v": {
+  "lyric": "so know",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 188901.098901099,
-      "v": {
-        "value1": "so know if",
-        "value2": ""
-      }
+"t": 188901.098901099,
+"v": {
+  "lyric": "so know if",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189065.934065934,
-      "v": {
-        "value1": "so know if you're",
-        "value2": ""
-      }
+"t": 189065.934065934,
+"v": {
+  "lyric": "so know if you're",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189230.769230769,
-      "v": {
-        "value1": "try",
-        "value2": ""
-      }
+"t": 189230.769230769,
+"v": {
+  "lyric": "try",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189395.604395604,
-      "v": {
-        "value1": "tryna",
-        "value2": ""
-      }
+"t": 189395.604395604,
+"v": {
+  "lyric": "tryna",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189560.439560439,
-      "v": {
-        "value1": "tryna take",
-        "value2": ""
-      }
+"t": 189560.439560439,
+"v": {
+  "lyric": "tryna take",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189725.274725274,
-      "v": {
-        "value1": "tryna take me",
-        "value2": ""
-      }
+"t": 189725.274725274,
+"v": {
+  "lyric": "tryna take me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 189890.10989011,
-      "v": {
-        "value1": "tryna take me out",
-        "value2": ""
-      }
+"t": 189890.10989011,
+"v": {
+  "lyric": "tryna take me out",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 190054.945054945,
-      "v": {
-        "value1": "it",
-        "value2": ""
-      }
+"t": 190054.945054945,
+"v": {
+  "lyric": "it",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 190219.78021978,
-      "v": {
-        "value1": "it wont",
-        "value2": ""
-      }
+"t": 190219.78021978,
+"v": {
+  "lyric": "it wont",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 190549.45054945,
-      "v": {
-        "value1": "it wont be",
-        "value2": ""
-      }
+"t": 190549.45054945,
+"v": {
+  "lyric": "it wont be",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 190714.285714285,
-      "v": {
-        "value1": "it wont be so",
-        "value2": ""
-      }
+"t": 190714.285714285,
+"v": {
+  "lyric": "it wont be so",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 190879.120879121,
-      "v": {
-        "value1": "it wont be so ea",
-        "value2": ""
-      }
+"t": 190879.120879121,
+"v": {
+  "lyric": "it wont be so ea",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 191043.956043956,
-      "v": {
-        "value1": "it wont be so easy",
-        "value2": ""
-      }
+"t": 191043.956043956,
+"v": {
+  "lyric": "it wont be so easy",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 191373.626373626,
-      "v": {
-        "value1": "throw",
-        "value2": ""
-      }
+"t": 191373.626373626,
+"v": {
+  "lyric": "throw",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 191538.461538461,
-      "v": {
-        "value1": "throw all",
-        "value2": ""
-      }
+"t": 191538.461538461,
+"v": {
+  "lyric": "throw all",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 191703.296703296,
-      "v": {
-        "value1": "throw all you",
-        "value2": ""
-      }
+"t": 191703.296703296,
+"v": {
+  "lyric": "throw all you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 191868.131868132,
-      "v": {
-        "value1": "throw all you want",
-        "value2": ""
-      }
+"t": 191868.131868132,
+"v": {
+  "lyric": "throw all you want",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192032.967032967,
-      "v": {
-        "value1": "throw",
-        "value2": ""
-      }
+"t": 192032.967032967,
+"v": {
+  "lyric": "throw",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192197.802197802,
-      "v": {
-        "value1": "throw ev",
-        "value2": ""
-      }
+"t": 192197.802197802,
+"v": {
+  "lyric": "throw ev",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192362.637362637,
-      "v": {
-        "value1": "throw every",
-        "value2": ""
-      }
+"t": 192362.637362637,
+"v": {
+  "lyric": "throw every",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192527.472527472,
-      "v": {
-        "value1": "throw everything",
-        "value2": ""
-      }
+"t": 192527.472527472,
+"v": {
+  "lyric": "throw everything",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192692.307692307,
-      "v": {
-        "value1": "throw everything you",
-        "value2": ""
-      }
+"t": 192692.307692307,
+"v": {
+  "lyric": "throw everything you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 192857.142857143,
-      "v": {
-        "value1": "throw everything you can",
-        "value2": ""
-      }
+"t": 192857.142857143,
+"v": {
+  "lyric": "throw everything you can",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 193186.813186813,
-      "v": {
-        "value1": "it",
-        "value2": ""
-      }
+"t": 193186.813186813,
+"v": {
+  "lyric": "it",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 193351.648351648,
-      "v": {
-        "value1": "it wont",
-        "value2": ""
-      }
+"t": 193351.648351648,
+"v": {
+  "lyric": "it wont",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 193516.483516483,
-      "v": {
-        "value1": "it wont faze",
-        "value2": ""
-      }
+"t": 193516.483516483,
+"v": {
+  "lyric": "it wont faze",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 193681.318681318,
-      "v": {
-        "value1": "it wont faze me",
-        "value2": ""
-      }
+"t": 193681.318681318,
+"v": {
+  "lyric": "it wont faze me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194010.989010989,
-      "v": {
-        "value1": "if",
-        "value2": ""
-      }
+"t": 194010.989010989,
+"v": {
+  "lyric": "if",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194175.824175824,
-      "v": {
-        "value1": "if im",
-        "value2": ""
-      }
+"t": 194175.824175824,
+"v": {
+  "lyric": "if im",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194340.659340659,
-      "v": {
-        "value1": "if im go",
-        "value2": ""
-      }
+"t": 194340.659340659,
+"v": {
+  "lyric": "if im go",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194505.494505494,
-      "v": {
-        "value1": "if im going",
-        "value2": ""
-      }
+"t": 194505.494505494,
+"v": {
+  "lyric": "if im going",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194670.329670329,
-      "v": {
-        "value1": "if im going to",
-        "value2": ""
-      }
+"t": 194670.329670329,
+"v": {
+  "lyric": "if im going to",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 194835.164835165,
-      "v": {
-        "value1": "if im going to my",
-        "value2": ""
-      }
+"t": 194835.164835165,
+"v": {
+  "lyric": "if im going to my",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195000,
-      "v": {
-        "value1": "if im going to my grave",
-        "value2": ""
-      }
+"t": 195000,
+"v": {
+  "lyric": "if im going to my grave",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195164.835164835,
-      "v": {
-        "value1": "then",
-        "value2": ""
-      }
+"t": 195164.835164835,
+"v": {
+  "lyric": "then",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195329.67032967,
-      "v": {
-        "value1": "then you",
-        "value2": ""
-      }
+"t": 195329.67032967,
+"v": {
+  "lyric": "then you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195494.505494505,
-      "v": {
-        "value1": "then you got",
-        "value2": ""
-      }
+"t": 195494.505494505,
+"v": {
+  "lyric": "then you got",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195659.34065934,
-      "v": {
-        "value1": "then you gotta",
-        "value2": ""
-      }
+"t": 195659.34065934,
+"v": {
+  "lyric": "then you gotta",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 195824.175824176,
-      "v": {
-        "value1": "make",
-        "value2": ""
-      }
+"t": 195824.175824176,
+"v": {
+  "lyric": "make",
+  "color": "FFFFFF"
+}
     },
     {
       "t": 195989.010989011,
@@ -3421,11 +3421,11 @@
     },
     {
       "e": "lyrics",
-      "t": 196153.846153846,
-      "v": {
-        "value1": "make me!",
-        "value2": ""
-      }
+"t": 196153.846153846,
+"v": {
+  "lyric": "make me!",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Flash Camera",
@@ -3456,19 +3456,19 @@
     },
     {
       "e": "lyrics",
-      "t": 196813.186813187,
-      "v": {
-        "value1": "round",
-        "value2": ""
-      }
+"t": 196813.186813187,
+"v": {
+  "lyric": "round",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 197142.857142857,
-      "v": {
-        "value1": "round 2",
-        "value2": ""
-      }
+"t": 197142.857142857,
+"v": {
+  "lyric": "round 2",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3480,27 +3480,27 @@
     },
     {
       "e": "lyrics",
-      "t": 197472.527472527,
-      "v": {
-        "value1": "i",
-        "value2": ""
-      }
+"t": 197472.527472527,
+"v": {
+  "lyric": "i",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 197637.362637362,
-      "v": {
-        "value1": "i ne",
-        "value2": ""
-      }
+"t": 197637.362637362,
+"v": {
+  "lyric": "i ne",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 197802.197802197,
-      "v": {
-        "value1": "i never",
-        "value2": ""
-      }
+"t": 197802.197802197,
+"v": {
+  "lyric": "i never",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3512,27 +3512,27 @@
     },
     {
       "e": "lyrics",
-      "t": 198131.868131868,
-      "v": {
-        "value1": "i never been",
-        "value2": ""
-      }
+"t": 198131.868131868,
+"v": {
+  "lyric": "i never been",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 198296.703296703,
-      "v": {
-        "value1": "i never been a",
-        "value2": ""
-      }
+"t": 198296.703296703,
+"v": {
+  "lyric": "i never been a",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 198461.538461538,
-      "v": {
-        "value1": "i never been a quit",
-        "value2": ""
-      }
+"t": 198461.538461538,
+"v": {
+  "lyric": "i never been a quit",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3544,11 +3544,11 @@
     },
     {
       "e": "lyrics",
-      "t": 198791.208791208,
-      "v": {
-        "value1": "i never been a quitter",
-        "value2": ""
-      }
+"t": 198791.208791208,
+"v": {
+  "lyric": "i never been a quitter",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3560,11 +3560,11 @@
     },
     {
       "e": "lyrics",
-      "t": 199120.879120879,
-      "v": {
-        "value1": "ris",
-        "value2": ""
-      }
+"t": 199120.879120879,
+"v": {
+  "lyric": "ris",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3576,35 +3576,35 @@
     },
     {
       "e": "lyrics",
-      "t": 199285.714285714,
-      "v": {
-        "value1": "rising",
-        "value2": ""
-      }
+"t": 199285.714285714,
+"v": {
+  "lyric": "rising",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 199450.549450549,
-      "v": {
-        "value1": "rising to",
-        "value2": ""
-      }
+"t": 199450.549450549,
+"v": {
+  "lyric": "rising to",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 199615.384615384,
-      "v": {
-        "value1": "rising to the",
-        "value2": ""
-      }
+"t": 199615.384615384,
+"v": {
+  "lyric": "rising to the",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 199780.219780219,
-      "v": {
-        "value1": "rising to the top",
-        "value2": ""
-      }
+"t": 199780.219780219,
+"v": {
+  "lyric": "rising to the top",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3616,35 +3616,35 @@
     },
     {
       "e": "lyrics",
-      "t": 199945.054945055,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 199945.054945055,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 200109.89010989,
-      "v": {
-        "value1": "you will",
-        "value2": ""
-      }
+"t": 200109.89010989,
+"v": {
+  "lyric": "you will",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 200274.725274725,
-      "v": {
-        "value1": "you will be",
-        "value2": ""
-      }
+"t": 200274.725274725,
+"v": {
+  "lyric": "you will be",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 200439.56043956,
-      "v": {
-        "value1": "you will be left",
-        "value2": ""
-      }
+"t": 200439.56043956,
+"v": {
+  "lyric": "you will be left",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3656,35 +3656,35 @@
     },
     {
       "e": "lyrics",
-      "t": 200604.395604395,
-      "v": {
-        "value1": "you will be left be",
-        "value2": ""
-      }
+"t": 200604.395604395,
+"v": {
+  "lyric": "you will be left be",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 200769.23076923,
-      "v": {
-        "value1": "you will be left behind",
-        "value2": ""
-      }
+"t": 200769.23076923,
+"v": {
+  "lyric": "you will be left behind",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 200934.065934066,
-      "v": {
-        "value1": "out",
-        "value2": ""
-      }
+"t": 200934.065934066,
+"v": {
+  "lyric": "out",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 201098.901098901,
-      "v": {
-        "value1": "out of",
-        "value2": ""
-      }
+"t": 201098.901098901,
+"v": {
+  "lyric": "out of",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3696,27 +3696,27 @@
     },
     {
       "e": "lyrics",
-      "t": 201263.736263736,
-      "v": {
-        "value1": "out of the",
-        "value2": ""
-      }
+"t": 201263.736263736,
+"v": {
+  "lyric": "out of the",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 201428.571428571,
-      "v": {
-        "value1": "out of the pic",
-        "value2": ""
-      }
+"t": 201428.571428571,
+"v": {
+  "lyric": "out of the pic",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 201593.406593406,
-      "v": {
-        "value1": "out of the picture",
-        "value2": ""
-      }
+"t": 201593.406593406,
+"v": {
+  "lyric": "out of the picture",
+  "color": "FFFFFF"
+}
     },
     {
       "t": 201758.241758241,
@@ -3730,11 +3730,11 @@
 ,
     {
       "e": "lyrics",
-      "t": 201923.076923077,
-      "v": {
-        "value1": "ive",
-        "value2": ""
-      }
+"t": 201923.076923077,
+"v": {
+  "lyric": "ive",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3746,27 +3746,27 @@
     },
     {
       "e": "lyrics",
-      "t": 202087.912087912,
-      "v": {
-        "value1": "ive stared",
-        "value2": ""
-      }
+"t": 202087.912087912,
+"v": {
+  "lyric": "ive stared",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 202252.747252747,
-      "v": {
-        "value1": "ive stared death",
-        "value2": ""
-      }
+"t": 202252.747252747,
+"v": {
+  "lyric": "ive stared death",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 202417.582417582,
-      "v": {
-        "value1": "ive stared death in",
-        "value2": ""
-      }
+"t": 202417.582417582,
+"v": {
+  "lyric": "ive stared death in",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3778,27 +3778,27 @@
     },
     {
       "e": "lyrics",
-      "t": 202582.417582417,
-      "v": {
-        "value1": "ive stared death in the",
-        "value2": ""
-      }
+"t": 202582.417582417,
+"v": {
+  "lyric": "ive stared death in the",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 202747.252747252,
-      "v": {
-        "value1": "ive stared death in the face",
-        "value2": ""
-      }
+"t": 202747.252747252,
+"v": {
+  "lyric": "ive stared death in the face",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 202912.087912088,
-      "v": {
-        "value1": "(and)",
-        "value2": ""
-      }
+"t": 202912.087912088,
+"v": {
+  "lyric": "(and)",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "CameraControl",
@@ -3818,11 +3818,11 @@
     },
     {
       "e": "lyrics",
-      "t": 203076.923076923,
-      "v": {
-        "value1": "(and dem)",
-        "value2": ""
-      }
+"t": 203076.923076923,
+"v": {
+  "lyric": "(and dem)",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3834,19 +3834,19 @@
     },
     {
       "e": "lyrics",
-      "t": 203241.758241758,
-      "v": {
-        "value1": "(and demons)",
-        "value2": ""
-      }
+"t": 203241.758241758,
+"v": {
+  "lyric": "(and demons)",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 203406.593406593,
-      "v": {
-        "value1": "(and demons too!)",
-        "value2": ""
-      }
+"t": 203406.593406593,
+"v": {
+  "lyric": "(and demons too!)",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3858,43 +3858,43 @@
     },
     {
       "e": "lyrics",
-      "t": 203736.263736263,
-      "v": {
-        "value1": "you",
-        "value2": ""
-      }
+"t": 203736.263736263,
+"v": {
+  "lyric": "you",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 203901.098901099,
-      "v": {
-        "value1": "you don't",
-        "value2": ""
-      }
+"t": 203901.098901099,
+"v": {
+  "lyric": "you don't",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 204065.934065934,
-      "v": {
-        "value1": "you don't scare",
-        "value2": ""
-      }
+"t": 204065.934065934,
+"v": {
+  "lyric": "you don't scare",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 204230.769230769,
-      "v": {
-        "value1": "you don't scare me",
-        "value2": ""
-      }
+"t": 204230.769230769,
+"v": {
+  "lyric": "you don't scare me",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "lyrics",
-      "t": 204395.604395604,
-      "v": {
-        "value1": "i'll",
-        "value2": ""
-      }
+"t": 204395.604395604,
+"v": {
+  "lyric": "i'll",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3906,11 +3906,11 @@
     },
     {
       "e": "lyrics",
-      "t": 205054.945054945,
-      "v": {
-        "value1": "i'll give",
-        "value2": ""
-      }
+"t": 205054.945054945,
+"v": {
+  "lyric": "i'll give",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3922,11 +3922,11 @@
     },
     {
       "e": "lyrics",
-      "t": 205714.285714285,
-      "v": {
-        "value1": "i'll give it",
-        "value2": ""
-      }
+"t": 205714.285714285,
+"v": {
+  "lyric": "i'll give it",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3938,11 +3938,11 @@
     },
     {
       "e": "lyrics",
-      "t": 206373.626373626,
-      "v": {
-        "value1": "i'll give it my",
-        "value2": ""
-      }
+"t": 206373.626373626,
+"v": {
+  "lyric": "i'll give it my",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3954,11 +3954,11 @@
     },
     {
       "e": "lyrics",
-      "t": 206703.296703296,
-      "v": {
-        "value1": "i'll give it my all!",
-        "value2": ""
-      }
+"t": 206703.296703296,
+"v": {
+  "lyric": "i'll give it my all!",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",
@@ -3970,11 +3970,11 @@
     },
     {
       "e": "lyrics",
-      "t": 207032.967032967,
-      "v": {
-        "value1": "",
-        "value2": ""
-      }
+"t": 207032.967032967,
+"v": {
+  "lyric": "",
+  "color": "FFFFFF"
+}
     },
     {
       "e": "Set Cam Zoom",

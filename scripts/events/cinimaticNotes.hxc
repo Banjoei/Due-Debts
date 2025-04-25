@@ -194,6 +194,6 @@ class CinematicNotesEvent extends SongEvent
 
     override function getTitle()
     {
-        return 'CinimaticNotes';
+        return 'Cinimatic Notes';
     }
 }

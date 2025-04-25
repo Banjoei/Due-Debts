@@ -177,10 +177,13 @@ class SplitScreenModule extends ScriptedModule {
 	}
 
     public function applySplitZoom(data:Dynamic) {
-        var targetZoom:Float = data.zoom ?? 1.0;
+        var zoom:Float = data.zoom ?? 1.0;
         var durationSteps:Float = data.duration ?? 4.0;
         var easeName:String = data.ease ?? 'linear';
         var mode:String = data.mode ?? 'stage';
+
+        var stageZoom = FlxCamera.defaultZoom;
+        var targetZoom:Float = zoom * (mode == "direct" ? 1.0 : stageZoom);
     
         var easeFunction = switch (easeName.toLowerCase()) {
             case "linear": FlxEase.linear;
@@ -213,20 +216,13 @@ class SplitScreenModule extends ScriptedModule {
                 FlxEase.linear;
         };        
     
-        // Convert steps to seconds
         var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
-    
-        if (mode == 'stage') {
-            targetZoom += camLeft.zoom; // apply relative
-        }
-    
-        // Tween both cams to same zoom
+
         FlxTween.cancelTweensOf(camLeft);
         FlxTween.cancelTweensOf(camRight);
         FlxTween.tween(camLeft, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
         FlxTween.tween(camRight, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
-    
-        // Update persistent target zooms so lerp doesn’t undo it
+        
         camLeftZoom = targetZoom;
         camRightZoom = targetZoom;
     }
@@ -241,22 +237,30 @@ class SplitScreenModule extends ScriptedModule {
 
 		var dadMidX = dad.x + (dad.width / 2);
 		var dadMidY = dad.y + (dad.height / 2);
-		camFollowDad.setPosition(dadMidX + 200 + leftX, dadMidY - 100 + leftY);
+		camFollowDad.setPosition(dadMidX + 150 + leftX, dadMidY - 100 + leftY);
 
 		var bfMidX = bf.x + (bf.width / 2);
 		var bfMidY = bf.y + (bf.height / 2);
-		camFollowBf.setPosition(bfMidX + 200 - rightX, bfMidY - 100 + rightY);
+		camFollowBf.setPosition(bfMidX + 100 - rightX, bfMidY - 100 + rightY);
 
-		// Smooth zooming
-		camLeft.zoom = FlxMath.lerp(camLeftZoom, camLeft.zoom, Math.exp(-elapsed * 3.125));
-		camRight.zoom = FlxMath.lerp(camRightZoom, camRight.zoom, Math.exp(-elapsed * 3.125));
-
-		// Shader sync
 		if (camLeft.filters != PlayState.instance.camGame.filters)
 			camLeft.filters = PlayState.instance.camGame.filters;
 		if (camRight.filters != PlayState.instance.camGame.filters)
 			camRight.filters = PlayState.instance.camGame.filters;
 	}
+
+    public function onStateChangeBegin(event:StateChangeScriptEvent) {
+        super.onStateChangeBegin(event);
+        if (PlayState.instance != null) {
+            if (camLeft != null) {
+                FlxG.cameras.remove(camLeft, true);
+            }
+        
+            if (camRight != null) {
+                FlxG.cameras.remove(camRight, true);
+            }
+        }
+    }
 }
 
 class SplitScreenEvent extends SongEvent {

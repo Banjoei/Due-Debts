@@ -1,0 +1,2 @@
+*.hxc linguist-language=Haxe
+*.json linguist-detectable=false

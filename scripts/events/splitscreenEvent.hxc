@@ -1,0 +1,284 @@
+//based on the Psych Engine script by kornelbut. would not have been possible without it!
+
+import flixel.FlxCamera;
+import flixel.FlxObject;
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.math.FlxMath;
+import funkin.graphics.FunkinCamera;
+import funkin.modding.module.ScriptedModule;
+import funkin.play.PlayState;
+import funkin.Conductor;
+import funkin.play.event.SongEvent;
+import funkin.modding.module.ModuleHandler;
+
+class SplitScreenModule extends ScriptedModule {
+	var camLeft:FunkinCamera;
+	var camRight:FunkinCamera;
+	var camFollowDad:FlxObject;
+	var camFollowBf:FlxObject;
+
+	var dual:Bool = false;
+	var swapped:Bool = false;
+
+	var camLeftZoom:Float = 1;
+	var camRightZoom:Float = 1;
+
+	var offsetX:Array<String>;
+	var offsetY:Array<String>;
+
+	var leftX:Float = 0;
+	var rightX:Float = 0;
+	var leftY:Float = 0;
+	var rightY:Float = 0;
+
+	public function new() {
+		super("SplitScreenModule");
+	}
+
+	override function onSongLoaded(event) {
+		camLeft = new FlxCamera();
+		camLeft.width = FlxG.width / 2;
+		camLeft.alpha = 0.001;
+
+		camRight = new FlxCamera();
+		camRight.x = FlxG.width / 2;
+		camRight.width = FlxG.width / 2;
+		camRight.alpha = 0.001;
+
+		camFollowDad = new FlxObject();
+		camFollowBf = new FlxObject();
+		PlayState.instance.add(camFollowDad);
+		PlayState.instance.add(camFollowBf);
+
+		camLeft.follow(camFollowDad);
+		camRight.follow(camFollowBf);
+
+		FlxG.cameras.remove(PlayState.instance.camHUD, false);
+		FlxG.cameras.add(PlayState.instance.camCutscene, false);
+		FlxG.cameras.add(camLeft, false);
+		FlxG.cameras.add(camRight, false);
+		FlxG.cameras.add(PlayState.instance.camHUD, false);
+		FlxG.cameras.add(PlayState.instance.camCutscene, false);
+	}
+
+	override function onSongEvent(event:SongEventScriptEvent) {
+		super.onSongEvent(event);
+		if (event.eventData.eventKind == 'SplitScreen') {
+			applySplit(event.eventData.value);
+		}
+		if (event.eventData.eventKind == 'ZoomCamera') {
+            applySplitZoom(event.eventData.value);
+        }        
+	}
+
+	public function applySplit(data:Dynamic) {
+		var duration = data.duration;
+		var ease = data.ease;
+		var leftZoom = data.leftZoom;
+		var rightZoom = data.rightZoom;
+		var swap = data.swap;
+
+		offsetX = data.offsetX.split(",");
+		offsetY = data.offsetY.split(",");
+
+		leftX = Std.parseFloat(offsetX[0]);
+		rightX = Std.parseFloat(offsetX[1]);
+		leftY = Std.parseFloat(offsetY[0]);
+		rightY = Std.parseFloat(offsetY[1]);
+
+		dual = !dual;
+		if (dual) swapped = swap;
+
+		var easeFunc = switch (ease.toLowerCase()) {
+			case "linear": FlxEase.linear;
+			case "quadin": FlxEase.quadIn;
+			case "quadout": FlxEase.quadOut;
+			case "quadinout": FlxEase.quadInOut;
+			case "cubein": FlxEase.cubeIn;
+			case "cubeout": FlxEase.cubeOut;
+			case "cubeinout": FlxEase.cubeInOut;
+			case "quartin": FlxEase.quartIn;
+			case "quartout": FlxEase.quartOut;
+			case "quartinout": FlxEase.quartInOut;
+			case "quintin": FlxEase.quintIn;
+			case "quintout": FlxEase.quintOut;
+			case "quintinout": FlxEase.quintInOut;
+			case "sinein": FlxEase.sineIn;
+			case "sineout": FlxEase.sineOut;
+			case "sineinout": FlxEase.sineInOut;
+			case "expoin": FlxEase.expoIn;
+			case "expoout": FlxEase.expoOut;
+			case "expoinout": FlxEase.expoInOut;
+			case "circin": FlxEase.circIn;
+			case "circout": FlxEase.circOut;
+			case "circinout": FlxEase.circInOut;
+			case "backin": FlxEase.backIn;
+			case "backout": FlxEase.backOut;
+			case "backinout": FlxEase.backInOut;
+			case "bouncein": FlxEase.bounceIn;
+			case "bounceout": FlxEase.bounceOut;
+			case "bounceinout": FlxEase.bounceInOut;
+			case "elasticin": FlxEase.elasticIn;
+			case "elasticout": FlxEase.elasticOut;
+			case "elasticinout": FlxEase.elasticInOut;
+			case "smoothstepin": FlxEase.smoothStepIn;
+			case "smoothstepout": FlxEase.smoothStepOut;
+			case "smoothstepinout": FlxEase.smoothStepInOut;
+			case "smootherstepin": FlxEase.smootherStepIn;
+			case "smootherstepout": FlxEase.smootherStepOut;
+			case "smootherstepinout": FlxEase.smootherStepInOut;
+			default: FlxEase.sineOut;
+		};
+
+		for (spr in PlayState.instance.members) {
+			if (spr != null && spr.exists && spr.camera == PlayState.instance.camGame) {
+				spr.cameras = [PlayState.instance.camGame, camLeft, camRight];
+			}
+		}
+
+		camLeft.alpha = camRight.alpha = 1;
+		FlxTween.cancelTweensOf(camLeft);
+		FlxTween.cancelTweensOf(camRight);
+
+        if (!swapped) {
+            camLeft.x = -(FlxG.width / 2);
+            camRight.x = FlxG.width;
+        } else {
+            camRight.x = -(FlxG.width / 2);
+            camLeft.x = FlxG.width;
+        }        
+
+		var camA = swapped ? camRight : camLeft;
+		var camB = swapped ? camLeft : camRight;
+
+		FlxTween.tween(camA, { x: dual ? 0 : -(FlxG.width / 2) }, duration, { ease: easeFunc });
+		FlxTween.tween(camB, { x: dual ? FlxG.width / 2 : FlxG.width }, duration, { ease: easeFunc });
+
+		if (!dual) return;
+
+		var dad = PlayState.instance.currentStage.getDad();
+		var bf = PlayState.instance.currentStage.getBoyfriend();
+
+		var dadMidX = dad.x + (dad.width / 2);
+		var dadMidY = dad.y + (dad.height / 2);
+		camFollowDad.setPosition(dadMidX + 150 + leftX, dadMidY - 100 + leftY);
+
+		var bfMidX = bf.x + (bf.width / 2);
+		var bfMidY = bf.y + (bf.height / 2);
+		camFollowBf.setPosition(bfMidX - 100 - rightX, bfMidY - 100 + rightY);
+
+		camLeftZoom = leftZoom;
+		camRightZoom = rightZoom;
+
+		camLeft.snapToTarget();
+		camRight.snapToTarget();
+	}
+
+    public function applySplitZoom(data:Dynamic) {
+        var targetZoom:Float = data.zoom ?? 1.0;
+        var durationSteps:Float = data.duration ?? 4.0;
+        var easeName:String = data.ease ?? 'linear';
+        var mode:String = data.mode ?? 'stage';
+    
+        var easeFunction = switch (easeName.toLowerCase()) {
+            case "linear": FlxEase.linear;
+            case "sinein": FlxEase.sineIn;
+            case "sineout": FlxEase.sineOut;
+            case "sineinout": FlxEase.sineInOut;
+            case "quadin": FlxEase.quadIn;
+            case "quadout": FlxEase.quadOut;
+            case "quadinout": FlxEase.quadInOut;
+            case "cubein": FlxEase.cubeIn;
+            case "cubeout": FlxEase.cubeOut;
+            case "cubeinout": FlxEase.cubeInOut;
+            case "quartin": FlxEase.quartIn;
+            case "quartout": FlxEase.quartOut;
+            case "quartinout": FlxEase.quartInOut;
+            case "quintin": FlxEase.quintIn;
+            case "quintout": FlxEase.quintOut;
+            case "quintinout": FlxEase.quintInOut;
+            case "expoin": FlxEase.expoIn;
+            case "expoout": FlxEase.expoOut;
+            case "expoinout": FlxEase.expoInOut;
+            case "smoothstepin": FlxEase.smoothStepIn;
+            case "smoothstepout": FlxEase.smoothStepOut;
+            case "smoothstepinout": FlxEase.smoothStepInOut;
+            case "elasticin": FlxEase.elasticIn;
+            case "elasticout": FlxEase.elasticOut;
+            case "elasticinout": FlxEase.elasticInOut;
+            default:
+                trace('Invalid ease: $easeName. Defaulting to linear.');
+                FlxEase.linear;
+        };        
+    
+        // Convert steps to seconds
+        var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
+    
+        if (mode == 'stage') {
+            targetZoom += camLeft.zoom; // apply relative
+        }
+    
+        // Tween both cams to same zoom
+        FlxTween.cancelTweensOf(camLeft);
+        FlxTween.cancelTweensOf(camRight);
+        FlxTween.tween(camLeft, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
+        FlxTween.tween(camRight, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
+    
+        // Update persistent target zooms so lerp doesn’t undo it
+        camLeftZoom = targetZoom;
+        camRightZoom = targetZoom;
+    }
+
+	override function onUpdate(elapsed:Float) {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null || camFollowDad == null || camFollowBf == null) return;
+
+		var dad = PlayState.instance.currentStage.getDad();
+		var bf = PlayState.instance.currentStage.getBoyfriend();
+
+		if (dad == null || bf == null) return;
+
+		var dadMidX = dad.x + (dad.width / 2);
+		var dadMidY = dad.y + (dad.height / 2);
+		camFollowDad.setPosition(dadMidX + 200 + leftX, dadMidY - 100 + leftY);
+
+		var bfMidX = bf.x + (bf.width / 2);
+		var bfMidY = bf.y + (bf.height / 2);
+		camFollowBf.setPosition(bfMidX + 200 - rightX, bfMidY - 100 + rightY);
+
+		// Smooth zooming
+		camLeft.zoom = FlxMath.lerp(camLeftZoom, camLeft.zoom, Math.exp(-elapsed * 3.125));
+		camRight.zoom = FlxMath.lerp(camRightZoom, camRight.zoom, Math.exp(-elapsed * 3.125));
+
+		// Shader sync
+		if (camLeft.filters != PlayState.instance.camGame.filters)
+			camLeft.filters = PlayState.instance.camGame.filters;
+		if (camRight.filters != PlayState.instance.camGame.filters)
+			camRight.filters = PlayState.instance.camGame.filters;
+	}
+}
+
+class SplitScreenEvent extends SongEvent {
+	public function new() {
+		super("SplitScreen");
+	}
+
+	override function getTitle():String {
+		return "SplitScreen";
+	}
+
+	override function getEventSchema():Array<Dynamic> {
+		return [
+			{ name: "duration", title: "Tween Duration", type: "float", defaultValue: 0.2 },
+			{ name: "ease", title: "Tween Easing", type: "string", defaultValue: "quadOut" },
+			{ name: "leftZoom", title: "Left Zoom", type: "float", defaultValue: 1.0 },
+			{ name: "rightZoom", title: "Right Zoom", type: "float", defaultValue: 1.0 },
+			{ name: "swap", title: "Swap Sides", type: "bool", defaultValue: false },
+			{ name: "offsetX", title: "Cam X Offsets (L,R)", type: "string", defaultValue: "0,0" },
+			{ name: "offsetY", title: "Cam Y Offsets (L,R)", type: "string", defaultValue: "0,0" }
+		];
+	}
+
+	override function handleEvent(data) {}
+}

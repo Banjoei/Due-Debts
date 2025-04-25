@@ -143,6 +143,7 @@ class CinematicNoteModule extends ScriptedModule
 
         if (cinematicEnabled)
         {
+            if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
             var player:Strumline = PlayState.instance.playerStrumline;
             if (player == null) return;
 

@@ -1,0 +1,117 @@
+import flixel.FlxG;
+import funkin.modding.module.Module;
+import funkin.play.PlayState;
+import funkin.play.notes.NoteSprite;
+import funkin.play.notes.Strumline;
+import funkin.play.scoring.Scoring;
+import funkin.Conductor;
+import funkin.Highscore;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.ui.debug.charting.util.ChartEditorDropdowns;
+import funkin.modding.events.HitNoteScriptEvent;
+import funkin.modding.events.ScriptEventDispatcher;
+import funkin.util.Constants;
+
+class BotplayNotesModule extends Module {
+	public function new() {
+		super("BotplayNotesModule");
+	}
+
+    var injected:Bool = false;
+
+	override function onUpdate(event) {
+		super.onUpdate(event);
+
+        if (!injected && Std.isOfType(FlxG.state, ChartEditorState)) {
+			injected = true;
+			ChartEditorDropdowns.NOTE_KINDS.set('botplayNote', 'Botplay Note');
+		}
+
+		if (FlxG.sound.music == null) return;
+		if (PlayState.instance == null) return;
+
+		var notesInRange = PlayState.instance.playerStrumline.getNotesMayHit();
+		var songPos = Conductor.instance.songPosition;
+        var notesByDirection = [];
+		for (i in 0...Strumline.KEY_COUNT)
+            notesByDirection.push([]);
+        var _g = 0;
+        while (_g < notesInRange.length) {
+            var note = notesInRange[_g];
+            ++_g;
+            notesByDirection[note.direction].push(note);
+        }
+
+        if(notesInRange.length > 0) {
+			for (direction in notesByDirection) {
+				for (note in direction) {
+					if(note.get_strumTime() <= songPos) {
+                        if (note.kind == "botplayNote") {
+						    emulateGoodNoteHit(note);
+                        }
+					}
+				}
+			}
+		}
+	}
+
+	function emulateGoodNoteHit(note:NoteSprite) {
+        var score = Scoring.scoreNote(0);
+        var daRating = 'sick';
+        var healthChange = Constants.HEALTH_SICK_BONUS;
+        var isComboBreak = false;
+        var noteDiff:Int = Std.int(Conductor.instance.songPosition - note.noteData.time);
+        var songPos = Conductor.instance.songPosition;
+    
+        var event = new HitNoteScriptEvent(note, healthChange, score, daRating, isComboBreak, Highscore.tallies.combo + 1, noteDiff, true);
+        dispatchEvent(event);
+
+        if (event.eventCanceled) return;
+    
+        var playerStrumline = PlayState.instance.playerStrumline;
+    
+        Highscore.tallies.totalNotesHit++;
+    
+        playerStrumline.hitNote(note, !isComboBreak);
+    
+        if(note.holdNoteSprite != null)
+		{
+			playerStrumline.playNoteHoldCover(note.holdNoteSprite);
+		}
+
+        for (holdNote in playerStrumline.holdNotes.members) {
+            if (holdNote == null || !holdNote.alive) continue;
+            if (!holdNote.hitNote) continue;
+            if (holdNote.missedNote) continue;
+        
+            var holdStart = holdNote.strumTime;
+            var holdEnd = holdNote.strumTime + holdNote.fullSustainLength;
+            var songPos = Conductor.instance.songPosition;
+        
+            if (songPos >= holdStart && songPos <= holdEnd) {
+                var currentStage = PlayState.currentStage;
+                if (currentStage != null && currentStage.getBoyfriend() != null) {
+                    currentStage.getBoyfriend().holdTimer = 0;
+                }
+        
+                PlayState.instance.health += Constants.HEALTH_HOLD_BONUS_PER_SECOND * FlxG.elapsed;
+                PlayState.instance.songScore += Std.int(Constants.SCORE_HOLD_BONUS_PER_SECOND * FlxG.elapsed);
+            }
+        }        
+    
+        if (event.doesNotesplash)
+            playerStrumline.playNoteSplash(note.noteData.getDirection());
+    
+        PlayState.instance.vocals.playerVolume = 1;
+        PlayState.instance.applyScore(event.score, event.judgement, event.healthChange, event.isComboBreak);
+        PlayState.instance.popUpScore(event.judgement);
+    }    
+
+	override function dispatchEvent(event:ScriptEvent):Void {
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentStage, event);
+		if (PlayState.instance.currentStage != null)
+			PlayState.instance.currentStage.dispatchToCharacters(event);
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentSong, event);
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentConversation, event);
+	}
+}

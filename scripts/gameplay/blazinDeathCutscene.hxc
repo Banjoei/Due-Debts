@@ -179,6 +179,8 @@ class blazinDeathSubState extends MusicBeatSubState {
         game.musicPausedBySubState = false;
     
         game.deathCounter++;
+        game.playerStrumline.clean();
+        game.opponentStrumline.clean();
         game.needsReset = true;
         module.scriptSet("finished", true);
         this.close();

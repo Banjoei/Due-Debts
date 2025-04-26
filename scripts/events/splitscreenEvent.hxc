@@ -33,16 +33,24 @@ class SplitScreenModule extends ScriptedModule {
 	var leftY:Float = 0;
 	var rightY:Float = 0;
 
+	var shouldRun:Bool = false;
+
 	public function new() {
 		super("SplitScreenModule");
 	}
 
 	override function onSongLoaded(event) {
-		camLeft = new FlxCamera();
+		if (event.events != null) {
+			shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen").length > 0;
+		}
+
+		if (!shouldRun) return;
+
+		camLeft = new FunkinCamera();
 		camLeft.width = FlxG.width / 2;
 		camLeft.alpha = 0.001;
 
-		camRight = new FlxCamera();
+		camRight = new FunkinCamera();
 		camRight.x = FlxG.width / 2;
 		camRight.width = FlxG.width / 2;
 		camRight.alpha = 0.001;
@@ -55,25 +63,23 @@ class SplitScreenModule extends ScriptedModule {
 		camLeft.follow(camFollowDad);
 		camRight.follow(camFollowBf);
 
-		FlxG.cameras.remove(PlayState.instance.camHUD, false);
-		FlxG.cameras.add(PlayState.instance.camCutscene, false);
-		FlxG.cameras.add(camLeft, false);
-		FlxG.cameras.add(camRight, false);
-		FlxG.cameras.add(PlayState.instance.camHUD, false);
-		FlxG.cameras.add(PlayState.instance.camCutscene, false);
+		FlxG.cameras.insert(camLeft, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+		FlxG.cameras.insert(camRight, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
 	}
 
 	override function onSongEvent(event:SongEventScriptEvent) {
 		super.onSongEvent(event);
+
 		if (event.eventData.eventKind == 'SplitScreen') {
-			applySplit(event.eventData.value);
+			if (shouldRun) applySplit(event.eventData.value);
 		}
 		if (event.eventData.eventKind == 'ZoomCamera') {
-            applySplitZoom(event.eventData.value);
-        }        
+			if (shouldRun) applySplitZoom(event.eventData.value);
+		}
 	}
 
 	public function applySplit(data:Dynamic) {
+		if (!shouldRun) return;
 		var duration = data.duration;
 		var ease = data.ease;
 		var leftZoom = data.leftZoom;
@@ -177,6 +183,8 @@ class SplitScreenModule extends ScriptedModule {
 	}
 
     public function applySplitZoom(data:Dynamic) {
+		if (!shouldRun) return;
+
         var zoom:Float = data.zoom ?? 1.0;
         var durationSteps:Float = data.duration ?? 4.0;
         var easeName:String = data.ease ?? 'linear';
@@ -228,6 +236,7 @@ class SplitScreenModule extends ScriptedModule {
     }
 
 	override function onUpdate(elapsed:Float) {
+		if (!shouldRun) return;
 		if (PlayState.instance == null || PlayState.instance.currentStage == null || camFollowDad == null || camFollowBf == null) return;
 
 		var dad = PlayState.instance.currentStage.getDad();
@@ -249,18 +258,19 @@ class SplitScreenModule extends ScriptedModule {
 			camRight.filters = PlayState.instance.camGame.filters;
 	}
 
-    public function onStateChangeBegin(event:StateChangeScriptEvent) {
-        super.onStateChangeBegin(event);
-        if (PlayState.instance != null) {
-            if (camLeft != null) {
-                FlxG.cameras.remove(camLeft, true);
-            }
-        
-            if (camRight != null) {
-                FlxG.cameras.remove(camRight, true);
-            }
-        }
-    }
+	public function onStateChangeBegin(event:StateChangeScriptEvent) {
+		super.onStateChangeBegin(event);
+		if (PlayState.instance != null) {
+			for (spr in PlayState.instance.members) {
+				if (spr != null && spr.exists && spr.camera == (camLeft || camRight)) {
+					spr.cameras = [PlayState.instance.camGame];
+				}
+			}
+
+			if (camLeft != null) FlxG.cameras.remove(camLeft, true);
+			if (camRight != null) FlxG.cameras.remove(camRight, true);
+		}
+	}
 }
 
 class SplitScreenEvent extends SongEvent {

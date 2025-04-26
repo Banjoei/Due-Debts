@@ -98,50 +98,50 @@ class CameraMovementFixes extends ScriptedModule {
 }
 
 class CameraMovementEvent extends ScriptedSongEvent {
-    function new() {
-        super('CameraMovement');
-    }
+	function new() {
+		super('CameraMovement');
+	}
 
-    public var eventTitle:String = "Camera Movement";
+	public var eventTitle:String = "Camera Movement";
 
-    public var position:Float = 3.5;
-    public var speed:Float = 10;
+	public var position:Float = 3.5;
+	public var speed:Float = 10;
 
-    override function handleEvent(data) {
-        var rawV1 = data.getString("v1");
-        var rawV2 = data.getString("v2");
+	override function handleEvent(data) {
+		var rawV1 = data.getString("v1");
+		var rawV2 = data.getString("v2");
 
-        speed = (rawV1 == null || rawV1 == "") ? 3.5 : Std.parseFloat(rawV1);
-        position = (rawV2 == null || rawV2 == "") ? 10 : Std.parseFloat(rawV2);
+		speed = (rawV1 == null || rawV1 == "") ? 3.5 : Std.parseFloat(rawV1);
+		position = (rawV2 == null || rawV2 == "") ? 10 : Std.parseFloat(rawV2);
 
-        var fixes = ModuleHandler.getModule('CameraMovementFixes');
-        if (fixes != null) {
-            fixes.scriptSet('sped', speed);
-            fixes.scriptSet('offset', position);
-            fixes.scriptSet('active', true);
-        }
-    }
+		var fixes = ModuleHandler.getModule('CameraMovementFixes');
+		if (fixes != null) {
+			fixes.scriptSet('sped', speed);
+			fixes.scriptSet('offset', position);
+			fixes.scriptSet('active', true);
+		}
+	}
 
-    override function getTitle() {
-        return eventTitle;
-    }
+	override function getTitle() {
+		return eventTitle;
+	}
 
-    override function getEventSchema() {
-        return [
-            {
-                name: 'v1',
-                title: 'Camera Speed',
-                defaultValue: 3.5,
-                step: 0.25,
-                type: "float"
-            },
-            {
-                name: 'v2',
-                title: 'Camera Movement Offset',
-                defaultValue: 10,
-                step: 0.5,
-                type: "float"
-            }
-        ];
-    }
+	override function getEventSchema() {
+		return [
+			{
+				name: 'v1',
+				title: 'Camera Speed',
+				defaultValue: 3.5,
+				step: 0.25,
+				type: "float"
+			},
+			{
+				name: 'v2',
+				title: 'Camera Movement Offset',
+				defaultValue: 10,
+				step: 0.5,
+				type: "float"
+			}
+		];
+	}
 }

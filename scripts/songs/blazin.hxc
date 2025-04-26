@@ -222,8 +222,8 @@ class BlazinSong extends Song {
 	}
 
 	public function onSongEvent(event):Void 
-    {
-        super.onSongEvent(event);
+	{
+		super.onSongEvent(event);
 
 		var darnell = PlayState.instance.currentStage.getDad();
 		var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
@@ -236,13 +236,13 @@ class BlazinSong extends Song {
 			PlayState.instance.iconP1,
 			PlayState.instance.iconP2
 		];
-        
+		
 		if (event.eventData.eventKind == 'BlazinEvent') {
 			var ev = event.eventData.value;
 
 			switch (Std.int(ev.blazinType))
 			{
-                case 0: // begin song fully black, tween to clear
+				case 0: // begin song fully black, tween to clear
 					FlxTween.tween(startblack, {alpha: 0}, 10, {ease: FlxEase.linear});
 				case 1: // fade HUD in
 					for (element in hudElements) {
@@ -263,7 +263,7 @@ class BlazinSong extends Song {
 					fakeDarnell.visible = false;
 			}
 		}
-    }
+	}
 
 	function hideOpponentStrumline()
 	{
@@ -279,7 +279,7 @@ class BlazinSong extends Song {
 
 	function centerPlayerStrumline()
 	{
-    // This is a song gimmick we are never making middlescroll an option.
+	// This is a song gimmick we are never making middlescroll an option.
 
 		var playerStrumline:FlxSprite = PlayState.instance.playerStrumline;
 		if (playerStrumline != null)
@@ -288,16 +288,16 @@ class BlazinSong extends Song {
 		}
 	}
 
-  public override function onSongEnd(event:CountdownScriptEvent):Void {
+public override function onSongEnd(event:CountdownScriptEvent):Void {
 		super.onSongEnd(event);
 
 		// Keep the cutscene from playing outside of story mode.
-    if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+	if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
 
-    if (!hasPlayedCutscene) {
-      trace('Pausing ending to play a video cutscene (`blazin`)');
+	if (!hasPlayedCutscene) {
+	trace('Pausing ending to play a video cutscene (`blazin`)');
 
-      hasPlayedCutscene = true;
+	hasPlayedCutscene = true;
 
 			// Add a black background behind the cutscene to fix a transition bug!
 			trace('Adding black background behind cutscene over UI');
@@ -308,19 +308,19 @@ class BlazinSong extends Song {
 			PlayState.instance.add(bgSprite);
 			PlayState.instance.refresh();
 
-      event.cancel(); // CANCEL THE COUNTDOWN!
+	event.cancel(); // CANCEL THE COUNTDOWN!
 
-      startVideo();
-    } else {
+	startVideo();
+	} else {
 			// Make sure the cutscene can play again next time!
 			hasPlayedCutscene = false;
 			// DO NOT CANCEL THE EVENT!
 		}
 	}
 
-  function startVideo() {
+function startVideo() {
 		VideoCutscene.play(Paths.videos('blazinCutscene'), CutsceneType.ENDING);
 		// This will call onSongEnd() again so make sure the flag is set!
 		hasPlayedCutscene = true;
-  }
+}
 }

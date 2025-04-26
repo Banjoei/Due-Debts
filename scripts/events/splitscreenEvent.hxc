@@ -148,13 +148,13 @@ class SplitScreenModule extends ScriptedModule {
 		FlxTween.cancelTweensOf(camLeft);
 		FlxTween.cancelTweensOf(camRight);
 
-        if (!swapped) {
-            camLeft.x = -(FlxG.width / 2);
-            camRight.x = FlxG.width;
-        } else {
-            camRight.x = -(FlxG.width / 2);
-            camLeft.x = FlxG.width;
-        }        
+		if (!swapped) {
+			camLeft.x = -(FlxG.width / 2);
+			camRight.x = FlxG.width;
+		} else {
+			camRight.x = -(FlxG.width / 2);
+			camLeft.x = FlxG.width;
+		}        
 
 		var camA = swapped ? camRight : camLeft;
 		var camB = swapped ? camLeft : camRight;
@@ -182,58 +182,58 @@ class SplitScreenModule extends ScriptedModule {
 		camRight.snapToTarget();
 	}
 
-    public function applySplitZoom(data:Dynamic) {
+	public function applySplitZoom(data:Dynamic) {
 		if (!shouldRun) return;
 
-        var zoom:Float = data.zoom ?? 1.0;
-        var durationSteps:Float = data.duration ?? 4.0;
-        var easeName:String = data.ease ?? 'linear';
-        var mode:String = data.mode ?? 'stage';
+		var zoom:Float = data.zoom ?? 1.0;
+		var durationSteps:Float = data.duration ?? 4.0;
+		var easeName:String = data.ease ?? 'linear';
+		var mode:String = data.mode ?? 'stage';
 
-        var stageZoom = FlxCamera.defaultZoom;
-        var targetZoom:Float = zoom * (mode == "direct" ? 1.0 : stageZoom);
-    
-        var easeFunction = switch (easeName.toLowerCase()) {
-            case "linear": FlxEase.linear;
-            case "sinein": FlxEase.sineIn;
-            case "sineout": FlxEase.sineOut;
-            case "sineinout": FlxEase.sineInOut;
-            case "quadin": FlxEase.quadIn;
-            case "quadout": FlxEase.quadOut;
-            case "quadinout": FlxEase.quadInOut;
-            case "cubein": FlxEase.cubeIn;
-            case "cubeout": FlxEase.cubeOut;
-            case "cubeinout": FlxEase.cubeInOut;
-            case "quartin": FlxEase.quartIn;
-            case "quartout": FlxEase.quartOut;
-            case "quartinout": FlxEase.quartInOut;
-            case "quintin": FlxEase.quintIn;
-            case "quintout": FlxEase.quintOut;
-            case "quintinout": FlxEase.quintInOut;
-            case "expoin": FlxEase.expoIn;
-            case "expoout": FlxEase.expoOut;
-            case "expoinout": FlxEase.expoInOut;
-            case "smoothstepin": FlxEase.smoothStepIn;
-            case "smoothstepout": FlxEase.smoothStepOut;
-            case "smoothstepinout": FlxEase.smoothStepInOut;
-            case "elasticin": FlxEase.elasticIn;
-            case "elasticout": FlxEase.elasticOut;
-            case "elasticinout": FlxEase.elasticInOut;
-            default:
-                trace('Invalid ease: $easeName. Defaulting to linear.');
-                FlxEase.linear;
-        };        
-    
-        var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
+		var stageZoom = FlxCamera.defaultZoom;
+		var targetZoom:Float = zoom * (mode == "direct" ? 1.0 : stageZoom);
+	
+		var easeFunction = switch (easeName.toLowerCase()) {
+			case "linear": FlxEase.linear;
+			case "sinein": FlxEase.sineIn;
+			case "sineout": FlxEase.sineOut;
+			case "sineinout": FlxEase.sineInOut;
+			case "quadin": FlxEase.quadIn;
+			case "quadout": FlxEase.quadOut;
+			case "quadinout": FlxEase.quadInOut;
+			case "cubein": FlxEase.cubeIn;
+			case "cubeout": FlxEase.cubeOut;
+			case "cubeinout": FlxEase.cubeInOut;
+			case "quartin": FlxEase.quartIn;
+			case "quartout": FlxEase.quartOut;
+			case "quartinout": FlxEase.quartInOut;
+			case "quintin": FlxEase.quintIn;
+			case "quintout": FlxEase.quintOut;
+			case "quintinout": FlxEase.quintInOut;
+			case "expoin": FlxEase.expoIn;
+			case "expoout": FlxEase.expoOut;
+			case "expoinout": FlxEase.expoInOut;
+			case "smoothstepin": FlxEase.smoothStepIn;
+			case "smoothstepout": FlxEase.smoothStepOut;
+			case "smoothstepinout": FlxEase.smoothStepInOut;
+			case "elasticin": FlxEase.elasticIn;
+			case "elasticout": FlxEase.elasticOut;
+			case "elasticinout": FlxEase.elasticInOut;
+			default:
+				trace('Invalid ease: $easeName. Defaulting to linear.');
+				FlxEase.linear;
+		};        
+	
+		var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
 
-        FlxTween.cancelTweensOf(camLeft);
-        FlxTween.cancelTweensOf(camRight);
-        FlxTween.tween(camLeft, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
-        FlxTween.tween(camRight, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
-        
-        camLeftZoom = targetZoom;
-        camRightZoom = targetZoom;
-    }
+		FlxTween.cancelTweensOf(camLeft);
+		FlxTween.cancelTweensOf(camRight);
+		FlxTween.tween(camLeft, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
+		FlxTween.tween(camRight, { zoom: targetZoom }, durationSeconds, { ease: easeFunction });
+		
+		camLeftZoom = targetZoom;
+		camRightZoom = targetZoom;
+	}
 
 	override function onUpdate(elapsed:Float) {
 		if (!shouldRun) return;

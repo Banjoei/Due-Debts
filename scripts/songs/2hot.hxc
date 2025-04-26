@@ -34,10 +34,10 @@ class TwoHOTSong extends Song
 
 	var boomdark:FunkinSprite;
 	var darkness:FunkinSprite;
-    var deadOrAlive:FunkinSprite;
-    var doa:FunkinSprite;
-    var doa2:FunkinSprite;
-    var doa3:FunkinSprite;
+	var deadOrAlive:FunkinSprite;
+	var doa:FunkinSprite;
+	var doa2:FunkinSprite;
+	var doa3:FunkinSprite;
 
 	function onCreate(event:ScriptEvent):Void
 	{
@@ -46,58 +46,58 @@ class TwoHOTSong extends Song
 		if (PlayState.instance.currentVariation == 'bf') {
 			PlayState.instance.cameraFollowPoint.setPosition(1526.5, 808.5);
 
-            boomdark = new FunkinSprite(-1000, -1000);
-            boomdark.makeSolidColor(FlxG.width + 10000, FlxG.height + 10000, 0xFF000000);
-            boomdark.updateHitbox();
-            boomdark.scrollFactor.set();
-            boomdark.alpha = 0;
-            boomdark.zIndex = 200;
-            boomdark.cameras = [PlayState.instance.camGame];
-            PlayState.instance.currentStage.add(boomdark);
+			boomdark = new FunkinSprite(-1000, -1000);
+			boomdark.makeSolidColor(FlxG.width + 10000, FlxG.height + 10000, 0xFF000000);
+			boomdark.updateHitbox();
+			boomdark.scrollFactor.set();
+			boomdark.alpha = 0;
+			boomdark.zIndex = 200;
+			boomdark.cameras = [PlayState.instance.camGame];
+			PlayState.instance.currentStage.add(boomdark);
 
-            darkness = new FunkinSprite(-1000, -1000);
-            darkness.makeSolidColor(FlxG.width + 10000, FlxG.height + 10000, 0xFF000000);
-            darkness.updateHitbox();
-            darkness.scrollFactor.set();
-            darkness.alpha = 0;
-            darkness.zIndex = 19999;
-            darkness.cameras = [PlayState.instance.camGame];
-            PlayState.instance.currentStage.add(darkness);
+			darkness = new FunkinSprite(-1000, -1000);
+			darkness.makeSolidColor(FlxG.width + 10000, FlxG.height + 10000, 0xFF000000);
+			darkness.updateHitbox();
+			darkness.scrollFactor.set();
+			darkness.alpha = 0;
+			darkness.zIndex = 19999;
+			darkness.cameras = [PlayState.instance.camGame];
+			PlayState.instance.currentStage.add(darkness);
 
-            doa = new FunkinSprite(0, 210);
-            doa.makeSolidColor(FlxG.width, FlxG.height, 0xFF000000);
-            doa.scrollFactor.set();
-            doa.alpha = 1;
-            doa.cameras = [PlayState.instance.camHUD];
-            doa.visible = false;
-            PlayState.instance.add(doa);
+			doa = new FunkinSprite(0, 210);
+			doa.makeSolidColor(FlxG.width, FlxG.height, 0xFF000000);
+			doa.scrollFactor.set();
+			doa.alpha = 1;
+			doa.cameras = [PlayState.instance.camHUD];
+			doa.visible = false;
+			PlayState.instance.add(doa);
 
-            doa2 = new FunkinSprite(750, 0);
-            doa2.makeSolidColor(FlxG.width, FlxG.height, 0xFF000000);
-            doa2.scrollFactor.set();
-            doa2.alpha = 1;
-            doa2.cameras = [PlayState.instance.camHUD];
-            doa2.visible = false;
-            PlayState.instance.add(doa2);
+			doa2 = new FunkinSprite(750, 0);
+			doa2.makeSolidColor(FlxG.width, FlxG.height, 0xFF000000);
+			doa2.scrollFactor.set();
+			doa2.alpha = 1;
+			doa2.cameras = [PlayState.instance.camHUD];
+			doa2.visible = false;
+			PlayState.instance.add(doa2);
 
-            doa3 = new FunkinSprite(0, 400);
-            doa3.makeSolidColor(270, 400, 0xFF000000);
-            doa3.scrollFactor.set();
-            doa3.alpha = 1;
-            doa3.cameras = [PlayState.instance.camHUD];
-            doa3.visible = false;
-            PlayState.instance.add(doa3);
+			doa3 = new FunkinSprite(0, 400);
+			doa3.makeSolidColor(270, 400, 0xFF000000);
+			doa3.scrollFactor.set();
+			doa3.alpha = 1;
+			doa3.cameras = [PlayState.instance.camHUD];
+			doa3.visible = false;
+			PlayState.instance.add(doa3);
 
-            deadOrAlive = new FunkinSprite(0, 0);
-            deadOrAlive.loadGraphic(Paths.image('phillyStreets/2hot/deadOrAlive'));
-            deadOrAlive.scrollFactor.set();
-            deadOrAlive.cameras = [PlayState.instance.camHUD];
-            deadOrAlive.visible = false;
-            PlayState.instance.add(deadOrAlive);
+			deadOrAlive = new FunkinSprite(0, 0);
+			deadOrAlive.loadGraphic(Paths.image('phillyStreets/2hot/deadOrAlive'));
+			deadOrAlive.scrollFactor.set();
+			deadOrAlive.cameras = [PlayState.instance.camHUD];
+			deadOrAlive.visible = false;
+			PlayState.instance.add(deadOrAlive);
 
-            var bf = PlayState.instance.currentStage.getBoyfriend();
+			var bf = PlayState.instance.currentStage.getBoyfriend();
 
-            var fakeExp = new StageProp();
+			var fakeExp = new StageProp();
 			fakeExp.loadSparrow('phillyStreets/spraypaintExplosionEZ');
 			fakeExp.setPosition(bf.x - 400, bf.y - 300);
 			fakeExp.animation.addByPrefix('BOOM', 'explosion round 1 short0', 24, false);
@@ -106,77 +106,77 @@ class TwoHOTSong extends Song
 			fakeExp.name = 'fakeExp';
 			PlayState.instance.currentStage.addProp(fakeExp, 'fakeExp');
 
-            var fakeDeath = new StageProp();
-            fakeDeath.loadSparrow('characters/BOYFRIEND_DEAD');
-            fakeDeath.setPosition(bf.x - 20 - 37, bf.y + 11);
-            fakeDeath.animation.addByPrefix('BF dies', 'BF dies', 24, false);
-            fakeDeath.animation.addByPrefix('BF Dead confirm', 'BF Dead confirm', 24, false);
-            fakeDeath.animation.addByPrefix('BF Dead Loop', 'BF Dead Loop', 24, true);
-            fakeDeath.zIndex = 20000;
-            fakeDeath.visible = false;
+			var fakeDeath = new StageProp();
+			fakeDeath.loadSparrow('characters/BOYFRIEND_DEAD');
+			fakeDeath.setPosition(bf.x - 20 - 37, bf.y + 11);
+			fakeDeath.animation.addByPrefix('BF dies', 'BF dies', 24, false);
+			fakeDeath.animation.addByPrefix('BF Dead confirm', 'BF Dead confirm', 24, false);
+			fakeDeath.animation.addByPrefix('BF Dead Loop', 'BF Dead Loop', 24, true);
+			fakeDeath.zIndex = 20000;
+			fakeDeath.visible = false;
 			fakeDeath.name = 'fakeDeath';
-            PlayState.instance.currentStage.addProp(fakeDeath, 'fakeDeath');
+			PlayState.instance.currentStage.addProp(fakeDeath, 'fakeDeath');
 
 			PlayState.instance.currentStage.refresh();
-        }
+		}
 	}
 
 	override function onStepHit(event:NoteHitScriptEvent):Void {
-        super.onStepHit(event);
-        if (PlayState.instance.currentVariation != 'bf') return;
+		super.onStepHit(event);
+		if (PlayState.instance.currentVariation != 'bf') return;
 
-        var step = Conductor.instance.currentStep;
+		var step = Conductor.instance.currentStep;
 
-        switch (step) {
-            case 1024:
-                doa.visible = doa2.visible = doa3.visible = deadOrAlive.visible = true;
-            case 1026:
-                doa.y = 380;
-            case 1028:
-                doa.x = 270;
-                doa3.y = 530;
-            case 1030:
-                doa2.kill();
-            case 1032:
-                doa3.kill();
-            case 1034:
-                doa.x = 700;
-            case 1036:
-                doa.kill();
-            case 1040:
-                FlxTween.tween(deadOrAlive.scale, {x: 4, y: 4}, 0.1);
-                FlxTween.tween(deadOrAlive, {alpha: 0}, 0.1);
-            case 1050:
-                deadOrAlive.kill();
-            case 1584:
+		switch (step) {
+			case 1024:
+				doa.visible = doa2.visible = doa3.visible = deadOrAlive.visible = true;
+			case 1026:
+				doa.y = 380;
+			case 1028:
+				doa.x = 270;
+				doa3.y = 530;
+			case 1030:
+				doa2.kill();
+			case 1032:
+				doa3.kill();
+			case 1034:
+				doa.x = 700;
+			case 1036:
+				doa.kill();
+			case 1040:
+				FlxTween.tween(deadOrAlive.scale, {x: 4, y: 4}, 0.1);
+				FlxTween.tween(deadOrAlive, {alpha: 0}, 0.1);
+			case 1050:
+				deadOrAlive.kill();
+			case 1584:
 				var can = getNextCanWithState(STATE_ARCING);
 				PlayState.instance.camHUD.visible = false;
-                var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
-                var fakeExp = PlayState.instance.currentStage.getNamedProp('fakeExp');
-                fakeDeath.visible = true;
-                fakeExp.visible = true;
-                fakeExp.animation.play('BOOM', true);
+				var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
+				var fakeExp = PlayState.instance.currentStage.getNamedProp('fakeExp');
+				fakeDeath.visible = true;
+				fakeExp.visible = true;
+				fakeExp.animation.play('BOOM', true);
 				fakeDeath.animation.play('BF dies', false);
-                darkness.alpha = 1;
-                boomdark.alpha = 0.6;
-            case 1616:
-                var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
-                fakeDeath.animation.play('BF Dead Loop', true);
-                fakeDeath.y += 6;
-                FlxTween.tween(FlxG.camera, {zoom: 0.9}, 10, {ease: FlxEase.sineInOut});
-            case 1728:
-                var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
-                fakeDeath.animation.play('BF Dead confirm', false);
-                fakeDeath.y -= 64;
-            case 1738:
-                PlayState.instance.currentStage.getNamedProp('fakeDeath').kill();
-                PlayState.instance.currentStage.getNamedProp('fakeExp').kill();
+				darkness.alpha = 1;
+				boomdark.alpha = 0.6;
+			case 1616:
+				var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
+				fakeDeath.animation.play('BF Dead Loop', true);
+				fakeDeath.y += 6;
+				FlxTween.tween(FlxG.camera, {zoom: 0.9}, 10, {ease: FlxEase.sineInOut});
+			case 1728:
+				var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
+				fakeDeath.animation.play('BF Dead confirm', false);
+				fakeDeath.y -= 64;
+			case 1738:
+				PlayState.instance.currentStage.getNamedProp('fakeDeath').kill();
+				PlayState.instance.currentStage.getNamedProp('fakeExp').kill();
 				PlayState.instance.camHUD.visible = true;
-            case 1744:
-                FlxTween.tween(FlxG.camera, {zoom: 0.65}, 10, {ease: FlxEase.sineInOut});
-                FlxTween.tween(darkness, {alpha: 0}, 10);
-        }
-    }
+			case 1744:
+				FlxTween.tween(FlxG.camera, {zoom: 0.65}, 10, {ease: FlxEase.sineInOut});
+				FlxTween.tween(darkness, {alpha: 0}, 10);
+		}
+	}
 
 	/**
 	 * Health lost when hit by can.
@@ -206,16 +206,16 @@ class TwoHOTSong extends Song
 
 	public override function onSongEnd(event:CountdownScriptEvent):Void {
 		super.onSongEnd(event);
-    if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+	if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
 
-    if (!hasPlayedCutscene) {
-      hasPlayedCutscene = true;
+	if (!hasPlayedCutscene) {
+	hasPlayedCutscene = true;
 
-      event.cancel();
+	event.cancel();
 
 			// start the video cutscene and hide it so the other stuff can happen after
-      startCutscene();
-    } else {
+	startCutscene();
+	} else {
 			// Make sure the cutscene can play again next time!
 			hasPlayedCutscene = false;
 			// DO NOT CANCEL THE EVENT!
@@ -278,7 +278,7 @@ class TwoHOTSong extends Song
 
 	function startVideo() {
 		VideoCutscene.play(Paths.videos('2hotCutscene'), CutsceneType.ENDING);
-  }
+}
 
 	function removeCans()
 	{
@@ -312,7 +312,7 @@ class TwoHOTSong extends Song
 	function onNoteHit(event:HitNoteScriptEvent)
 	{
 		super.onNoteHit(event);
-    if (PlayState.instance.currentStage == null) return;
+	if (PlayState.instance.currentStage == null) return;
 
 		switch (event.note.kind)
 		{

@@ -6,9 +6,9 @@ import funkin.play.PlayState;
 
 class SpraycanErectAtlasSprite extends FlxAtlasSprite
 {
-	public var STATE_ARCING:Int = 2; // In the air.
-	public var STATE_SHOT:Int = 3; // Hit by the player.
-	public var STATE_IMPACTED:Int = 4; // Impacted the player.
+  public var STATE_ARCING:Int = 2; // In the air.
+  public var STATE_SHOT:Int = 3; // Hit by the player.
+  public var STATE_IMPACTED:Int = 4; // Impacted the player.
 
   public var currentState:Int = 2;
 
@@ -40,11 +40,11 @@ class SpraycanErectAtlasSprite extends FlxAtlasSprite
 
   public function playHitExplosion():Void {
     var explodeEZ:FunkinSprite = FunkinSprite.createSparrow(this.x + 1050, this.y + 150, "spraypaintExplosionEZ");
-		explodeEZ.animation.addByPrefix("idle", "explosion round 1 short0", 24, false);
-		explodeEZ.animation.play("idle");
+    explodeEZ.animation.addByPrefix("idle", "explosion round 1 short0", 24, false);
+    explodeEZ.animation.play("idle");
 
-		PlayState.instance.currentStage.add(explodeEZ);
-		explodeEZ.animation.finishCallback = () -> {
+    PlayState.instance.currentStage.add(explodeEZ);
+    explodeEZ.animation.finishCallback = () -> {
       explodeEZ.kill();
     };
   }

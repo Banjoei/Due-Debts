@@ -30,9 +30,9 @@ class CinematicNoteModule extends ScriptedModule
 
     override function onSongLoaded(event:SongLoadScriptEvent):Void {
         if (event.events != null) {
-		    shouldRun = event.events.filter(data -> return data.eventKind == "CinimaticNotes").length > 0;
+            shouldRun = event.events.filter(data -> return data.eventKind == "CinimaticNotes").length > 0;
         }
-	}
+    }
 
     public function applyCinematic(enable:Bool, ease:String):Void
     {
@@ -144,24 +144,24 @@ class CinematicNoteModule extends ScriptedModule
     }
 
     override function onUpdate(delta:Float):Void {
-		super.onUpdate(delta);
-		if (!shouldRun) return;
+        super.onUpdate(delta);
+        if (!shouldRun) return;
 
-		var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+        var goalAlpha:Float = cinematicEnabled ? 0 : 1;
 
-		if (cinematicEnabled) {
-			if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-			var player:Strumline = PlayState.instance.playerStrumline;
-			if (player == null) return;
+        if (cinematicEnabled) {
+            if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+            var player:Strumline = PlayState.instance.playerStrumline;
+            if (player == null) return;
 
-			if (player.noteHoldCovers != null && player.noteHoldCovers.members != null) {
-				for (n in player.noteHoldCovers.members) {
-					if (n != null && n.alive)
-						n.alpha = goalAlpha;
-				}
-			}
-		}
-	}
+            if (player.noteHoldCovers != null && player.noteHoldCovers.members != null) {
+                for (n in player.noteHoldCovers.members) {
+                    if (n != null && n.alive)
+                        n.alpha = goalAlpha;
+                }
+            }
+        }
+    }
 }
 
 class CinematicNotesEvent extends SongEvent

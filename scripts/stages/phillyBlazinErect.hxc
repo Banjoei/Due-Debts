@@ -103,7 +103,7 @@ class PhillyBlazinErectStage extends Stage
 		mist0.setPosition(-650, 660);
 		mist0.scrollFactor.set(1.2, 1.2);
 		mist0.zIndex = 10000;
-    	mist0.blend = 0;
+		mist0.blend = 0;
 		mist0.color = 0xFF5c5c5c;
 		mist0.alpha = 0.6;
 		mist0.velocity.x = 172;
@@ -115,7 +115,7 @@ class PhillyBlazinErectStage extends Stage
 		mist1.setPosition(-650, 500);
 		mist1.scrollFactor.set(1.1, 1);
 		mist1.zIndex = 10000;
-    	mist1.blend = 0;
+		mist1.blend = 0;
 		mist1.color = 0xFF5c5c5c;
 		mist1.alpha = 0.6;
 		mist1.velocity.x = 150;
@@ -127,7 +127,7 @@ class PhillyBlazinErectStage extends Stage
 		mist2.setPosition(-650, 540);
 		mist2.scrollFactor.set(1.2, 1.2);
 		mist2.zIndex = 10010;
-    	mist2.blend = 0;
+		mist2.blend = 0;
 		mist2.color = 0xFF5c5c5c;
 		mist2.alpha = 0.8;
 		mist2.velocity.x = -80;
@@ -139,7 +139,7 @@ class PhillyBlazinErectStage extends Stage
 		mist3.setPosition(-650, 230);
 		mist3.scrollFactor.set(0.95, 0.95);
 		mist3.zIndex = 990;
-   		mist3.blend = 0;
+		mist3.blend = 0;
 		mist3.color = 0xFF5c5c5c;
 		mist3.alpha = 0.5;
 		mist3.velocity.x = -50;
@@ -152,7 +152,7 @@ class PhillyBlazinErectStage extends Stage
 		mist4.setPosition(-650, 170);
 		mist4.scrollFactor.set(0.8, 0.8);
 		mist4.zIndex = 880;
-   		mist4.blend = 0;
+		mist4.blend = 0;
 		mist4.color = 0xFF5c5c5c;
 		mist4.alpha = 1;
 		mist4.velocity.x = 40;
@@ -165,7 +165,7 @@ class PhillyBlazinErectStage extends Stage
 		mist5.setPosition(-650, -80);
 		mist5.scrollFactor.set(0.5, 0.5);
 		mist5.zIndex = 390;
-   		mist5.blend = 0;
+		mist5.blend = 0;
 		mist5.color = 0xFF5c5c5c;
 		mist5.alpha = 1;
 		mist5.velocity.x = 20;
@@ -267,7 +267,7 @@ class PhillyBlazinErectStage extends Stage
 			gfShader.saturation = -60;
 
 			PlayState.instance.currentStage.getGirlfriend().shader = gfShader;
-    	}
+		}
 	}
 
 	public function onNoteHit(event:HitNoteScriptEvent) {
@@ -344,7 +344,7 @@ class PhillyBlazinErectStage extends Stage
 		var gf = PlayState.instance.currentStage.getGirlfriend();
 
 		var xTarget:Float = gf.cameraFocusPoint.x;
-    	var yTarget:Float = gf.cameraFocusPoint.y;
+		var yTarget:Float = gf.cameraFocusPoint.y;
 		
 		if (gf.characterID == "gf") {
 			xTarget -= 28;
@@ -352,7 +352,7 @@ class PhillyBlazinErectStage extends Stage
 		}
 		xTarget += 50;
 		yTarget -= 90;
-    PlayState.instance.cameraFollowPoint.setPosition(xTarget, yTarget);
+	PlayState.instance.cameraFollowPoint.setPosition(xTarget, yTarget);
 		PlayState.instance.resetCamera();
 
 		PlayState.instance.comboPopUps.offsets = [480, -50];

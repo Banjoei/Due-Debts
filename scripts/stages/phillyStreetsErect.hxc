@@ -59,9 +59,9 @@ class PhillyStreetsErectStage extends Stage
 	}
 
 	/**
-  * Changes the current state of the traffic lights.
+ * Changes the current state of the traffic lights.
 	* Updates the next change accordingly and will force cars to move when ready
-  */
+*/
 	function changeLights(beat:Int):Void{
 
 		lastChange = beat;
@@ -79,8 +79,8 @@ class PhillyStreetsErectStage extends Stage
 	}
 
 	/**
-  * Resets every value of a car and hides it from view.
-  */
+ * Resets every value of a car and hides it from view.
+ */
 	function resetCar(left:Bool, right:Bool){
 		if(left){
 			carWaiting = false;
@@ -191,7 +191,7 @@ class PhillyStreetsErectStage extends Stage
 		mist0.setPosition(-650, -100);
 		mist0.scrollFactor.set(1.2, 1.2);
 		mist0.zIndex = 1000;
-    mist0.blend = 0;
+	mist0.blend = 0;
 		mist0.color = 0xFF5c5c5c;
 		mist0.alpha = 0.6;
 		mist0.velocity.x = 172;
@@ -203,7 +203,7 @@ class PhillyStreetsErectStage extends Stage
 		mist1.setPosition(-650, -100);
 		mist1.scrollFactor.set(1.1, 1.1);
 		mist1.zIndex = 1000;
-    mist1.blend = 0;
+	mist1.blend = 0;
 		mist1.color = 0xFF5c5c5c;
 		mist1.alpha = 0.6;
 		mist1.velocity.x = 150;
@@ -215,7 +215,7 @@ class PhillyStreetsErectStage extends Stage
 		mist2.setPosition(-650, -100);
 		mist2.scrollFactor.set(1.2, 1.2);
 		mist2.zIndex = 1001;
-    mist2.blend = 0;
+	mist2.blend = 0;
 		mist2.color = 0xFF5c5c5c;
 		mist2.alpha = 0.8;
 		mist2.velocity.x = -80;
@@ -227,7 +227,7 @@ class PhillyStreetsErectStage extends Stage
 		mist3.setPosition(-650, -100);
 		mist3.scrollFactor.set(0.95, 0.95);
 		mist3.zIndex = 99;
-   	mist3.blend = 0;
+	mist3.blend = 0;
 		mist3.color = 0xFF5c5c5c;
 		mist3.alpha = 0.5;
 		mist3.velocity.x = -50;
@@ -240,7 +240,7 @@ class PhillyStreetsErectStage extends Stage
 		mist4.setPosition(-650, -100);
 		mist4.scrollFactor.set(0.8, 0.8);
 		mist4.zIndex = 88;
-   	mist4.blend = 0;
+	mist4.blend = 0;
 		mist4.color = 0xFF5c5c5c;
 		mist4.alpha = 1;
 		mist4.velocity.x = 40;
@@ -253,7 +253,7 @@ class PhillyStreetsErectStage extends Stage
 		mist5.setPosition(-650, -100);
 		mist5.scrollFactor.set(0.5, 0.5);
 		mist5.zIndex = 39;
-   	mist5.blend = 0;
+	mist5.blend = 0;
 		mist5.color = 0xFF5c5c5c;
 		mist5.alpha = 1;
 		mist5.velocity.x = 20;
@@ -277,9 +277,9 @@ class PhillyStreetsErectStage extends Stage
 	}
 
 	/**
-  * Drive the car away from the lights to the end of the road.
+ * Drive the car away from the lights to the end of the road.
 	* Used when the lights turn green and the car is waiting in position.
-  */
+*/
 	function finishCarLights(sprite:FlxSprite):Void{
 		carWaiting = false;
 		var duration:Float = FlxG.random.float(1.8, 3);
@@ -295,19 +295,19 @@ class PhillyStreetsErectStage extends Stage
 
 		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.sineIn, startDelay: startdelay} );
 		FlxTween.quadPath(sprite, path, duration, true,
-    {
-      ease: FlxEase.sineIn,
+	{
+	ease: FlxEase.sineIn,
 			startDelay: startdelay,
 			onComplete: function(_) {
-            carInterruptable = true;
-      }
-    });
+			carInterruptable = true;
+	}
+	});
 	}
 
 	/**
-  * Drives a car towards the lights and stops.
+ * Drives a car towards the lights and stops.
 	* Used when a car tries to drive while the lights are red.
-  */
+*/
 	function driveCarLights(sprite:FlxSprite):Void{
 		carInterruptable = false;
 		FlxTween.cancelTweensOf(sprite);
@@ -341,23 +341,23 @@ class PhillyStreetsErectStage extends Stage
 		// debug shit!!! keeping it here just in case
 		// for(point in path){
 		// 	var debug:FlxSprite = new FlxSprite(point.x - 5, point.y - 5).makeGraphic(10, 10, 0xFFFF0000);
-    // 	add(debug);
+	// 	add(debug);
 		// }
 		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.cubeOut} );
 		FlxTween.quadPath(sprite, path, duration, true,
-    {
-      ease: FlxEase.cubeOut,
+	{
+	ease: FlxEase.cubeOut,
 			onComplete: function(_) {
-            carWaiting = true;
+			carWaiting = true;
 						if(lightsStop == false) finishCarLights(getNamedProp('phillyCars'));
-      }
-    });
+	}
+	});
 	}
 
 	/**
-  * Drives a car across the screen without stopping.
+ * Drives a car across the screen without stopping.
 	* Used when the lights are green.
-  */
+*/
 	function driveCar(sprite:FlxSprite):Void{
 		carInterruptable = false;
 		FlxTween.cancelTweensOf(sprite);
@@ -396,12 +396,12 @@ class PhillyStreetsErectStage extends Stage
 
 		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null );
 		FlxTween.quadPath(sprite, path, duration, true,
-      {
-        ease: null,
+	{
+		ease: null,
 				onComplete: function(_) {
-      	  carInterruptable = true;
-      	}
-    });
+		carInterruptable = true;
+		}
+	});
 	}
 
 	function driveCarBack(sprite:FlxSprite):Void{
@@ -443,17 +443,17 @@ class PhillyStreetsErectStage extends Stage
 
 		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null );
 		FlxTween.quadPath(sprite, path, duration, true,
-      {
-        ease: null,
+	{
+		ease: null,
 				onComplete: function(_) {
-      	  car2Interruptable = true;
-      	}
-    });
+		car2Interruptable = true;
+		}
+	});
 	}
 
 	/**
-  * Resets the values tied to the lights that need to be accounted for on a restart.
-  */
+ * Resets the values tied to the lights that need to be accounted for on a restart.
+ */
 	function resetStageValues():Void{
 		lastChange = 0;
 		changeInterval = 8;
@@ -503,22 +503,22 @@ class PhillyStreetsErectStage extends Stage
 		if(scrollingSky != null) scrollingSky.scrollX -= FlxG.elapsed * 22;
 
 		if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null){
-      	  PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
-		  PlayState.instance.currentStage.getGirlfriend().shader = colorShader;
-		  PlayState.instance.currentStage.getDad().shader = colorShader;
-		  if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+		PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
+		PlayState.instance.currentStage.getGirlfriend().shader = colorShader;
+		PlayState.instance.currentStage.getDad().shader = colorShader;
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
 			PlayState.instance.currentStage.getNamedProp('spraycanPile').shader = colorShader;
 			if (PlayState.instance.currentStage.getNamedProp('spraycanPile') != null) {
 				PlayState.instance.currentStage.getNamedProp('spraycanPile').shader = colorShader;
 			}
-		  }
-		  
+		}
+		
 
-		  colorShader.hue = -5;
-		  colorShader.saturation = -40;
-		  colorShader.contrast = -25;
-		  colorShader.brightness = -20;
-    }
+		colorShader.hue = -5;
+		colorShader.saturation = -40;
+		colorShader.contrast = -25;
+		colorShader.brightness = -20;
+	}
 
 		// if (rainSndAmbience != null) {
 		// 	rainSndAmbience.volume = Math.min(0.3, remappedIntensityValue * 2);
@@ -665,7 +665,7 @@ class PhillyStreetsErectStage extends Stage
 		}
 	}
 
-  override function addCharacter(character:BaseCharacter, charType:CharacterType)
+override function addCharacter(character:BaseCharacter, charType:CharacterType)
 	{
 		super.addCharacter(character, charType);
 		// add to the mask so that characters hide puddles

@@ -19,7 +19,7 @@ class LyricsEvent extends SongEvent {
 		return 'Lyrics';
 	}
 
-    public override function handleEvent(data) {}
+	public override function handleEvent(data) {}
 
 	override public function getEventSchema():Array<Dynamic> {
 		return [

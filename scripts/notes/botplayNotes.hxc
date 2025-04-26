@@ -13,27 +13,27 @@ import funkin.modding.events.ScriptEventDispatcher;
 import funkin.util.Constants;
 
 class BotplayNotesModule extends Module {
-	public function new() {
-		super("BotplayNotesModule");
-	}
+    public function new() {
+        super("BotplayNotesModule");
+    }
 
     var injected:Bool = false;
 
-	override function onUpdate(event) {
-		super.onUpdate(event);
+    override function onUpdate(event) {
+        super.onUpdate(event);
 
         if (!injected && Std.isOfType(FlxG.state, ChartEditorState)) {
-			injected = true;
-			ChartEditorDropdowns.NOTE_KINDS.set('botplayNote', 'Botplay Note');
-		}
+            injected = true;
+            ChartEditorDropdowns.NOTE_KINDS.set('botplayNote', 'Botplay Note');
+        }
 
-		if (FlxG.sound.music == null) return;
-		if (PlayState.instance == null) return;
+        if (FlxG.sound.music == null) return;
+        if (PlayState.instance == null) return;
 
-		var notesInRange = PlayState.instance.playerStrumline.getNotesMayHit();
-		var songPos = Conductor.instance.songPosition;
+        var notesInRange = PlayState.instance.playerStrumline.getNotesMayHit();
+        var songPos = Conductor.instance.songPosition;
         var notesByDirection = [];
-		for (i in 0...Strumline.KEY_COUNT)
+        for (i in 0...Strumline.KEY_COUNT)
             notesByDirection.push([]);
         var _g = 0;
         while (_g < notesInRange.length) {
@@ -43,19 +43,19 @@ class BotplayNotesModule extends Module {
         }
 
         if(notesInRange.length > 0) {
-			for (direction in notesByDirection) {
-				for (note in direction) {
-					if(note.get_strumTime() <= songPos) {
+            for (direction in notesByDirection) {
+                for (note in direction) {
+                    if(note.get_strumTime() <= songPos) {
                         if (note.kind == "botplayNote") {
-						    emulateGoodNoteHit(note);
+                            emulateGoodNoteHit(note);
                         }
-					}
-				}
-			}
-		}
-	}
+                    }
+                }
+            }
+        }
+    }
 
-	function emulateGoodNoteHit(note:NoteSprite) {
+    function emulateGoodNoteHit(note:NoteSprite) {
         var score = Scoring.scoreNote(0);
         var daRating = 'sick';
         var healthChange = Constants.HEALTH_SICK_BONUS;
@@ -75,9 +75,9 @@ class BotplayNotesModule extends Module {
         playerStrumline.hitNote(note, !isComboBreak);
     
         if(note.holdNoteSprite != null)
-		{
-			playerStrumline.playNoteHoldCover(note.holdNoteSprite);
-		}
+        {
+            playerStrumline.playNoteHoldCover(note.holdNoteSprite);
+        }
 
         for (holdNote in playerStrumline.holdNotes.members) {
             if (holdNote == null || !holdNote.alive) continue;
@@ -107,11 +107,11 @@ class BotplayNotesModule extends Module {
         PlayState.instance.popUpScore(event.judgement);
     }    
 
-	override function dispatchEvent(event:ScriptEvent):Void {
-		ScriptEventDispatcher.callEvent(PlayState.instance.currentStage, event);
-		if (PlayState.instance.currentStage != null)
-			PlayState.instance.currentStage.dispatchToCharacters(event);
-		ScriptEventDispatcher.callEvent(PlayState.instance.currentSong, event);
-		ScriptEventDispatcher.callEvent(PlayState.instance.currentConversation, event);
-	}
+    override function dispatchEvent(event:ScriptEvent):Void {
+        ScriptEventDispatcher.callEvent(PlayState.instance.currentStage, event);
+        if (PlayState.instance.currentStage != null)
+            PlayState.instance.currentStage.dispatchToCharacters(event);
+        ScriptEventDispatcher.callEvent(PlayState.instance.currentSong, event);
+        ScriptEventDispatcher.callEvent(PlayState.instance.currentConversation, event);
+    }
 }

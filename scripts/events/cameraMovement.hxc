@@ -5,6 +5,7 @@ import flixel.FlxCamera;
 import funkin.modding.PolymodErrorHandler;
 import funkin.play.event.SongEvent;
 import funkin.play.event.ScriptedSongEvent;
+import funkin.ui.transition.stickers.StickerSubState;
 import flixel.util.FlxSave;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
@@ -12,82 +13,88 @@ import flixel.tweens.FlxEase;
 import funkin.modding.module.ModuleHandler;
 import funkin.modding.module.ScriptedModule;
 import funkin.data.event.SongEventRegistry;
-import funkin.ui.transition.StickerSubState;
 
 class CameraMovementFixes extends ScriptedModule {
-    public function new(){
-        super('CameraMovementFixes');
-    }
+	public function new(){
+		super('CameraMovementFixes');
+	}
 
-    public var offset:Float = 0;
-    public var sped:Float = 0;
-    public var active:Bool = false;
+	public var offset:Float = 0;
+	public var sped:Float = 0;
+	public var active:Bool = false;
+	public var shouldRun:Bool = false;
 
-    function follow(dir:NoteDirection):Void {
-        if (!active || PlayState.instance == null || PlayState.instance.currentStage == null) return;
-        var x:Float = 0;
-        var y:Float = 0;
-        var coolCam:FlxTimer = new FlxTimer();
-        var cameraSpeed:Float;
-        var bf = PlayState.instance.currentStage.getBoyfriend();
+	override function onSongLoaded(event:SongLoadScriptEvent):Void {
+		if (event.events != null) {
+			shouldRun = event.events.filter(data -> return data.eventKind == "CameraMovement").length > 0;
+		}
+	}
 
-        if (bf == null) return;
+	function follow(dir:NoteDirection):Void {
+		if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null) return;
+		var x:Float = 0;
+		var y:Float = 0;
+		var coolCam:FlxTimer = new FlxTimer();
+		var cameraSpeed:Float;
+		var bf = PlayState.instance.currentStage.getBoyfriend();
 
-        if (dir != null) {
-            if (dir == 0) {
-                x = -offset;
-            } else if (dir == 1) {
-                y = offset;
-            } else if (dir == 2) {
-                y = -offset;
-            } else if (dir == 3) {
-                x = offset;
-            }
-            coolCam.start(
-                Conductor.instance.stepLengthMs * (0.0011) * bf.singTimeSteps,
-                function(timer:FlxTimer):Void {
-                    follow();
-                }
-            );
-            cameraSpeed = sped;
-        } else {
-            coolCam.cancel();
-        }
-        var duration:Float = 1.7 / cameraSpeed + 0.25;
-        if (PlayState.instance.camGame != null) {
-            FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.linear});
-            FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.linear});
-        }
-    }
+		if (bf == null) return;
 
-    public function onSubStateOpenBegin(event):Void {
-        super.onSubStateOpenBegin(event);
+		if (dir != null) {
+			if (dir == 0) x = -offset;
+			else if (dir == 1) y = offset;
+			else if (dir == 2) y = -offset;
+			else if (dir == 3) x = offset;
 
-        if (Std.isOfType(event.targetState, StickerSubState)) {
-            active = false;
-            var offset = 0;
-            var sped = 0;
-        }
-    }
+			coolCam.start(
+				Conductor.instance.stepLengthMs * (0.0011) * bf.singTimeSteps,
+				function(timer:FlxTimer):Void {
+					follow();
+				}
+			);
+			cameraSpeed = sped;
+		} else {
+			coolCam.cancel();
+		}
 
-    override function onNoteHit(event:HitNoteScriptEvent) {
-        if (event.note != null && event.note.noteData != null) {
-            var dir = event.note.noteData.getDirection();
-            follow(dir);
-        }
-    }
+		var duration:Float = 1.7 / cameraSpeed + 0.25;
+		if (PlayState.instance.camGame != null) {
+			FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.linear});
+			FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.linear});
+		}
+	}
 
-    override function onNoteMiss(event:HitNoteScriptEvent) {
-        if (event.note != null && event.note.noteData != null) {
-            var dir = event.note.noteData.getDirection();
-            follow(dir);
-        }
-    }
+	public function onSubStateOpenBegin(event):Void {
+		super.onSubStateOpenBegin(event);
 
-    override function onNoteGhostMiss(event:HitNoteScriptEvent) {
-        var dir = event.dir;
-        follow(dir);
-    }
+		if (Std.isOfType(event.targetState, StickerSubState)) {
+			active = false;
+			offset = 0;
+			sped = 0;
+		}
+	}
+
+	override function onNoteHit(event:HitNoteScriptEvent) {
+		if (!shouldRun) return;
+		if (event.note != null && event.note.noteData != null) {
+			var dir = event.note.noteData.getDirection();
+			follow(dir);
+		}
+	}
+
+	override function onNoteMiss(event:HitNoteScriptEvent) {
+		if (!shouldRun) return;
+		if (event.note != null && event.note.noteData != null) {
+			var dir = event.note.noteData.getDirection();
+			follow(dir);
+		}
+	}
+
+	override function onNoteGhostMiss(event:HitNoteScriptEvent) {
+		if (!shouldRun) return;
+		var dir = event.dir;
+		follow(dir);
+	}
 }
 
 class CameraMovementEvent extends ScriptedSongEvent {

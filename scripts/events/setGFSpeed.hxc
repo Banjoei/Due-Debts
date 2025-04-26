@@ -6,17 +6,26 @@ import funkin.modding.module.ModuleHandler;
 class GFSpeedFixes extends ScriptedModule {
 	public var defaultDanceEvery:Float;
 	public var divisor:Float = 1;
+	public var shouldRun:Bool = false;
 
-    override function onSongLoaded(event:ScriptEvent):Void {
-        if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-        var gf = PlayState.instance.currentStage.getGirlfriend();
+	override function onSongLoaded(event:ScriptEvent):Void {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+
+		if (event.events != null) {
+			shouldRun = event.events.filter(e -> return e.eventKind == "SetGFSpeed").length > 0;
+		}
+		if (!shouldRun) return;
+
+		var gf = PlayState.instance.currentStage.getGirlfriend();
 		if (gf == null) return;
 
-        defaultDanceEvery = gf.danceEvery;
-    }
+		defaultDanceEvery = gf.danceEvery;
+	}
 
 	override function onSongRetry(event:ScriptEvent):Void {
+		if (!shouldRun) return;
 		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+
 		var gf = PlayState.instance.currentStage.getGirlfriend();
 		if (gf == null) return;
 
@@ -24,6 +33,7 @@ class GFSpeedFixes extends ScriptedModule {
 	}
 
 	public function applyDivisor(newDiv:Float) {
+		if (!shouldRun) return;
 		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
 		var gf = PlayState.instance.currentStage.getGirlfriend();

@@ -34,7 +34,7 @@ import funkin.ui.MusicBeatSubState;
 import funkin.ui.MusicBeatState;
 import funkin.modding.base.ScriptedMusicBeatState;
 import funkin.ui.freeplay.FreeplayState;
-import funkin.ui.transition.StickerSubState;
+import funkin.ui.transition.stickers.StickerSubState;
 import funkin.ui.transition.LoadingState;
 import funkin.util.WindowUtil;
 import funkin.util.Constants;
@@ -160,12 +160,11 @@ class blazinDeathSubState extends MusicBeatSubState {
         if (video != null) video.destroy();
         if (sound != null) sound.destroy();
     
-        var targetState:funkin.ui.transition.StickerSubState->FlxState = (sticker) -> FreeplayState.build(sticker);
+        var targetState:funkin.ui.transition.stickers.StickerSubState->FlxState = (sticker) -> FreeplayState.build(sticker);
     
-        PlayState.instance.openSubState(new funkin.ui.transition.StickerSubState({
+        PlayState.instance.openSubState(new funkin.ui.transition.stickers.StickerSubState({
             targetState: targetState,
-            stickerSet: "stickers-set-1",
-            stickerPack: "all"
+            stickerPack: "standard-bf"
         }));
     }
     

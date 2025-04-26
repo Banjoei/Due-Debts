@@ -1,12 +1,16 @@
 {
-  "title": "Due Debts",
-  "description": "An introductory mod.",
+  "title": "Due Debts (BF Mix)",
+  "description": "A V-Slice port of the mod Due Debts (BF Mix) by LeGooey.",
   "contributors": [
     {
-      "name": "EliteMasterEric"
+      "Porter": "Banjoei",
+      "Original Creator": "LeGooey",
+      "SplitScreen Code Original Creator": "kornelbut",
+      "2Hot Composer": "RixFX",
+      "Blazin' Composer": "HeV"
     }
   ],
-  "api_version": "0.5.0",
+  "api_version": "0.6.3",
   "mod_version": "1.0.0",
   "license": "Apache-2.0"
 }

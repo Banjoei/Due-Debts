@@ -44,27 +44,27 @@ class SplitScreenModule extends ScriptedModule {
 			shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen").length > 0;
 		}
 
-		if (!shouldRun) return;
+		if (shouldRun) {
+			camLeft = new FunkinCamera();
+			camLeft.width = FlxG.width / 2;
+			camLeft.alpha = 0.001;
 
-		camLeft = new FunkinCamera();
-		camLeft.width = FlxG.width / 2;
-		camLeft.alpha = 0.001;
+			camRight = new FunkinCamera();
+			camRight.x = FlxG.width / 2;
+			camRight.width = FlxG.width / 2;
+			camRight.alpha = 0.001;
 
-		camRight = new FunkinCamera();
-		camRight.x = FlxG.width / 2;
-		camRight.width = FlxG.width / 2;
-		camRight.alpha = 0.001;
+			camFollowDad = new FlxObject();
+			camFollowBf = new FlxObject();
+			PlayState.instance.add(camFollowDad);
+			PlayState.instance.add(camFollowBf);
 
-		camFollowDad = new FlxObject();
-		camFollowBf = new FlxObject();
-		PlayState.instance.add(camFollowDad);
-		PlayState.instance.add(camFollowBf);
+			camLeft.follow(camFollowDad);
+			camRight.follow(camFollowBf);
 
-		camLeft.follow(camFollowDad);
-		camRight.follow(camFollowBf);
-
-		FlxG.cameras.insert(camLeft, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
-		FlxG.cameras.insert(camRight, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+			FlxG.cameras.insert(camLeft, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+			FlxG.cameras.insert(camRight, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+		}
 	}
 
 	override function onSongEvent(event:SongEventScriptEvent) {
@@ -260,15 +260,20 @@ class SplitScreenModule extends ScriptedModule {
 
 	public function onStateChangeBegin(event:StateChangeScriptEvent) {
 		super.onStateChangeBegin(event);
-		if (PlayState.instance != null) {
-			for (spr in PlayState.instance.members) {
-				if (spr != null && spr.exists && spr.camera == (camLeft || camRight)) {
-					spr.cameras = [PlayState.instance.camGame];
-				}
-			}
 
-			if (camLeft != null) FlxG.cameras.remove(camLeft, true);
-			if (camRight != null) FlxG.cameras.remove(camRight, true);
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			if (PlayState.instance != null) {
+				for (spr in PlayState.instance.members) {
+					if (spr != null && spr.exists && spr.camera != (camHud || camCutscene)) {
+						spr.cameras = [PlayState.instance.camGame];
+					}
+				}
+	
+				if (camLeft != null) FlxG.cameras.remove(camLeft, true);
+				if (camRight != null) FlxG.cameras.remove(camRight, true);
+				PlayState.instance.remove(camFollowDad);
+				PlayState.instance.remove(camFollowBf);
+			}
 		}
 	}
 }

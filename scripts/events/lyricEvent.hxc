@@ -41,6 +41,7 @@ class LyricsEvent extends SongEvent {
 
 class LyricsObject extends Module {
 	var lyricText:FlxText;
+	var shouldRun:Bool = false;
 
 	public function new() {
 		super('LyricsObject');
@@ -48,6 +49,12 @@ class LyricsObject extends Module {
 
 	override function onSongLoaded(event:ScriptEvent) {
 		super.onSongLoaded(event);
+
+		if (event.events != null) {
+			shouldRun = event.events.filter(e -> return e.eventKind == 'lyrics').length > 0;
+		}
+
+		if (!shouldRun) return;
 
 		lyricText = new FlxText(0, 550, FlxG.width, '');
 		lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
@@ -58,6 +65,7 @@ class LyricsObject extends Module {
 
 	override function onSongEvent(event:SongEventScriptEvent) {
 		super.onSongEvent(event);
+		if (!shouldRun) return;
 
 		if (event.eventData.eventKind == 'lyrics') {
 			var text:String = event.eventData.value.lyric;
@@ -68,18 +76,20 @@ class LyricsObject extends Module {
 	}
 
 	public function showLyric(text:String, color:String) {
+		if (!shouldRun || lyricText == null) return;
+
 		lyricText.text = text;
 		lyricText.scale.set(1.1, 1.1);
 
 		if (color != null && StringTools.trim(color) != '') {
-            try {
-                lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
-            } catch (e:Dynamic) {
-                lyricText.color = 0xFFFFFFFF;
-            }
-        } else {
-            lyricText.color = 0xFFFFFFFF;
-        }        
+			try {
+				lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
+			} catch (e:Dynamic) {
+				lyricText.color = 0xFFFFFFFF;
+			}
+		} else {
+			lyricText.color = 0xFFFFFFFF;
+		}
 
 		FlxTween.tween(lyricText.scale, { x: 1, y: 1 }, 0.2, { ease: FlxEase.quartOut });
 	}

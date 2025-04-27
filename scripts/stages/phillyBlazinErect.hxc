@@ -228,9 +228,9 @@ class PhillyBlazinErectStage extends Stage {
 			initializeCamera();
 
 			PlayState.instance.currentStage.getBoyfriend().color = 0xFFDEDEDE;
-			// PlayState.instance.currentStage.getDad().color = 0xFFDEDEDE;
+			PlayState.instance.currentStage.getDad().mainSprite.color = 0xFFDEDEDE;
 			PlayState.instance.currentStage.getGirlfriend().color = 0xFF888888;
-			// PlayState.instance.currentStage.getNamedProp('fakeDarnell').color = 0xFFDEDEDE;
+			PlayState.instance.currentStage.getNamedProp('fakeDarnell').color = 0xFFDEDEDE;
 		}
 
 		if (lightningActive) {
@@ -246,8 +246,8 @@ class PhillyBlazinErectStage extends Stage {
 
 		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null) {
 			PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
-			// PlayState.instance.currentStage.getDad().shader = colorShader;
-			// PlayState.instance.currentStage.getNamedProp('fakeDarnell').shader = colorShader;
+			PlayState.instance.currentStage.getDad().mainSprite.shader = colorShader;
+			PlayState.instance.currentStage.getNamedProp('fakeDarnell').shader = colorShader;
 
 			colorShader.hue = -5;
 			colorShader.saturation = -40;

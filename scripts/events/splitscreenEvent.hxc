@@ -226,17 +226,19 @@ class SplitScreenModule extends ScriptedModule {
 			return;
 		var dad = PlayState.instance.currentStage.getDad();
 		var bf = PlayState.instance.currentStage.getBoyfriend();
-		if (dad != null)
+		if (dad != null) {
 			var dadMidX = dad.x + (dad.width / 2);
-		var dadMidY = dad.y + (dad.height / 2);
-		camFollowDad.setPosition(dadMidX + 0 + leftX, dadMidY - 100 + leftY);
-		camLeft.follow(camFollowDad);
+			var dadMidY = dad.y + (dad.height / 2);
+			camFollowDad.setPosition(dadMidX + 0 + leftX, dadMidY - 100 + leftY);
+			camLeft.follow(camFollowDad);
+		}
 
-		if (bf != null)
+		if (bf != null) {
 			var bfMidX = bf.x + (bf.width / 2);
-		var bfMidY = bf.y + (bf.height / 2);
-		camFollowBf.setPosition(bfMidX - 100 - rightX, bfMidY - 100 + rightY);
-		camRight.follow(camFollowBf);
+			var bfMidY = bf.y + (bf.height / 2);
+			camFollowBf.setPosition(bfMidX - 100 - rightX, bfMidY - 100 + rightY);
+			camRight.follow(camFollowBf);
+		}
 	}
 
 	function resetSplitScreen(smooth:Bool = false, forceDestroy:Bool = false):Void {
@@ -255,7 +257,7 @@ class SplitScreenModule extends ScriptedModule {
 			var dur = 0.5;
 			splitTweens.push(FlxTween.tween(camLeft, {x: -FlxG.width / 2}, dur, {ease: FlxEase.quadOut}));
 			splitTweens.push(FlxTween.tween(camRight, {x: FlxG.width}, dur, {ease: FlxEase.quadOut}));
-		} else if (forceDestroy) {
+		} else if (!smooth) {
 			FlxG.cameras.remove(camLeft, true);
 			FlxG.cameras.remove(camRight, true);
 			camLeft = null;

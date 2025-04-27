@@ -1,0 +1,26 @@
+[
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "quickPiss",
+      "prefix": "Gets Pissed0",
+      "offsets": [0, 0],
+      "frameIndices": [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39],
+      "fps": 24,
+      "looped": false
+    }
+  },
+  {
+    "op": "add",
+    "path": "/animations/-",
+    "value": {
+      "name": "infinitePiss",
+      "prefix": "Gets Pissed0",
+      "offsets": [0, 0],
+      "frameIndices": [39, 39],
+      "fps": 1,
+      "looped": true
+    }
+  }
+]

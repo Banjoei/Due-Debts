@@ -6,7 +6,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import funkin.audio.FunkinSound;
-import funkin.audio.FunkinSound;
 import funkin.Conductor;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.framebuffer.BitmapDataUtil;
@@ -19,9 +18,12 @@ import funkin.play.stage.Stage;
 import funkin.play.stage.StageProp;
 import openfl.filters.BlurFilter;
 import openfl.filters.ShaderFilter;
+import openfl.utils.Assets;
 import funkin.util.FlxTweenUtil;
+import funkin.util.Constants;
 import flixel.addons.display.FlxTiledSprite;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.display.FlxRuntimeShader;
 import funkin.graphics.shaders.AdjustColorShader;
 import StringTools;
 
@@ -29,6 +31,12 @@ class PhillyStreetsErectStage extends Stage {
 	var rainShader:RuntimeRainShader = new RuntimeRainShader();
 	var rainShaderFilter:ShaderFilter;
 	var blurFilter:BlurFilter = new BlurFilter(6, 6);
+	var chromShader:ScriptedFlxRuntimeShader;
+	var chromShader:FlxRuntimeShader;
+	var chromFilter:ShaderFilter;
+	var chromStrength:Float = 0;
+	var chromMult:Float = 1;
+	var chromSpeed:Float = 8;
 
 	// as song goes on, these are used to make the rain more intense throught the song
 	// these values are also used for the rain sound effect volume intensity!
@@ -53,6 +61,18 @@ class PhillyStreetsErectStage extends Stage {
 
 	function new() {
 		super('phillyStreetsErect');
+	}
+
+	function applyFilterToCamera(filter:ShaderFilter) {
+		var filters = (FlxG.camera.filters != null) ? FlxG.camera.filters : [];
+		filters.push(filter);
+		FlxG.camera.filters = filters;
+	}
+
+	function applyFilterToHUD(filter:ShaderFilter) {
+		var filters = (PlayState.instance.camHUD.filters != null) ? PlayState.instance.camHUD.filters : [];
+		filters.push(filter);
+		PlayState.instance.camHUD.filters = filters;
 	}
 
 	/**
@@ -113,6 +133,12 @@ class PhillyStreetsErectStage extends Stage {
 	override function onCountdownEnd(event:ScriptEvent) {
 		super.onCountdownEnd(event);
 		// carSndAmbience.volume = 0.1;
+		applyFilterToCamera(rainShaderFilter);
+
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			applyFilterToCamera(chromFilter);
+			applyFilterToHUD(chromFilter);
+		}
 	}
 
 	override function onCreate(event:ScriptEvent):Void {
@@ -142,20 +168,16 @@ class PhillyStreetsErectStage extends Stage {
 				rainShaderEndIntensity = 0.04;
 		}
 
-		rainShader.intensity = rainShaderStartIntensity;
-		rainShader.rainColor = 0xFFa8adb5;
-
-		// set the shader input
-		// rainShader.mask = frameBufferMan.getFrameBuffer("mask");
-		// rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
-
 		rainShaderFilter = new ShaderFilter(rainShader);
-		FlxG.camera.filters = [rainShaderFilter];
-		// FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
+		applyFilterToCamera(rainShaderFilter);
 
-		resetCar(true, true);
-		resetStageValues();
 		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			chromShader = new FlxRuntimeShader(Assets.getText(Paths.frag('ferzyShader')), null);
+			chromShader.setFloat('force', 0);
+			chromFilter = new ShaderFilter(chromShader);
+
+			applyFilterToCamera(chromFilter);
+			applyFilterToHUD(chromFilter);
 			initializeProps();
 		}
 	}
@@ -512,6 +534,17 @@ class PhillyStreetsErectStage extends Stage {
 		// if (rainSndAmbience != null) {
 		// 	rainSndAmbience.volume = Math.min(0.3, remappedIntensityValue * 2);
 		// }
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			var curStep = Conductor.instance.currentStep;
+
+			if (curStep >= 2464 && curStep <= 2472) {
+				chromStrength = FlxMath.lerp(chromStrength, 0.3, event.elapsed * chromSpeed);
+			} else {
+				chromStrength = FlxMath.lerp(chromStrength, 0.0, event.elapsed * chromSpeed);
+			}
+
+			chromShader.setFloat('force', chromStrength * chromMult);
+		}
 	}
 
 	function onBeatHit(event:SongTimeScriptEvent) {
@@ -547,6 +580,22 @@ class PhillyStreetsErectStage extends Stage {
 		// After the interval has been hit, change the light state.
 		if (event.beat == (lastChange + changeInterval))
 			changeLights(event.beat);
+
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			var curStep = Conductor.instance.currentStep;
+			var curBeat = Conductor.instance.currentBeat;
+
+			if ((curStep > 2383 && curStep < 2735) || (curStep > 846 && curStep < 1023) || (curStep > 1039 && curStep < 1105)) {
+				if (curBeat % 1 == 0) {
+					if (FlxG.camera.zoom < 1.35) {
+						FlxG.camera.zoom += 0.015;
+						PlayState.instance.camHUD.zoom += 0.03;
+					}
+
+					chromStrength += 0.2;
+				}
+			}
+		}
 	}
 
 	override function setupFrameBuffers() {
@@ -625,7 +674,12 @@ class PhillyStreetsErectStage extends Stage {
 
 		resetCar(true, true);
 		resetStageValues();
-		FlxG.camera.filters = [rainShaderFilter];
+		applyFilterToCamera(rainShaderFilter);
+
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			applyFilterToCamera(chromFilter);
+			applyFilterToHUD(chromFilter);
+		}
 	}
 
 	override function addProp(prop:StageProp, ?name:String = null) {
@@ -704,13 +758,6 @@ class PhillyStreetsErectStage extends Stage {
 
 		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
 			var step = Conductor.instance.currentStep;
-
-			switch (step) {
-				case 2256 || 1584 || 2748:
-					FlxG.camera.filters = [];
-				case 2384 || 1744 || 1040:
-					FlxG.camera.filters = [rainShaderFilter];
-			}
 
 			if (step >= 1743 && step <= 2256) {
 				var visualTextureRando:Int = FlxG.random.int(1, 10);

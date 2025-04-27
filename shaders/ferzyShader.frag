@@ -1,14 +1,16 @@
 #pragma header
-vec2 uv = openfl_TextureCoordv.xy;
+
 uniform float force;
 
 void main() {
-    float f = force / 70.0; // scale factor
+    vec2 uv = openfl_TextureCoordv.xy;
     vec3 col;
-    col.r = texture2D(bitmap, vec2(uv.x + f, uv.y)).r;
+
+    col.r = texture2D(bitmap, vec2(uv.x + (force / 70.0), uv.y)).r;
     col.g = texture2D(bitmap, uv).g;
-    col.b = texture2D(bitmap, vec2(uv.x - f, uv.y)).b;
-    gl_FragColor = vec4(col, texture2D(bitmap, uv).w);
+    col.b = texture2D(bitmap, vec2(uv.x - (force / 70.0), uv.y)).b;
+
+    gl_FragColor = vec4(col, texture2D(bitmap, uv).a);
 }
 
-//Shader and lua script for it is By Ferzy
+// Shader and Lua script for it is By Ferzy

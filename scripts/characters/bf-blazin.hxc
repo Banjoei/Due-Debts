@@ -87,8 +87,6 @@ class BoyfriendBlazinCharacter extends SparrowCharacter {
 				}
 			case "weekend-1-bfhitnote":
 				lolGetFucked(dir);
-			case "nothing":
-				return;
 
 			// Script from pico-blazin.hxc for compatability with original chart
 			case "weekend-1-punchlow":

@@ -68,8 +68,6 @@ class BoyfriendCharacter extends MultiSparrowCharacter {
 					playFireGunAnim();
 				case "weekend-1-altbfnote":
 					playSingingAnims(dir, false, 'alt');
-				case "nothing":
-					return;
 				default:
 					super.onNoteHit(event);
 			}

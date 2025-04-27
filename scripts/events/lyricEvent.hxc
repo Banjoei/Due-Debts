@@ -57,7 +57,7 @@ class LyricsObject extends Module {
 		lyricText = new FlxText(0, 550, FlxG.width, '');
 		lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
 		lyricText.borderSize = 5;
-		lyricText.cameras = [PlayState.instance.camHUD];
+		lyricText.cameras = [PlayState.instance.camCutscene];
 		PlayState.instance.add(lyricText);
 	}
 

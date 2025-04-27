@@ -32,18 +32,12 @@ class BlazinSong extends Song {
 		this.hasHidden = false;
 		this.hasPlayedCutscene = false;
 
-		var hudElements = [
-			PlayState.instance.scoreText,
-			PlayState.instance.healthBar,
-			PlayState.instance.healthBarBG,
-			PlayState.instance.iconP1,
-			PlayState.instance.iconP2
-		];
-
 		if (PlayState.instance.currentVariation == "bf") {
-			for (element in hudElements) {
-				element.alpha = 0;
-				element.visible = false;
+			for (element in getHudElements()) {
+				try {
+					element.alpha = 0;
+					element.visible = false;
+				} catch (e:Dynamic) {}
 			}
 			// Create first black sprite (HUD Layer)
 			startblack = new FunkinSprite(0, 0);
@@ -59,17 +53,11 @@ class BlazinSong extends Song {
 
 	override function onGameOver() {
 		if (PlayState.instance.currentVariation == "bf") {
-			var hudElements = [
-				PlayState.instance.scoreText,
-				PlayState.instance.healthBar,
-				PlayState.instance.healthBarBG,
-				PlayState.instance.iconP1,
-				PlayState.instance.iconP2
-			];
-
-			for (element in hudElements) {
-				element.alpha = 0;
-				element.visible = false;
+			for (element in getHudElements()) {
+				try {
+					element.alpha = 0;
+					element.visible = false;
+				} catch (e:Dynamic) {}
 			}
 
 			startblack.alpha = 1;
@@ -112,20 +100,14 @@ class BlazinSong extends Song {
 			var darnell = PlayState.instance.currentStage.getDad();
 			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
 
-			var hudElements = [
-				PlayState.instance.scoreText,
-				PlayState.instance.healthBar,
-				PlayState.instance.healthBarBG,
-				PlayState.instance.iconP1,
-				PlayState.instance.iconP2
-			];
-
-			for (element in hudElements) {
-				if (element.alpha != 0) {
+			for (element in getHudElements()) {
+				try {
 					FlxTween.cancelTweensOf(element);
-					element.alpha = 0;
-					element.visible = false;
-				}
+					FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
+					new FlxTimer().start(0.5, () -> {
+						element.visible = false;
+					});
+				} catch (e:Dynamic) {}
 			}
 
 			if (startblack.alpha != 1) {
@@ -175,22 +157,16 @@ class BlazinSong extends Song {
 			var darnell = PlayState.instance.currentStage.getDad();
 			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
 
-			var hudElements = [
-				PlayState.instance.scoreText,
-				PlayState.instance.healthBar,
-				PlayState.instance.healthBarBG,
-				PlayState.instance.iconP1,
-				PlayState.instance.iconP2
-			];
-
-			for (element in hudElements) {
-				if (element.alpha != 0) {
-					FlxTween.cancelTweensOf(element);
-					FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
-					new FlxTimer().start(0.5, () -> {
-						element.visible = false;
-					});
-				}
+			for (element in getHudElements()) {
+				try {
+					if (element.alpha != 0) {
+						FlxTween.cancelTweensOf(element);
+						FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
+						new FlxTimer().start(0.5, () -> {
+							element.visible = false;
+						});
+					}
+				} catch (e:Dynamic) {}
 			}
 
 			if (startblack.alpha != 1) {
@@ -227,14 +203,6 @@ class BlazinSong extends Song {
 		var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
 		var boyfriend = PlayState.instance.currentStage.getBoyfriend();
 
-		var hudElements = [
-			PlayState.instance.scoreText,
-			PlayState.instance.healthBar,
-			PlayState.instance.healthBarBG,
-			PlayState.instance.iconP1,
-			PlayState.instance.iconP2
-		];
-
 		if (event.eventData.eventKind == 'BlazinEvent') {
 			var ev = event.eventData.value;
 
@@ -242,10 +210,13 @@ class BlazinSong extends Song {
 				case 0: // begin song fully black, tween to clear
 					FlxTween.tween(startblack, {alpha: 0}, 10, {ease: FlxEase.linear});
 				case 1: // fade HUD in
-					for (element in hudElements) {
-						element.alpha = 0;
-						FlxTween.tween(element, {alpha: 1}, 3, {ease: FlxEase.linear});
-						element.visible = true;
+					for (element in getHudElements()) {
+						try {
+							element.alpha = 0;
+							element.visible = true;
+							FlxTween.cancelTweensOf(element);
+							FlxTween.tween(element, {alpha: 1}, 3, {ease: FlxEase.linear});
+						} catch (e:Dynamic) {}
 					}
 				case 2: // fade out game
 					FlxTween.tween(startblack, {alpha: 1}, 5, {ease: FlxEase.linear});
@@ -315,5 +286,29 @@ class BlazinSong extends Song {
 		VideoCutscene.play(Paths.videos('blazinCutscene'), CutsceneType.ENDING);
 		// This will call onSongEnd() again so make sure the flag is set!
 		hasPlayedCutscene = true;
+	}
+
+	function getHudElements():Array<Dynamic> {
+		var elements:Array<Dynamic> = [];
+
+		for (spr in PlayState.instance.members) {
+			if (spr != null
+				&& spr.camera == PlayState.instance.camHUD
+				&& spr != startblack
+				&& spr != PlayState.instance.playerStrumline
+				&& spr != PlayState.instance.opponentStrumline
+				&& (PlayState.instance.playerStrumline == null
+					|| (!PlayState.instance.playerStrumline.strumlineNotes.members.contains(spr)
+						&& !PlayState.instance.playerStrumline.notes.members.contains(spr)
+						&& !PlayState.instance.playerStrumline.holdNotes.members.contains(spr)))
+				&& (PlayState.instance.opponentStrumline == null
+					|| (!PlayState.instance.opponentStrumline.strumlineNotes.members.contains(spr)
+						&& !PlayState.instance.opponentStrumline.notes.members.contains(spr)
+						&& !PlayState.instance.opponentStrumline.holdNotes.members.contains(spr)))) {
+				elements.push(spr);
+			}
+		}
+
+		return elements;
 	}
 }

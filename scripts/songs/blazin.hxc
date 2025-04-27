@@ -103,10 +103,8 @@ class BlazinSong extends Song {
 			for (element in getHudElements()) {
 				try {
 					FlxTween.cancelTweensOf(element);
-					FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
-					new FlxTimer().start(0.5, () -> {
-						element.visible = false;
-					});
+					element.alpha = 0;
+					element.visible = false;
 				} catch (e:Dynamic) {}
 			}
 
@@ -158,15 +156,19 @@ class BlazinSong extends Song {
 			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
 
 			for (element in getHudElements()) {
-				try {
-					if (element.alpha != 0) {
-						FlxTween.cancelTweensOf(element);
-						FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
-						new FlxTimer().start(0.5, () -> {
-							element.visible = false;
-						});
-					}
-				} catch (e:Dynamic) {}
+				if (element != null) {
+					try {
+						if (element.alpha != 0) {
+							FlxTween.cancelTweensOf(element);
+							FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
+							new FlxTimer().start(0.5, () -> {
+								try {
+									element.visible = false;
+								} catch (e:Dynamic) {}
+							});
+						}
+					} catch (e:Dynamic) {}
+				}
 			}
 
 			if (startblack.alpha != 1) {
@@ -297,15 +299,19 @@ class BlazinSong extends Song {
 				&& spr != startblack
 				&& spr != PlayState.instance.playerStrumline
 				&& spr != PlayState.instance.opponentStrumline
-				&& (PlayState.instance.playerStrumline == null
-					|| (!PlayState.instance.playerStrumline.strumlineNotes.members.contains(spr)
+				&& (PlayState.instance.playerStrumline != null
+					&& (!PlayState.instance.playerStrumline.strumlineNotes.members.contains(spr)
 						&& !PlayState.instance.playerStrumline.notes.members.contains(spr)
 						&& !PlayState.instance.playerStrumline.holdNotes.members.contains(spr)))
-				&& (PlayState.instance.opponentStrumline == null
-					|| (!PlayState.instance.opponentStrumline.strumlineNotes.members.contains(spr)
+				&& (PlayState.instance.opponentStrumline != null
+					&& (!PlayState.instance.opponentStrumline.strumlineNotes.members.contains(spr)
 						&& !PlayState.instance.opponentStrumline.notes.members.contains(spr)
 						&& !PlayState.instance.opponentStrumline.holdNotes.members.contains(spr)))) {
-				elements.push(spr);
+				try {
+					if (spr.alpha != null) {
+						elements.push(spr);
+					}
+				} catch (e:Dynamic) {}
 			}
 		}
 

@@ -15,6 +15,7 @@ import funkin.audio.FunkinSound;
 import funkin.Conductor;
 import funkin.data.story.level.LevelRegistry;
 import funkin.data.song.SongRegistry;
+import funkin.data.freeplay.player.PlayerRegistry;
 import funkin.graphics.FunkinSprite;
 import funkin.graphics.video.FunkinVideoSprite;
 import funkin.modding.module.Module;
@@ -25,6 +26,7 @@ import funkin.PlayerSettings;
 import funkin.play.character.BaseCharacter;
 import funkin.play.PlayState;
 import funkin.play.PlayStatePlaylist;
+import funkin.play.GameOverSubState;
 import funkin.play.Countdown;
 import funkin.play.song.Song;
 import funkin.play.stage.Stage;
@@ -161,12 +163,42 @@ class blazinDeathSubState extends MusicBeatSubState {
 		if (sound != null)
 			sound.destroy();
 
-		var targetState:funkin.ui.transition.stickers.StickerSubState->FlxState = (sticker) -> FreeplayState.build(sticker);
+		isEnding = true;
+		blueballed = false;
+		PlayState.instance.deathCounter = 0;
 
-		PlayState.instance.openSubState(new funkin.ui.transition.stickers.StickerSubState({
-			targetState: targetState,
-			stickerPack: "standard-bf"
-		}));
+		if (GameOverSubState.isChartingMode) {
+			this.close();
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.pause(); // Don't reset song position!
+			PlayState.instance.close(); // This only works because PlayState is a substate!
+			return;
+		} else {
+			var targetState:StickerSubState->FlxState = (PlayStatePlaylist.isStoryMode) ? (sticker) -> new StoryMenuState(sticker) : (sticker) ->
+				FreeplayState.build(sticker);
+
+			if (PlayStatePlaylist.isStoryMode) {
+				PlayStatePlaylist.reset();
+			}
+
+			var stickerPackId:Null<String> = PlayState.instance.currentChart.stickerPack;
+
+			if (stickerPackId == null) {
+				var playerCharacterId = PlayerRegistry.instance.getCharacterOwnerId(PlayState.instance.currentChart.characters.player);
+				var playerCharacter = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? Constants.DEFAULT_CHARACTER);
+
+				if (playerCharacter != null) {
+					stickerPackId = playerCharacter.getStickerPackID();
+				}
+			}
+
+			if (PlayState.instance.playerStrumline != null)
+				PlayState.instance.playerStrumline.clean();
+			if (PlayState.instance.opponentStrumline != null)
+				PlayState.instance.opponentStrumline.clean();
+
+			openSubState(new StickerSubState({targetState: targetState, stickerPack: stickerPackId}));
+		}
 	}
 
 	function exitCutscene():Void {
@@ -174,6 +206,7 @@ class blazinDeathSubState extends MusicBeatSubState {
 			video.destroy();
 		if (sound != null)
 			sound.destroy();
+
 		var module = ModuleHandler.getModule('blazinDeathCutscene');
 
 		if (FlxG.sound.music != null)
@@ -183,8 +216,12 @@ class blazinDeathSubState extends MusicBeatSubState {
 		game.musicPausedBySubState = false;
 
 		game.deathCounter++;
-		game.playerStrumline.clean();
-		game.opponentStrumline.clean();
+
+		if (game.playerStrumline != null)
+			game.playerStrumline.clean();
+		if (game.opponentStrumline != null)
+			game.opponentStrumline.clean();
+
 		game.needsReset = true;
 		module.scriptSet("finished", true);
 		this.close();

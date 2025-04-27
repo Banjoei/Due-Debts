@@ -15,7 +15,7 @@ import funkin.modding.module.ScriptedModule;
 import funkin.data.event.SongEventRegistry;
 
 class CameraMovementFixes extends ScriptedModule {
-	public function new(){
+	public function new() {
 		super('CameraMovementFixes');
 	}
 
@@ -24,6 +24,11 @@ class CameraMovementFixes extends ScriptedModule {
 	public var active:Bool = false;
 	public var shouldRun:Bool = false;
 
+	var coolCam:FlxTimer = null;
+	var camTweens:Array<FlxTween> = [];
+	var camXTween:FlxTween = null;
+	var camYTween:FlxTween = null;
+
 	override function onSongLoaded(event:SongLoadScriptEvent):Void {
 		if (event.events != null) {
 			shouldRun = event.events.filter(data -> return data.eventKind == "CameraMovement").length > 0;
@@ -31,27 +36,33 @@ class CameraMovementFixes extends ScriptedModule {
 	}
 
 	function follow(dir:NoteDirection):Void {
-		if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null) return;
+		if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
 		var x:Float = 0;
 		var y:Float = 0;
-		var coolCam:FlxTimer = new FlxTimer();
 		var cameraSpeed:Float;
 		var bf = PlayState.instance.currentStage.getBoyfriend();
 
-		if (bf == null) return;
+		if (bf == null)
+			return;
+
+		if (coolCam != null)
+			coolCam.cancel();
+		coolCam = new FlxTimer();
 
 		if (dir != null) {
-			if (dir == 0) x = -offset;
-			else if (dir == 1) y = offset;
-			else if (dir == 2) y = -offset;
-			else if (dir == 3) x = offset;
+			if (dir == 0)
+				x = -offset;
+			else if (dir == 1)
+				y = offset;
+			else if (dir == 2)
+				y = -offset;
+			else if (dir == 3)
+				x = offset;
 
-			coolCam.start(
-				Conductor.instance.stepLengthMs * (0.0011) * bf.singTimeSteps,
-				function(timer:FlxTimer):Void {
-					follow();
-				}
-			);
+			coolCam.start(Conductor.instance.stepLengthMs * (0.0011) * bf.singTimeSteps, function(timer:FlxTimer):Void {
+				follow();
+			});
 			cameraSpeed = sped;
 		} else {
 			coolCam.cancel();
@@ -59,8 +70,16 @@ class CameraMovementFixes extends ScriptedModule {
 
 		var duration:Float = 1.7 / cameraSpeed + 0.25;
 		if (PlayState.instance.camGame != null) {
-			FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.linear});
-			FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.linear});
+			if (camXTween != null)
+				camXTween.cancel();
+			if (camYTween != null)
+				camYTween.cancel();
+
+			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.linear});
+			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.linear});
+
+			camTweens.push(camXTween);
+			camTweens.push(camYTween);
 		}
 	}
 
@@ -75,7 +94,8 @@ class CameraMovementFixes extends ScriptedModule {
 	}
 
 	override function onNoteHit(event:HitNoteScriptEvent) {
-		if (!shouldRun) return;
+		if (!shouldRun)
+			return;
 		if (event.note != null && event.note.noteData != null) {
 			var dir = event.note.noteData.getDirection();
 			follow(dir);
@@ -83,7 +103,8 @@ class CameraMovementFixes extends ScriptedModule {
 	}
 
 	override function onNoteMiss(event:HitNoteScriptEvent) {
-		if (!shouldRun) return;
+		if (!shouldRun)
+			return;
 		if (event.note != null && event.note.noteData != null) {
 			var dir = event.note.noteData.getDirection();
 			follow(dir);
@@ -91,9 +112,93 @@ class CameraMovementFixes extends ScriptedModule {
 	}
 
 	override function onNoteGhostMiss(event:HitNoteScriptEvent) {
-		if (!shouldRun) return;
+		if (!shouldRun)
+			return;
 		var dir = event.dir;
 		follow(dir);
+	}
+
+	function resetCameraMovement(smooth:Bool = false):Void {
+		if (PlayState.instance == null)
+			return;
+		var cam = PlayState.instance.camGame;
+		if (cam == null)
+			return;
+
+		active = false;
+		offset = 0;
+		sped = 0;
+
+		if (coolCam != null) {
+			coolCam.cancel();
+			coolCam = null;
+		}
+
+		FlxTween.cancelTweensOf(cam.targetOffset);
+		camTweens = [];
+
+		if (smooth) {
+			FlxTween.tween(cam.targetOffset, {x: 0, y: 0}, 0.5, {ease: FlxEase.quadOut});
+		} else {
+			cam.targetOffset.set(0, 0);
+		}
+	}
+
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
+
+		if (!shouldRun)
+			return;
+
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			resetCameraMovement(false);
+		}
+	}
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+
+		if (!shouldRun)
+			return;
+
+		resetCameraMovement(true);
+	}
+
+	override function onGameOver(event:ScriptEvent):Void {
+		super.onGameOver(event);
+
+		if (!shouldRun)
+			return;
+
+		resetCameraMovement(false);
+	}
+
+	override function onPause(event:ScriptEvent):Void {
+		super.onPause(event);
+
+		if (!shouldRun)
+			return;
+
+		for (tween in camTweens) {
+			if (tween != null)
+				tween.active = false;
+		}
+		if (coolCam != null)
+			coolCam.active = false;
+	}
+
+	override function onResume(event:ScriptEvent):Void {
+		super.onResume(event);
+
+		if (!shouldRun)
+			return;
+
+		for (tween in camTweens) {
+			if (tween != null)
+				tween.active = true;
+		}
+		if (coolCam != null)
+			coolCam.active = true;
 	}
 }
 

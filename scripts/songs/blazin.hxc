@@ -31,7 +31,7 @@ class BlazinSong extends Song {
 
 		this.hasHidden = false;
 		this.hasPlayedCutscene = false;
-		
+
 		var hudElements = [
 			PlayState.instance.scoreText,
 			PlayState.instance.healthBar,
@@ -39,8 +39,8 @@ class BlazinSong extends Song {
 			PlayState.instance.iconP1,
 			PlayState.instance.iconP2
 		];
-		
-		if(PlayState.instance.currentVariation == "bf") {
+
+		if (PlayState.instance.currentVariation == "bf") {
 			for (element in hudElements) {
 				element.alpha = 0;
 				element.visible = false;
@@ -71,7 +71,7 @@ class BlazinSong extends Song {
 				element.alpha = 0;
 				element.visible = false;
 			}
-			
+
 			startblack.alpha = 1;
 		}
 	}
@@ -95,14 +95,12 @@ class BlazinSong extends Song {
 	var hasPlayedCutscene:Bool = false;
 	var needsRestart:Bool;
 
-	function onUpdate(event:ScriptEvent):Void
-	{
+	function onUpdate(event:ScriptEvent):Void {
 		super.onUpdate(event);
 
 		var module = ModuleHandler.getModule('blazinDeathCutscene');
 
-		if (!this.hasHidden)
-		{
+		if (!this.hasHidden) {
 			this.hasHidden = true;
 			hideOpponentStrumline();
 			centerPlayerStrumline();
@@ -110,10 +108,10 @@ class BlazinSong extends Song {
 
 		if (module.scriptGet("finished") == true) {
 			module.scriptSet("finished", false);
-	
+
 			var darnell = PlayState.instance.currentStage.getDad();
 			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
-	
+
 			var hudElements = [
 				PlayState.instance.scoreText,
 				PlayState.instance.healthBar,
@@ -121,7 +119,7 @@ class BlazinSong extends Song {
 				PlayState.instance.iconP1,
 				PlayState.instance.iconP2
 			];
-	
+
 			for (element in hudElements) {
 				if (element.alpha != 0) {
 					FlxTween.cancelTweensOf(element);
@@ -129,22 +127,22 @@ class BlazinSong extends Song {
 					element.visible = false;
 				}
 			}
-	
+
 			if (startblack.alpha != 1) {
 				FlxTween.cancelTweensOf(startblack);
 				startblack.alpha = 1;
 			}
-	
+
 			if (!darnell.visible) {
 				darnell.visible = true;
 				fakeDarnell.visible = false;
 			}
-	
+
 			if (PlayState.instance.cameraFollowPoint.x != 1403 || PlayState.instance.cameraFollowPoint.y != 731) {
 				PlayState.instance.cancelCameraFollowTween();
 				PlayState.instance.cameraFollowPoint.setPosition(1403, 731);
 			}
-	
+
 			if (PlayState.instance.currentCameraZoom != 0.75) {
 				PlayState.instance.cancelAllCameraTweens();
 				PlayState.instance.tweenCameraZoom(0.75, 0.5, FlxEase.linear);
@@ -152,8 +150,7 @@ class BlazinSong extends Song {
 		}
 	}
 
-	function onPause(event:ScriptEvent):Void
-	{
+	function onPause(event:ScriptEvent):Void {
 		super.onPause(event);
 
 		if (PlayState.instance.currentVariation == "bf") {
@@ -162,8 +159,7 @@ class BlazinSong extends Song {
 		}
 	}
 
-	function onResume(event:ScriptEvent):Void
-	{
+	function onResume(event:ScriptEvent):Void {
 		super.onResume(event);
 
 		if (PlayState.instance.currentVariation == "bf") {
@@ -172,8 +168,7 @@ class BlazinSong extends Song {
 		}
 	}
 
-	override function onSongRetry(event):Void 
-	{
+	override function onSongRetry(event):Void {
 		super.onSongRetry(event);
 
 		if (PlayState.instance.currentVariation == "bf") {
@@ -192,14 +187,18 @@ class BlazinSong extends Song {
 				if (element.alpha != 0) {
 					FlxTween.cancelTweensOf(element);
 					FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
-					new FlxTimer().start(0.5, () -> { element.visible = false; });
+					new FlxTimer().start(0.5, () -> {
+						element.visible = false;
+					});
 				}
 			}
 
 			if (startblack.alpha != 1) {
 				FlxTween.cancelTweensOf(startblack);
 				FlxTween.tween(startblack, {alpha: 1}, 0.5, {ease: FlxEase.linear});
-				new FlxTimer().start(0.5, () -> { startblack.alpha = 1; });
+				new FlxTimer().start(0.5, () -> {
+					startblack.alpha = 1;
+				});
 			}
 
 			if (darnell.visible != true) {
@@ -221,8 +220,7 @@ class BlazinSong extends Song {
 		}
 	}
 
-	public function onSongEvent(event):Void 
-	{
+	public function onSongEvent(event):Void {
 		super.onSongEvent(event);
 
 		var darnell = PlayState.instance.currentStage.getDad();
@@ -236,12 +234,11 @@ class BlazinSong extends Song {
 			PlayState.instance.iconP1,
 			PlayState.instance.iconP2
 		];
-		
+
 		if (event.eventData.eventKind == 'BlazinEvent') {
 			var ev = event.eventData.value;
 
-			switch (Std.int(ev.blazinType))
-			{
+			switch (Std.int(ev.blazinType)) {
 				case 0: // begin song fully black, tween to clear
 					FlxTween.tween(startblack, {alpha: 0}, 10, {ease: FlxEase.linear});
 				case 1: // fade HUD in
@@ -251,7 +248,7 @@ class BlazinSong extends Song {
 						element.visible = true;
 					}
 				case 2: // fade out game
-				FlxTween.tween(startblack, {alpha: 1}, 5, {ease: FlxEase.linear});
+					FlxTween.tween(startblack, {alpha: 1}, 5, {ease: FlxEase.linear});
 				case 3: // swap fake Darnell
 					startblack.alpha = 1;
 					darnell.visible = false;
@@ -265,39 +262,35 @@ class BlazinSong extends Song {
 		}
 	}
 
-	function hideOpponentStrumline()
-	{
+	function hideOpponentStrumline() {
 		var opponentStrumline:FlxSprite = PlayState.instance.opponentStrumline;
-		if (opponentStrumline != null)
-		{
-			for (arrow in opponentStrumline.members)
-			{
+		if (opponentStrumline != null) {
+			for (arrow in opponentStrumline.members) {
 				arrow.visible = false;
 			}
 		}
 	}
 
-	function centerPlayerStrumline()
-	{
-	// This is a song gimmick we are never making middlescroll an option.
+	function centerPlayerStrumline() {
+		// This is a song gimmick we are never making middlescroll an option.
 
 		var playerStrumline:FlxSprite = PlayState.instance.playerStrumline;
-		if (playerStrumline != null)
-		{
+		if (playerStrumline != null) {
 			playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;
 		}
 	}
 
-public override function onSongEnd(event:CountdownScriptEvent):Void {
+	public override function onSongEnd(event:CountdownScriptEvent):Void {
 		super.onSongEnd(event);
 
 		// Keep the cutscene from playing outside of story mode.
-	if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+		if (!PlayStatePlaylist.isStoryMode)
+			hasPlayedCutscene = true;
 
-	if (!hasPlayedCutscene) {
-	trace('Pausing ending to play a video cutscene (`blazin`)');
+		if (!hasPlayedCutscene) {
+			trace('Pausing ending to play a video cutscene (`blazin`)');
 
-	hasPlayedCutscene = true;
+			hasPlayedCutscene = true;
 
 			// Add a black background behind the cutscene to fix a transition bug!
 			trace('Adding black background behind cutscene over UI');
@@ -308,19 +301,19 @@ public override function onSongEnd(event:CountdownScriptEvent):Void {
 			PlayState.instance.add(bgSprite);
 			PlayState.instance.refresh();
 
-	event.cancel(); // CANCEL THE COUNTDOWN!
+			event.cancel(); // CANCEL THE COUNTDOWN!
 
-	startVideo();
-	} else {
+			startVideo();
+		} else {
 			// Make sure the cutscene can play again next time!
 			hasPlayedCutscene = false;
 			// DO NOT CANCEL THE EVENT!
 		}
 	}
 
-function startVideo() {
+	function startVideo() {
 		VideoCutscene.play(Paths.videos('blazinCutscene'), CutsceneType.ENDING);
 		// This will call onSongEnd() again so make sure the flag is set!
 		hasPlayedCutscene = true;
-}
+	}
 }

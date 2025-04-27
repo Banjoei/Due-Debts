@@ -7,37 +7,55 @@ class GFSpeedFixes extends ScriptedModule {
 	public var defaultDanceEvery:Float;
 	public var divisor:Float = 1;
 	public var shouldRun:Bool = false;
+	public var gf:Dynamic = null;
 
 	override function onSongLoaded(event:ScriptEvent):Void {
-		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
 
 		if (event.events != null) {
 			shouldRun = event.events.filter(e -> return e.eventKind == "SetGFSpeed").length > 0;
 		}
-		if (!shouldRun) return;
+		if (!shouldRun)
+			return;
 
-		var gf = PlayState.instance.currentStage.getGirlfriend();
-		if (gf == null) return;
+		gf = PlayState.instance.currentStage.getGirlfriend();
+		if (gf == null)
+			return;
 
 		defaultDanceEvery = gf.danceEvery;
 	}
 
 	override function onSongRetry(event:ScriptEvent):Void {
-		if (!shouldRun) return;
-		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-
-		var gf = PlayState.instance.currentStage.getGirlfriend();
-		if (gf == null) return;
+		if (!shouldRun || gf == null)
+			return;
 
 		gf.danceEvery = defaultDanceEvery;
 	}
 
-	public function applyDivisor(newDiv:Float) {
-		if (!shouldRun) return;
-		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+	override function onGameOver(event:ScriptEvent):Void {
+		super.onGameOver(event);
 
-		var gf = PlayState.instance.currentStage.getGirlfriend();
-		if (gf == null) return;
+		if (!shouldRun || gf == null)
+			return;
+
+		gf.danceEvery = defaultDanceEvery;
+	}
+
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
+
+		if (!shouldRun || gf == null)
+			return;
+
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			gf.danceEvery = defaultDanceEvery;
+		}
+	}
+
+	public function applyDivisor(newDiv:Float) {
+		if (!shouldRun || gf == null)
+			return;
 
 		divisor = newDiv;
 		gf.danceEvery = defaultDanceEvery * divisor;
@@ -50,8 +68,10 @@ class SetGFSpeedEvent extends SongEvent {
 	}
 
 	override function handleEvent(data) {
-		if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-		if (PlayState.instance.isMinimalMode) return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+		if (PlayState.instance.isMinimalMode)
+			return;
 
 		var speed = Math.round(data.getFloat('divisor'));
 		var fixes = ModuleHandler.getModule('GFSpeedFixes');

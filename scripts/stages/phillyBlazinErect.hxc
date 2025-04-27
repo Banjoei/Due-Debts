@@ -18,15 +18,14 @@ import funkin.util.MathUtil;
 /**
  * This stage includes a partial version of the Philly Streets stage with shaders applied.
  */
-class PhillyBlazinErectStage extends Stage
-{
-	function new()
-	{
+class PhillyBlazinErectStage extends Stage {
+	function new() {
 		super('phillyBlazinErect');
 	}
 
 	var rainShader:RuntimeRainShader = new RuntimeRainShader();
 	var scrollingSky:FlxTiledSprite;
+
 	// var rainShaderFilter:ShaderFilter;
 
 	override function onCreate(event:ScriptEvent) {
@@ -68,8 +67,7 @@ class PhillyBlazinErectStage extends Stage
 	var mist4:FlxBackdrop;
 	var mist5:FlxBackdrop;
 
-	override function buildStage()
-	{
+	override function buildStage() {
 		super.buildStage();
 
 		var skyAdditive = PlayState.instance.currentStage.getNamedProp('skyAdditive');
@@ -95,8 +93,8 @@ class PhillyBlazinErectStage extends Stage
 		PlayState.instance.currentStage.add(scrollingSky);
 		PlayState.instance.currentStage.refresh(); // Apply z-index.
 
-		//scrollingSky.velocity.x = -20;
-		
+		// scrollingSky.velocity.x = -20;
+
 		colorShader = new AdjustColorShader();
 
 		mist0 = new FlxBackdrop(Paths.image('phillyStreets/erect/mistMid'), 0x01);
@@ -193,21 +191,20 @@ class PhillyBlazinErectStage extends Stage
 		bf.updateHitbox();
 	}
 
-	override function onUpdate(event:ScriptEvent)
-	{
+	override function onUpdate(event:ScriptEvent) {
 		super.onUpdate(event);
 
 		_timer += event.elapsed;
-		mist0.y = 660 + (Math.sin(_timer*0.35)*70);
-		mist1.y = 500 + (Math.sin(_timer*0.3)*80);
-		mist2.y = 540 + (Math.sin(_timer*0.4)*60);
-		mist3.y = 230 + (Math.sin(_timer*0.3)*70);
-		mist4.y = 170 + (Math.sin(_timer*0.35)*50);
-		mist5.y = 170 + (Math.sin(_timer*0.08)*100);
+		mist0.y = 660 + (Math.sin(_timer * 0.35) * 70);
+		mist1.y = 500 + (Math.sin(_timer * 0.3) * 80);
+		mist2.y = 540 + (Math.sin(_timer * 0.4) * 60);
+		mist3.y = 230 + (Math.sin(_timer * 0.3) * 70);
+		mist4.y = 170 + (Math.sin(_timer * 0.35) * 50);
+		mist5.y = 170 + (Math.sin(_timer * 0.08) * 100);
 		// mist3.y = -20 + (Math.sin(_timer*0.5)*200);
 		// mist4.y = -180 + (Math.sin(_timer*0.4)*300);
 		// mist5.y = -450 + (Math.sin(_timer*0.2)*1xxx50);
-		//trace(mist1.y);
+		// trace(mist1.y);
 
 		var gf = PlayState.instance.currentStage.getGirlfriend();
 		if (gf.characterID == "gf") {
@@ -222,11 +219,11 @@ class PhillyBlazinErectStage extends Stage
 		rainShader.update(event.elapsed * rainTimeScale);
 		rainTimeScale = MathUtil.coolLerp(rainTimeScale, 0.02, 0.05);
 
-		if(scrollingSky != null) scrollingSky.scrollX -= FlxG.elapsed * 35;
+		if (scrollingSky != null)
+			scrollingSky.scrollX -= FlxG.elapsed * 35;
 
 		// Manually focus the camera before the song starts.
-		if (!cameraInitialized && PlayState.instance.currentStage.getGirlfriend().cameraFocusPoint != null)
-		{
+		if (!cameraInitialized && PlayState.instance.currentStage.getGirlfriend().cameraFocusPoint != null) {
 			cameraInitialized = true;
 			initializeCamera();
 
@@ -247,7 +244,7 @@ class PhillyBlazinErectStage extends Stage
 			lightningTimer = FlxG.random.float(7, 15);
 		}
 
-		if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null){
+		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null) {
 			PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
 			// PlayState.instance.currentStage.getDad().shader = colorShader;
 			// PlayState.instance.currentStage.getNamedProp('fakeDarnell').shader = colorShader;
@@ -275,7 +272,6 @@ class PhillyBlazinErectStage extends Stage
 		rainTimeScale += 0.7;
 	}
 
-
 	function applyLightning():Void {
 		var lightning = PlayState.instance.currentStage.getNamedProp('lightning');
 		var skyAdditive = PlayState.instance.currentStage.getNamedProp('skyAdditive');
@@ -302,12 +298,11 @@ class PhillyBlazinErectStage extends Stage
 		lightning.visible = true;
 		lightning.animation.play('strike');
 
-		if(FlxG.random.bool(65)){
+		if (FlxG.random.bool(65)) {
 			lightning.x = FlxG.random.int(-250, 280);
-		}else{
+		} else {
 			lightning.x = FlxG.random.int(780, 900);
 		}
-
 
 		// Darken characters
 		var boyfriend = PlayState.instance.currentStage.getBoyfriend();
@@ -345,14 +340,14 @@ class PhillyBlazinErectStage extends Stage
 
 		var xTarget:Float = gf.cameraFocusPoint.x;
 		var yTarget:Float = gf.cameraFocusPoint.y;
-		
+
 		if (gf.characterID == "gf") {
 			xTarget -= 28;
 			yTarget += 193;
 		}
 		xTarget += 50;
 		yTarget -= 90;
-	PlayState.instance.cameraFollowPoint.setPosition(xTarget, yTarget);
+		PlayState.instance.cameraFollowPoint.setPosition(xTarget, yTarget);
 		PlayState.instance.resetCamera();
 
 		PlayState.instance.comboPopUps.offsets = [480, -50];

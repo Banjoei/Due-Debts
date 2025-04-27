@@ -14,174 +14,210 @@ import funkin.modding.events.SongLoadScriptEvent;
 import funkin.util.Constants;
 
 class BotplayNotesModule extends Module {
-    public function new() {
-        super("BotplayNotesModule");
-    }
+	public function new() {
+		super("BotplayNotesModule");
+	}
 
-    var injected:Bool = false;
-    var botplayNotes:Array<SongNoteData> = [];
-    var currentBotplayIndex:Int = 0;
-    var botplayActive:Bool = false;
-    var lastBotplayNoteEnd:Float = -1;
+	var injected:Bool = false;
+	var botplayNotes:Array<SongNoteData> = [];
+	var currentBotplayIndex:Int = 0;
+	var botplayActive:Bool = false;
+	var lastBotplayNoteEnd:Float = -1;
 
-    var leewayTime_MS:Int = 50;
+	var leewayTime_MS:Int = 50;
 
-    override function onSongLoaded(event:SongLoadScriptEvent):Void {
-        super.onSongLoaded(event);
+	override function onSongLoaded(event:SongLoadScriptEvent):Void {
+		super.onSongLoaded(event);
 
-        botplayNotes = [];
-        currentBotplayIndex = 0;
-        botplayActive = false;
-        lastBotplayNoteEnd = -1;
+		botplayNotes = [];
+		currentBotplayIndex = 0;
+		botplayActive = false;
+		lastBotplayNoteEnd = -1;
 
-        for (note in event.notes) {
-            if (note.kind == "botplayNote") {
-                botplayNotes.push(note);
-            }
-        }
+		for (note in event.notes) {
+			if (note.kind == "botplayNote") {
+				botplayNotes.push(note);
+			}
+		}
 
-        botplayNotes.sort(function(a, b) return Std.int(a.time - b.time));
+		botplayNotes.sort(function(a, b) return Std.int(a.time - b.time));
 
-        if (botplayNotes.length > 0) {
-            var lastNote = botplayNotes[botplayNotes.length - 1];
-            lastBotplayNoteEnd = lastNote.time;
-            if (lastNote.length != null && lastNote.length > 0) {
-                lastBotplayNoteEnd += lastNote.length;
-            }
-        }
-    }
+		if (botplayNotes.length > 0) {
+			var lastNote = botplayNotes[botplayNotes.length - 1];
+			lastBotplayNoteEnd = lastNote.time;
+			if (lastNote.length != null && lastNote.length > 0) {
+				lastBotplayNoteEnd += lastNote.length;
+			}
+		}
+	}
 
-    override function onUpdate(event) {
-        super.onUpdate(event);
+	override function onUpdate(event) {
+		super.onUpdate(event);
 
-        if (!injected && Std.isOfType(FlxG.state, ChartEditorState)) {
-            injected = true;
-            ChartEditorDropdowns.NOTE_KINDS.set('botplayNote', 'Botplay Note');
-        }
+		if (!injected && Std.isOfType(FlxG.state, ChartEditorState)) {
+			injected = true;
+			ChartEditorDropdowns.NOTE_KINDS.set('botplayNote', 'Botplay Note');
+		}
 
-        if (FlxG.sound.music == null) return;
-        if (PlayState.instance == null) return;
+		if (FlxG.sound.music == null)
+			return;
+		if (PlayState.instance == null)
+			return;
 
-        var songPos = Conductor.instance.songPosition;
+		var songPos = Conductor.instance.songPosition;
 
-        if (currentBotplayIndex < botplayNotes.length) {
-            var nextNote = botplayNotes[currentBotplayIndex];
+		if (currentBotplayIndex < botplayNotes.length) {
+			var nextNote = botplayNotes[currentBotplayIndex];
 
-            if (songPos >= nextNote.time - leewayTime_MS) {
-                PlayState.instance.disableKeys = true;
-                botplayActive = true;
-                currentBotplayIndex++;
-            }
-        }
-        else if (botplayActive) {
-            if (songPos >= lastBotplayNoteEnd + leewayTime_MS) {
-                PlayState.instance.disableKeys = false;
-                botplayActive = false;
-            }
-        }
+			if (songPos >= nextNote.time - leewayTime_MS) {
+				PlayState.instance.disableKeys = true;
+				botplayActive = true;
+				currentBotplayIndex++;
+			}
+		} else if (botplayActive) {
+			if (songPos >= lastBotplayNoteEnd + leewayTime_MS) {
+				PlayState.instance.disableKeys = false;
+				botplayActive = false;
+			}
+		}
 
-        if (botplayActive) {
-            var notesInRange = PlayState.instance.playerStrumline.getNotesMayHit();
-            var notesByDirection = [];
+		if (botplayActive) {
+			var notesInRange = PlayState.instance.playerStrumline.getNotesMayHit();
+			var notesByDirection = [];
 
-            for (i in 0...Strumline.KEY_COUNT)
-                notesByDirection.push([]);
+			for (i in 0...Strumline.KEY_COUNT)
+				notesByDirection.push([]);
 
-            for (note in notesInRange) {
-                notesByDirection[note.direction].push(note);
-            }
+			for (note in notesInRange) {
+				notesByDirection[note.direction].push(note);
+			}
 
-            if (notesInRange.length > 0) {
-                for (direction in notesByDirection) {
-                    for (note in direction) {
-                        if (note.kind == "botplayNote" && note.get_strumTime() <= songPos) {
-                            emulateGoodNoteHit(note);
-                        }
-                    }
-                }
-            }
+			if (notesInRange.length > 0) {
+				for (direction in notesByDirection) {
+					for (note in direction) {
+						if (note.kind == "botplayNote" && note.get_strumTime() <= songPos) {
+							emulateGoodNoteHit(note);
+						}
+					}
+				}
+			}
 
-            var keysHeld:Array<Bool> = [];
-            for (i in 0...Strumline.KEY_COUNT)
-                keysHeld.push(false);
+			var keysHeld:Array<Bool> = [];
+			for (i in 0...Strumline.KEY_COUNT)
+				keysHeld.push(false);
 
-            for (holdNote in PlayState.instance.playerStrumline.holdNotes.members) {
-                if (holdNote == null) continue;
+			for (holdNote in PlayState.instance.playerStrumline.holdNotes.members) {
+				if (holdNote == null)
+					continue;
 
-                var holdStart = holdNote.strumTime;
-                var holdEnd = holdNote.strumTime + holdNote.fullSustainLength;
+				var holdStart = holdNote.strumTime;
+				var holdEnd = holdNote.strumTime + holdNote.fullSustainLength;
 
-                if (holdNote.noteData != null && holdNote.noteData.kind == "botplayNote") {
-                    if (songPos >= holdStart && songPos <= holdEnd) {
-                        keysHeld[holdNote.noteData.getDirection()] = true;
-                        PlayState.instance.playerStrumline.pressKey(holdNote.noteData.getDirection());
+				if (holdNote.noteData != null && holdNote.noteData.kind == "botplayNote") {
+					if (songPos >= holdStart && songPos <= holdEnd) {
+						keysHeld[holdNote.noteData.getDirection()] = true;
+						PlayState.instance.playerStrumline.pressKey(holdNote.noteData.getDirection());
 
-                        var bf = PlayState.instance.currentStage.getBoyfriend();
-                        if (bf != null && bf.isSinging()) {
-                            bf.holdTimer = 0;
-                        }
-                    }
-                }
-            }
+						var bf = PlayState.instance.currentStage.getBoyfriend();
+						if (bf != null && bf.isSinging()) {
+							bf.holdTimer = 0;
+						}
+					}
+				}
+			}
 
-            for (i in 0...Strumline.KEY_COUNT) {
-                if (!keysHeld[i]) {
-                    PlayState.instance.playerStrumline.releaseKey(i);
-                }
-            }
-        }
-    }
+			for (i in 0...Strumline.KEY_COUNT) {
+				if (!keysHeld[i]) {
+					PlayState.instance.playerStrumline.releaseKey(i);
+				}
+			}
+		}
+	}
 
-    function emulateGoodNoteHit(note:NoteSprite) {
-        var score = Scoring.scoreNote(0);
-        var daRating = 'sick';
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
 
-        var healthChange = 0.0;
-        switch (daRating) {
-            case 'sick':
-                healthChange = Constants.HEALTH_SICK_BONUS;
-                isComboBreak = Constants.JUDGEMENT_SICK_COMBO_BREAK;
-            case 'good':
-                healthChange = Constants.HEALTH_GOOD_BONUS;
-                isComboBreak = Constants.JUDGEMENT_GOOD_COMBO_BREAK;
-            case 'bad':
-                healthChange = Constants.HEALTH_BAD_BONUS;
-                isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
-            case 'shit':
-                healthChange = Constants.HEALTH_SHIT_BONUS;
-                isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
-        }
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			resetBotplay();
+		}
+	}
 
-        var isComboBreak = false;
-        var noteDiff:Int = Std.int(Conductor.instance.songPosition - note.noteData.time);
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
 
-        var event:HitNoteScriptEvent = new HitNoteScriptEvent(note, healthChange, score, daRating, isComboBreak, Highscore.tallies.combo + 1, noteDiff, daRating == 'sick');
-        dispatchEvent(event);
+		resetBotplay();
+	}
 
-        if (event.eventCanceled) return;
+	override function onGameOver(event:ScriptEvent):Void {
+		super.onGameOver(event);
 
-        var playerStrumline = PlayState.instance.playerStrumline;
+		resetBotplay();
+	}
 
-        Highscore.tallies.totalNotesHit++;
+	function emulateGoodNoteHit(note:NoteSprite) {
+		var score = Scoring.scoreNote(0);
+		var daRating = 'sick';
 
-        playerStrumline.hitNote(note, !isComboBreak);
+		var healthChange = 0.0;
+		switch (daRating) {
+			case 'sick':
+				healthChange = Constants.HEALTH_SICK_BONUS;
+				isComboBreak = Constants.JUDGEMENT_SICK_COMBO_BREAK;
+			case 'good':
+				healthChange = Constants.HEALTH_GOOD_BONUS;
+				isComboBreak = Constants.JUDGEMENT_GOOD_COMBO_BREAK;
+			case 'bad':
+				healthChange = Constants.HEALTH_BAD_BONUS;
+				isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
+			case 'shit':
+				healthChange = Constants.HEALTH_SHIT_BONUS;
+				isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
+		}
 
-        if (note.holdNoteSprite != null) {
-            playerStrumline.playNoteHoldCover(note.holdNoteSprite);
-        }
+		var isComboBreak = false;
+		var noteDiff:Int = Std.int(Conductor.instance.songPosition - note.noteData.time);
 
-        if (event.doesNotesplash) playerStrumline.playNoteSplash(note.noteData.getDirection());
-        PlayState.instance.vocals.playerVolume = 1;
+		var event:HitNoteScriptEvent = new HitNoteScriptEvent(note, healthChange, score, daRating, isComboBreak, Highscore.tallies.combo + 1, noteDiff,
+			daRating == 'sick');
+		dispatchEvent(event);
 
-        PlayState.instance.applyScore(event.score, event.judgement, event.healthChange, event.isComboBreak);
-        PlayState.instance.popUpScore(event.judgement);
-    }
+		if (event.eventCanceled)
+			return;
 
-    override function dispatchEvent(event:ScriptEvent):Void {
-        ScriptEventDispatcher.callEvent(PlayState.instance.currentStage, event);
-        if (PlayState.instance.currentStage != null)
-            PlayState.instance.currentStage.dispatchToCharacters(event);
-        ScriptEventDispatcher.callEvent(PlayState.instance.currentSong, event);
-        ScriptEventDispatcher.callEvent(PlayState.instance.currentConversation, event);
-    }
+		var playerStrumline = PlayState.instance.playerStrumline;
+
+		Highscore.tallies.totalNotesHit++;
+
+		playerStrumline.hitNote(note, !isComboBreak);
+
+		if (note.holdNoteSprite != null) {
+			playerStrumline.playNoteHoldCover(note.holdNoteSprite);
+		}
+
+		if (event.doesNotesplash)
+			playerStrumline.playNoteSplash(note.noteData.getDirection());
+		PlayState.instance.vocals.playerVolume = 1;
+
+		PlayState.instance.applyScore(event.score, event.judgement, event.healthChange, event.isComboBreak);
+		PlayState.instance.popUpScore(event.judgement);
+	}
+
+	function resetBotplay():Void {
+		if (PlayState.instance == null)
+			return;
+
+		PlayState.instance.disableKeys = false;
+		botplayNotes = [];
+		currentBotplayIndex = 0;
+		botplayActive = false;
+		lastBotplayNoteEnd = -1;
+	}
+
+	override function dispatchEvent(event:ScriptEvent):Void {
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentStage, event);
+		if (PlayState.instance.currentStage != null)
+			PlayState.instance.currentStage.dispatchToCharacters(event);
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentSong, event);
+		ScriptEventDispatcher.callEvent(PlayState.instance.currentConversation, event);
+	}
 }

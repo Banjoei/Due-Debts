@@ -7,23 +7,18 @@ import funkin.play.character.SparrowCharacter;
 import funkin.play.GameOverSubState;
 import StringTools;
 
-class BoyfriendBlazinCharacter extends SparrowCharacter
-{
-	function new()
-	{
+class BoyfriendBlazinCharacter extends SparrowCharacter {
+	function new() {
 		super('bf-blazin');
 	}
 
-	function onCreate(event:ScriptEvent)
-	{
+	function onCreate(event:ScriptEvent) {
 		super.onCreate(event);
-		
 	}
 
 	var cantUppercut = false;
 
-	function onNoteHit(event:HitNoteScriptEvent)
-	{
+	function onNoteHit(event:HitNoteScriptEvent) {
 		holdTimer = 0;
 
 		// SPECIAL CASE: If Boyfriend hits a poor note at low health (at 30% chance),
@@ -45,8 +40,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		var dir = event.note.noteData.getDirection();
 
 		// Override the hit note animation.
-		switch (event.note.kind)
-		{
+		switch (event.note.kind) {
 			case "weekend-1-bfnote":
 				if (dir == 0) {
 					playPunchHighAnim();
@@ -68,7 +62,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 			case "weekend-1-bfstylenote":
 				playSingingAnims(dir, false, 'alt');
 			case "weekend-1-bfuppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playPunchHighAnim();
 					} else if (dir == 1) {
@@ -80,7 +74,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 					playUppercutAnim(true);
 				}
 			case "weekend-1-darnelluppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playHitSpinAnim();
 					} else if (dir == 1) {
@@ -141,7 +135,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 				playUppercutPrepAnim();
 			case "weekend-1-picouppercut":
 				playUppercutAnim(true);
-			
+
 			case "weekend-1-darnelluppercutprep":
 				playIdleAnim();
 
@@ -164,8 +158,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		super.playAnimation(name, restart, ignoreOther);
 	}
 
-	function onNoteMiss(event:NoteScriptEvent)
-	{
+	function onNoteMiss(event:NoteScriptEvent) {
 		holdTimer = 0;
 
 		// SPECIAL CASE: Darnell prepared to uppercut last time and Pico missed! FINISH HIM!
@@ -187,8 +180,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		var dir = event.note.noteData.getDirection();
 
 		// Override the hit note animation.
-		switch (event.note.kind)
-		{
+		switch (event.note.kind) {
 			case "weekend-1-bfnote":
 				lolGetFucked(dir);
 			case "weekend-1-bftaunt":
@@ -198,7 +190,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 			case "weekend-1-bfstylenote":
 				lolGetFucked(dir);
 			case "weekend-1-bfuppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playPunchHighAnim();
 					} else if (dir == 1) {
@@ -210,7 +202,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 					playUppercutAnim(true);
 				}
 			case "weekend-1-darnelluppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playHitSpinAnim();
 					} else if (dir == 1) {
@@ -302,8 +294,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		return (PlayState.instance.health + event.healthChange) <= 0.0;
 	}
 
-	function onNoteGhostMiss(event:GhostMissNoteScriptEvent)
-	{
+	function onNoteGhostMiss(event:GhostMissNoteScriptEvent) {
 		if (willMissBeLethal(event)) {
 			// Darnell throws a punch so that Pico dies.
 			playHitLowAnim();
@@ -313,34 +304,32 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		}
 	}
 
-	override function onAnimationFinished(name:String)
-	{
+	override function onAnimationFinished(name:String) {
 		super.onAnimationFinished(name);
 	}
 
-	override function onSongRetry()
-	{
+	override function onSongRetry() {
 		super.onSongRetry();
 		cantUppercut = false;
 		playIdleAnim();
 	}
 
-	function getDarnell()
-	{
-		if (this.debug) return null;
+	function getDarnell() {
+		if (this.debug)
+			return null;
 		return PlayState.instance.currentStage.getDad();
 	}
 
-	function moveToBack()
-	{
-		if (this.debug) return;
+	function moveToBack() {
+		if (this.debug)
+			return;
 		this.zIndex = 2000;
 		PlayState.instance.currentStage.refresh();
 	}
 
-	function moveToFront()
-	{
-		if (this.debug) return;
+	function moveToFront() {
+		if (this.debug)
+			return;
 		this.zIndex = 3000;
 		PlayState.instance.currentStage.refresh();
 	}
@@ -350,9 +339,7 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 	}
 
 	function isDarnellInUppercut():Void {
-		return
-			getDarnell().getCurrentAnimation() == 'uppercut'
-			|| getDarnell().getCurrentAnimation() == 'uppercut-hold';
+		return getDarnell().getCurrentAnimation() == 'uppercut' || getDarnell().getCurrentAnimation() == 'uppercut-hold';
 	}
 
 	function wasNoteHitPoorly(event:HitNoteScriptEvent):Bool {
@@ -364,7 +351,6 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 	}
 
 	// ANIMATIONS
-
 	var alternate:Bool = false;
 
 	function doAlternate():String {
@@ -372,26 +358,23 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		return alternate ? '1' : '2';
 	}
 
-	function playBlockAnim(?judgement:String)
-	{
+	function playBlockAnim(?judgement:String) {
 		// on sick block, do a 3rd strike esque "tech" effect
-		if (judgement == 'sick')
-		{
-			//var blendAnims:Array<Int> = [10, 0, 10, 0, 0, 10, 0, 0, 10, 0, 10];
-//
-			//for (blendMode in 0...blendAnims.length)
-			//{
+		if (judgement == 'sick') {
+			// var blendAnims:Array<Int> = [10, 0, 10, 0, 0, 10, 0, 0, 10, 0, 10];
+			//
+			// for (blendMode in 0...blendAnims.length)
+			// {
 			//	new FlxTimer().start(blendMode / 60, function(_) {
-//
+			//
 			//		if (blendAnims[blendMode] != 10)
 			//			this.color = 0xFF0000FF;
 			//		else
 			//			this.color = 0xFFFFFFFF;
-//
+			//
 			//		this.blend = blendAnims[blendMode];
 			//	});
-			//}
-
+			// }
 		}
 
 		this.playAnimation('block', true, false);
@@ -399,38 +382,32 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		moveToBack();
 	}
 
-	function playCringeAnim()
-	{
+	function playCringeAnim() {
 		this.playAnimation('cringe', true, false);
 		moveToBack();
 	}
 
-	function playDodgeAnim()
-	{
+	function playDodgeAnim() {
 		this.playAnimation('dodge', true, false);
 		moveToBack();
 	}
 
-	function playIdleAnim()
-	{
+	function playIdleAnim() {
 		this.playAnimation('idle', false, false);
 		moveToBack();
 	}
 
-	function playFakeoutAnim()
-	{
+	function playFakeoutAnim() {
 		this.playAnimation('fakeout', true, false);
 		moveToBack();
 	}
 
-	function playUppercutPrepAnim()
-	{
+	function playUppercutPrepAnim() {
 		this.playAnimation('uppercutPrep', true, false);
 		moveToFront();
 	}
 
-	function playUppercutAnim(hit:Bool)
-	{
+	function playUppercutAnim(hit:Bool) {
 		this.playAnimation('uppercut', true, false);
 		if (hit) {
 			PlayState.instance.camGame.shake(0.005, 0.25);
@@ -438,48 +415,41 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		moveToFront();
 	}
 
-	function playUppercutHitAnim()
-	{
+	function playUppercutHitAnim() {
 		this.playAnimation('uppercutHit', true, false);
 		PlayState.instance.camGame.shake(0.005, 0.25);
 		moveToBack();
 	}
 
-	function playHitHighAnim()
-	{
+	function playHitHighAnim() {
 		this.playAnimation('hitHigh', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
 
-	function playHitLowAnim()
-	{
+	function playHitLowAnim() {
 		this.playAnimation('hitLow', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
 
-	function playHitSpinAnim()
-	{
+	function playHitSpinAnim() {
 		this.playAnimation('hitSpin', true, false, true);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
 
-	function playPunchHighAnim()
-	{
+	function playPunchHighAnim() {
 		this.playAnimation('punchHigh' + doAlternate(), true, false);
 		moveToFront();
 	}
 
-	function playPunchLowAnim()
-	{
+	function playPunchLowAnim() {
 		this.playAnimation('punchLow' + doAlternate(), true, false);
 		moveToFront();
 	}
 
-	function playTauntConditionalAnim()
-	{
+	function playTauntConditionalAnim() {
 		if (getCurrentAnimation() == "fakeout") {
 			playTauntAnim();
 		} else {
@@ -487,21 +457,18 @@ class BoyfriendBlazinCharacter extends SparrowCharacter
 		}
 	}
 
-	function playTauntAnim()
-	{
+	function playTauntAnim() {
 		this.playAnimation('hey', true, false);
 		moveToBack();
 	}
-	
-	function playSingingAnims(dir:NoteDirection, missed:Bool, suffix:String):Void
-	{
+
+	function playSingingAnims(dir:NoteDirection, missed:Bool, suffix:String):Void {
 		this.playSingAnimation(dir, missed, suffix);
 		moveToBack();
 		this.holdTimer = 0;
 	}
 
-	function lolGetFucked(dir:NoteDirection)
-	{
+	function lolGetFucked(dir:NoteDirection) {
 		if (dir == 1 || dir == 0) {
 			playHitHighAnim();
 		} else if (dir == 2 || dir == 3) {

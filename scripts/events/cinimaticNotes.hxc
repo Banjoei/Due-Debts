@@ -5,200 +5,328 @@ import funkin.play.notes.notestyle.NoteStyle;
 import funkin.data.notestyle.NoteStyleRegistry;
 import funkin.Preferences;
 import funkin.util.Constants;
-
 import flixel.FlxG;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
-
 import funkin.modding.module.ScriptedModule;
 import funkin.modding.module.ModuleHandler;
 
-class CinematicNoteModule extends ScriptedModule
-{
-    var originalPlayerX:Float = Math.NaN;
-    public var cinematicEnabled:Bool = false;
-    public var cinematicEase:Dynamic = FlxEase.quadOut;
-    public var deltaX:Float = 0;
-    public var noteStyle:NoteStyle;
-    public var shouldRun:Bool = false;
+class CinematicNoteModule extends ScriptedModule {
+	var originalPlayerX:Float = Math.NaN;
 
-    public function new()
-    {
-        super('CinematicNoteModule');
-    }
+	public var cinematicEnabled:Bool = false;
+	public var cinematicEase:Dynamic = FlxEase.quadOut;
+	public var deltaX:Float = 0;
+	public var noteStyle:NoteStyle;
+	public var shouldRun:Bool = false;
 
-    override function onSongLoaded(event:SongLoadScriptEvent):Void {
-        if (event.events != null) {
-            shouldRun = event.events.filter(data -> return data.eventKind == "CinimaticNotes").length > 0;
-        }
-    }
+	var cinematicTweens:Array<FlxTween> = [];
+	var cinematicTimers:Array<FlxTimer> = [];
 
-    public function applyCinematic(enable:Bool, ease:String):Void
-    {
-        var game = PlayState.instance;
-        if (game == null || game.currentStage == null) return;
+	public function new() {
+		super('CinematicNoteModule');
+	}
 
-        var player:Strumline = game.playerStrumline;
-        var opp:Strumline = game.opponentStrumline;
-        if (player == null || opp == null) return;
+	override function onSongLoaded(event:SongLoadScriptEvent):Void {
+		if (event.events != null) {
+			shouldRun = event.events.filter(data -> return data.eventKind == "CinimaticNotes").length > 0;
+		}
+	}
 
-        if (Math.isNaN(originalPlayerX))
-            originalPlayerX = player.x;
+	public function applyCinematic(enable:Bool, ease:String):Void {
+		var game = PlayState.instance;
+		if (game == null || game.currentStage == null)
+			return;
 
-        this.cinematicEnabled = enable;
+		var player:Strumline = game.playerStrumline;
+		var opp:Strumline = game.opponentStrumline;
+		if (player == null || opp == null)
+			return;
 
-        if (noteStyle == null) noteStyle = NoteStyleRegistry.instance.fetchEntry(game.currentChart.noteStyle);
-        if (noteStyle == null) noteStyle = NoteStyleRegistry.instance.fetchDefault();
+		if (Math.isNaN(originalPlayerX))
+			originalPlayerX = player.x;
 
-        var easeKey = ease != null ? ease.toLowerCase() : "quadout";
-        this.cinematicEase = switch (easeKey) {
-            case "linear": FlxEase.linear;
-            case "quadin": FlxEase.quadIn;
-            case "quadout": FlxEase.quadOut;
-            case "quadinout": FlxEase.quadInOut;
-            case "cubein": FlxEase.cubeIn;
-            case "cubeout": FlxEase.cubeOut;
-            case "cubeinout": FlxEase.cubeInOut;
-            case "quartin": FlxEase.quartIn;
-            case "quartout": FlxEase.quartOut;
-            case "quartinout": FlxEase.quartInOut;
-            case "quintin": FlxEase.quintIn;
-            case "quintout": FlxEase.quintOut;
-            case "quintinout": FlxEase.quintInOut;
-            case "sinein": FlxEase.sineIn;
-            case "sineout": FlxEase.sineOut;
-            case "sineinout": FlxEase.sineInOut;
-            case "expoin": FlxEase.expoIn;
-            case "expoout": FlxEase.expoOut;
-            case "expoinout": FlxEase.expoInOut;
-            case "circin": FlxEase.circIn;
-            case "circout": FlxEase.circOut;
-            case "circinout": FlxEase.circInOut;
-            case "backin": FlxEase.backIn;
-            case "backout": FlxEase.backOut;
-            case "backinout": FlxEase.backInOut;
-            case "bouncein": FlxEase.bounceIn;
-            case "bounceout": FlxEase.bounceOut;
-            case "bounceinout": FlxEase.bounceInOut;
-            case "elasticin": FlxEase.elasticIn;
-            case "elasticout": FlxEase.elasticOut;
-            case "elasticinout": FlxEase.elasticInOut;
-            case "smoothstepin": FlxEase.smoothStepIn;
-            case "smoothstepout": FlxEase.smoothStepOut;
-            case "smoothstepinout": FlxEase.smoothStepInOut;
-            case "smootherstepin": FlxEase.smootherStepIn;
-            case "smootherstepout": FlxEase.smootherStepOut;
-            case "smootherstepinout": FlxEase.smootherStepInOut;
-            default:
-                trace('[CinematicNotes] Unknown easing "' + ease + '"! Defaulting to quadOut.');
-                FlxEase.quadOut;
-        };
+		this.cinematicEnabled = enable;
 
-        var targetX:Float = enable
-            ? (FlxG.width * 0.5 - player.width * 0.5)
-            : originalPlayerX;
+		if (noteStyle == null)
+			noteStyle = NoteStyleRegistry.instance.fetchEntry(game.currentChart.noteStyle);
+		if (noteStyle == null)
+			noteStyle = NoteStyleRegistry.instance.fetchDefault();
 
-        this.deltaX = targetX - player.x;
+		var easeKey = ease != null ? ease.toLowerCase() : "quadout";
+		this.cinematicEase = switch (easeKey) {
+			case "linear": FlxEase.linear;
+			case "quadin": FlxEase.quadIn;
+			case "quadout": FlxEase.quadOut;
+			case "quadinout": FlxEase.quadInOut;
+			case "cubein": FlxEase.cubeIn;
+			case "cubeout": FlxEase.cubeOut;
+			case "cubeinout": FlxEase.cubeInOut;
+			case "quartin": FlxEase.quartIn;
+			case "quartout": FlxEase.quartOut;
+			case "quartinout": FlxEase.quartInOut;
+			case "quintin": FlxEase.quintIn;
+			case "quintout": FlxEase.quintOut;
+			case "quintinout": FlxEase.quintInOut;
+			case "sinein": FlxEase.sineIn;
+			case "sineout": FlxEase.sineOut;
+			case "sineinout": FlxEase.sineInOut;
+			case "expoin": FlxEase.expoIn;
+			case "expoout": FlxEase.expoOut;
+			case "expoinout": FlxEase.expoInOut;
+			case "circin": FlxEase.circIn;
+			case "circout": FlxEase.circOut;
+			case "circinout": FlxEase.circInOut;
+			case "backin": FlxEase.backIn;
+			case "backout": FlxEase.backOut;
+			case "backinout": FlxEase.backInOut;
+			case "bouncein": FlxEase.bounceIn;
+			case "bounceout": FlxEase.bounceOut;
+			case "bounceinout": FlxEase.bounceInOut;
+			case "elasticin": FlxEase.elasticIn;
+			case "elasticout": FlxEase.elasticOut;
+			case "elasticinout": FlxEase.elasticInOut;
+			case "smoothstepin": FlxEase.smoothStepIn;
+			case "smoothstepout": FlxEase.smoothStepOut;
+			case "smoothstepinout": FlxEase.smoothStepInOut;
+			case "smootherstepin": FlxEase.smootherStepIn;
+			case "smootherstepout": FlxEase.smootherStepOut;
+			case "smootherstepinout": FlxEase.smootherStepInOut;
+			default:
+				trace('[CinematicNotes] Unknown easing "' + ease + '"! Defaulting to quadOut.');
+				FlxEase.quadOut;
+		};
 
-        FlxTween.tween(player, { x: targetX }, 0.5, { ease: cinematicEase });
+		var targetX:Float = enable ? (FlxG.width * 0.5 - player.width * 0.5) : originalPlayerX;
 
-        if (player.strumlineNotes != null && player.strumlineNotes.members != null)
-        {
-            for (note in player.strumlineNotes.members)
-            {
-                if (note != null)
-                    FlxTween.tween(note, { x: note.x + deltaX }, 0.5, { ease: cinematicEase });
-            }
-        }
+		this.deltaX = targetX - player.x;
 
-        var goalAlpha:Float = enable ? 0 : 1;
+		FlxTween.tween(player, {x: targetX}, 0.5, {ease: cinematicEase});
 
-        if (player.notes != null && player.notes.members != null)
-        {
-            for (n in player.notes.members)
-            {
-                if (n != null && n.alive)
-                    FlxTween.tween(n, { x: n.x + deltaX }, 0.5, { ease: cinematicEase });
-            }
-        }
+		if (player.strumlineNotes != null && player.strumlineNotes.members != null) {
+			for (note in player.strumlineNotes.members) {
+				if (note != null)
+					FlxTween.tween(note, {x: note.x + deltaX}, 0.5, {ease: cinematicEase});
+			}
+		}
 
-        if (opp.background != null)
-            opp.background.visible = false;
+		var goalAlpha:Float = enable ? 0 : 1;
 
-        if (!enable)
-        {
-            opp.visible = true;
-            opp.alpha = 0;
-        }
+		if (player.notes != null && player.notes.members != null) {
+			for (n in player.notes.members) {
+				if (n != null && n.alive)
+					FlxTween.tween(n, {x: n.x + deltaX}, 0.5, {ease: cinematicEase});
+			}
+		}
 
-        FlxTween.tween(opp, { alpha: goalAlpha }, 0.5, { ease: FlxEase.linear });
+		if (opp.background != null)
+			opp.background.visible = false;
 
-        var hideOpp:Bool = enable;
+		if (!enable) {
+			opp.visible = true;
+			opp.alpha = 0;
+		}
 
-        new FlxTimer().start(0.5, function(_:FlxTimer):Void
-        {
-            if (opp != null)
-                opp.visible = hideOpp ? false : true;
-        });
-    }
+		FlxTween.tween(opp, {alpha: goalAlpha}, 0.5, {ease: FlxEase.linear});
 
-    override function onUpdate(delta:Float):Void {
-        super.onUpdate(delta);
-        if (!shouldRun) return;
+		var hideOpp:Bool = enable;
 
-        var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+		new FlxTimer().start(0.5, function(_:FlxTimer):Void {
+			if (opp != null)
+				opp.visible = hideOpp ? false : true;
+		});
+	}
 
-        if (cinematicEnabled) {
-            if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-            var player:Strumline = PlayState.instance.playerStrumline;
-            if (player == null) return;
+	override function onUpdate(delta:Float):Void {
+		super.onUpdate(delta);
+		if (!shouldRun)
+			return;
 
-            if (player.noteHoldCovers != null && player.noteHoldCovers.members != null) {
-                for (n in player.noteHoldCovers.members) {
-                    if (n != null && n.alive)
-                        n.alpha = goalAlpha;
-                }
-            }
-        }
-    }
+		var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+
+		if (cinematicEnabled) {
+			if (PlayState.instance == null || PlayState.instance.currentStage == null)
+				return;
+			var player:Strumline = PlayState.instance.playerStrumline;
+			if (player == null)
+				return;
+
+			if (player.noteHoldCovers != null && player.noteHoldCovers.members != null) {
+				for (n in player.noteHoldCovers.members) {
+					if (n != null && n.alive)
+						n.alpha = goalAlpha;
+				}
+			}
+		}
+	}
+
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
+
+		if (!shouldRun)
+			return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			resetCinematic();
+		}
+	}
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+
+		if (!shouldRun)
+			return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+
+		resetCinematic(true);
+	}
+
+	override function onGameOver(event:ScriptEvent):Void {
+		super.onGameOver(event);
+
+		if (!shouldRun)
+			return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+
+		resetCinematic(false);
+	}
+
+	function resetCinematic(smooth:Bool = false):Void {
+		var player = PlayState.instance.playerStrumline;
+		var opp = PlayState.instance.opponentStrumline;
+		if (player == null || opp == null)
+			return;
+
+		for (tween in cinematicTweens) {
+			if (tween != null)
+				tween.cancel();
+		}
+		cinematicTweens = [];
+
+		for (timer in cinematicTimers) {
+			if (timer != null)
+				timer.cancel();
+		}
+		cinematicTimers = [];
+
+		var easeFunc = FlxEase.quadOut;
+
+		if (!Math.isNaN(originalPlayerX)) {
+			if (smooth) {
+				cinematicTweens.push(FlxTween.tween(player, {x: originalPlayerX}, 0.5, {ease: easeFunc}));
+			} else {
+				player.x = originalPlayerX;
+			}
+		}
+
+		if (player.notes != null && player.notes.members != null) {
+			for (note in player.notes.members) {
+				if (note != null) {
+					if (smooth) {
+						cinematicTweens.push(FlxTween.tween(note, {x: note.x - deltaX}, 0.5, {ease: easeFunc}));
+					} else {
+						note.x -= deltaX;
+					}
+				}
+			}
+		}
+
+		if (player.strumlineNotes != null && player.strumlineNotes.members != null) {
+			for (note in player.strumlineNotes.members) {
+				if (note != null) {
+					if (smooth) {
+						cinematicTweens.push(FlxTween.tween(note, {x: note.x - deltaX}, 0.5, {ease: easeFunc}));
+					} else {
+						note.x -= deltaX;
+					}
+				}
+			}
+		}
+
+		if (smooth) {
+			opp.visible = true;
+			cinematicTweens.push(FlxTween.tween(opp, {alpha: 1}, 0.5, {ease: FlxEase.linear}));
+		} else {
+			opp.alpha = 1;
+			opp.visible = true;
+		}
+	}
+
+	override function onPause(event:ScriptEvent):Void {
+		super.onPause(event);
+
+		if (!shouldRun)
+			return;
+
+		for (tween in cinematicTweens) {
+			if (tween != null)
+				tween.active = false;
+		}
+		for (timer in cinematicTimers) {
+			if (timer != null)
+				timer.active = false;
+		}
+	}
+
+	override function onResume(event:ScriptEvent):Void {
+		super.onResume(event);
+
+		if (!shouldRun)
+			return;
+
+		for (tween in cinematicTweens) {
+			if (tween != null)
+				tween.active = true;
+		}
+		for (timer in cinematicTimers) {
+			if (timer != null)
+				timer.active = true;
+		}
+	}
 }
 
-class CinematicNotesEvent extends SongEvent
-{
-    public function new()
-    {
-        super('CinimaticNotes');
-    }
+class CinematicNotesEvent extends SongEvent {
+	public function new() {
+		super('CinimaticNotes');
+	}
 
-    override function handleEvent(data)
-    {
-        var enable:Bool  = data.getBool('enabled');
-        var easing:String = data.getString('easing');
+	override function handleEvent(data) {
+		var enable:Bool = data.getBool('enabled');
+		var easing:String = data.getString('easing');
 
-        var mod = ModuleHandler.getModule('CinematicNoteModule');
-        if (mod != null)
-        {
-            mod.scriptSet('cinematicEnabled', enable);
-            mod.scriptSet('cinematicEase', easing);
-            mod.scriptCall('applyCinematic', [enable, easing]);
-        }
-        else
-        {
-            trace('[CinimaticNotesEvent] Module not found');
-        }
-    }
+		var mod = ModuleHandler.getModule('CinematicNoteModule');
+		if (mod != null) {
+			mod.scriptSet('cinematicEnabled', enable);
+			mod.scriptSet('cinematicEase', easing);
+			mod.scriptCall('applyCinematic', [enable, easing]);
+		} else {
+			trace('[CinimaticNotesEvent] Module not found');
+		}
+	}
 
-    override function getEventSchema()
-    {
-        return [
-            { name:'enabled', title:'Enable Cinematic', defaultValue:true,  type:'bool' },
-            { name:'easing',  title:'Tween Easing',     defaultValue:'quadOut', type:'string' }
-        ];
-    }
+	override function getEventSchema() {
+		return [
+			{
+				name: 'enabled',
+				title: 'Enable Cinematic',
+				defaultValue: true,
+				type: 'bool'
+			},
+			{
+				name: 'easing',
+				title: 'Tween Easing',
+				defaultValue: 'quadOut',
+				type: 'string'
+			}
+		];
+	}
 
-    override function getTitle()
-    {
-        return 'Cinimatic Notes';
-    }
+	override function getTitle() {
+		return 'Cinimatic Notes';
+	}
 }

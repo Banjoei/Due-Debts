@@ -28,29 +28,28 @@ class BoyfriendCharacter extends MultiSparrowCharacter {
 		FunkinSound.playOnce(Paths.sound("gameplay/gameover/fakeout_death"), 1.0);
 
 		var bfFakeout:FlxAtlasSprite = new FlxAtlasSprite(this.x - 440, this.y - 240, Paths.animateAtlas("characters/bfFakeOut", "shared"));
-    FlxG.state.subState.add(bfFakeout);
+		FlxG.state.subState.add(bfFakeout);
 		bfFakeout.zIndex = 1000;
-    bfFakeout.playAnimation('');
+		bfFakeout.playAnimation('');
 		// We don't want people to miss this.
 		FlxG.state.subState.mustNotExit = true;
-    bfFakeout.onAnimationComplete.add(() -> {
-      bfFakeout.visible = false;
-      this.visible = true;
+		bfFakeout.onAnimationComplete.add(() -> {
+			bfFakeout.visible = false;
+			this.visible = true;
 			FlxG.state.subState.mustNotExit = false;
-      this.playAnimation('firstDeath', true, true);
-      // Play the "blue balled" sound. May play a variant if one has been assigned.
-      GameOverSubState.playBlueBalledSFX();
-    });
-    bfFakeout.visible = true;
+			this.playAnimation('firstDeath', true, true);
+			// Play the "blue balled" sound. May play a variant if one has been assigned.
+			GameOverSubState.playBlueBalledSFX();
+		});
+		bfFakeout.visible = true;
 		this.visible = false;
 	}
 
 	var game = PlayState.instance;
 
-    var bfFade:FunkinSprite;
+	var bfFade:FunkinSprite;
 
-	function onNoteHit(event:HitNoteScriptEvent)
-	{
+	function onNoteHit(event:HitNoteScriptEvent) {
 		if (event.eventCanceled) {
 			// onNoteHit event was cancelled by the gameplay module.
 			return;
@@ -60,7 +59,7 @@ class BoyfriendCharacter extends MultiSparrowCharacter {
 
 		if (event.note.noteData.getMustHitNote() && characterType == CharacterType.BF) {
 			// Override the hit note animation.
-			switch(event.note.kind) {
+			switch (event.note.kind) {
 				case "weekend-1-cockgun": // HE'S PULLING HIS COCK OUT
 					holdTimer = 0;
 					playCockGunAnim();
@@ -99,13 +98,12 @@ class BoyfriendCharacter extends MultiSparrowCharacter {
 		FunkinSound.playOnce(Paths.soundRandom('shot', 1, 4));
 	}
 
-	function playSingingAnims(dir:NoteDirection, missed:Bool, suffix:String):Void
-	{
+	function playSingingAnims(dir:NoteDirection, missed:Bool, suffix:String):Void {
 		this.playSingAnimation(dir, missed, suffix);
 		this.holdTimer = 0;
 	}
 
-    function addToStage(sprite:FlxSprite) {
+	function addToStage(sprite:FlxSprite) {
 		if (this.debug) {
 			// We are in the chart editor or something.
 			// TODO: Make this work properly.

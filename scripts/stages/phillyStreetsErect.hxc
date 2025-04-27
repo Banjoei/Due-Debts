@@ -25,8 +25,7 @@ import flixel.addons.display.FlxBackdrop;
 import funkin.graphics.shaders.AdjustColorShader;
 import StringTools;
 
-class PhillyStreetsErectStage extends Stage
-{
+class PhillyStreetsErectStage extends Stage {
 	var rainShader:RuntimeRainShader = new RuntimeRainShader();
 	var rainShaderFilter:ShaderFilter;
 	var blurFilter:BlurFilter = new BlurFilter(6, 6);
@@ -38,7 +37,6 @@ class PhillyStreetsErectStage extends Stage
 
 	// var rainSndAmbience:FunkinSound;
 	// var carSndAmbience:FunkinSound;
-
 	var lightsStop:Bool = false; // state of the traffic lights
 	var lastChange:Int = 0;
 	var changeInterval:Int = 8; // make sure it doesnt change until AT LEAST this many beats
@@ -53,36 +51,35 @@ class PhillyStreetsErectStage extends Stage
 
 	var colorShader:AdjustColorShader;
 
-	function new()
-	{
+	function new() {
 		super('phillyStreetsErect');
 	}
 
 	/**
- * Changes the current state of the traffic lights.
-	* Updates the next change accordingly and will force cars to move when ready
-*/
-	function changeLights(beat:Int):Void{
-
+	 * Changes the current state of the traffic lights.
+	 	* Updates the next change accordingly and will force cars to move when ready
+	 */
+	function changeLights(beat:Int):Void {
 		lastChange = beat;
 		lightsStop = !lightsStop;
 
-		if(lightsStop){
+		if (lightsStop) {
 			getNamedProp('phillyTraffic').animation.play('tored');
 			changeInterval = 20;
 		} else {
 			getNamedProp('phillyTraffic').animation.play('togreen');
 			changeInterval = 30;
 
-			if(carWaiting == true) finishCarLights(getNamedProp('phillyCars'));
+			if (carWaiting == true)
+				finishCarLights(getNamedProp('phillyCars'));
 		}
 	}
 
 	/**
- * Resets every value of a car and hides it from view.
- */
-	function resetCar(left:Bool, right:Bool){
-		if(left){
+	 * Resets every value of a car and hides it from view.
+	 */
+	function resetCar(left:Bool, right:Bool) {
+		if (left) {
 			carWaiting = false;
 			carInterruptable = true;
 			var cars = getNamedProp('phillyCars');
@@ -94,7 +91,7 @@ class PhillyStreetsErectStage extends Stage
 			}
 		}
 
-		if(right){
+		if (right) {
 			car2Interruptable = true;
 			var cars2 = getNamedProp('phillyCars2');
 			if (cars2 != null) {
@@ -118,8 +115,7 @@ class PhillyStreetsErectStage extends Stage
 		// carSndAmbience.volume = 0.1;
 	}
 
-	override function onCreate(event:ScriptEvent):Void
-	{
+	override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
 		// rainSndAmbience = FunkinSound.load(Paths.sound("rainAmbience", "weekend1"), true, false, true);
@@ -134,8 +130,7 @@ class PhillyStreetsErectStage extends Stage
 		rainShader.scale = FlxG.height / 200; // adjust this value so that the rain looks nice
 
 		FlxG.console.registerObject("rainShader", rainShader);
-		switch (PlayState.instance.currentSong.id)
-		{
+		switch (PlayState.instance.currentSong.id) {
 			case "darnell":
 				rainShaderStartIntensity = 0;
 				rainShaderEndIntensity = 0.01;
@@ -151,12 +146,12 @@ class PhillyStreetsErectStage extends Stage
 		rainShader.rainColor = 0xFFa8adb5;
 
 		// set the shader input
-		//rainShader.mask = frameBufferMan.getFrameBuffer("mask");
-		//rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
+		// rainShader.mask = frameBufferMan.getFrameBuffer("mask");
+		// rainShader.lightMap = frameBufferMan.getFrameBuffer("lightmap");
 
 		rainShaderFilter = new ShaderFilter(rainShader);
 		FlxG.camera.filters = [rainShaderFilter];
-		//FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
+		// FlxG.camera.setFilters([new openfl.filters.BlurFilter(16,16)]);
 
 		resetCar(true, true);
 		resetStageValues();
@@ -172,8 +167,7 @@ class PhillyStreetsErectStage extends Stage
 	var mist4:FlxBackdrop;
 	var mist5:FlxBackdrop;
 
-	override function buildStage()
-	{
+	override function buildStage() {
 		super.buildStage();
 
 		scrollingSky = new FlxTiledSprite(Paths.image('phillyStreets/erect/phillySkybox'), 2922, 718, true, false);
@@ -191,7 +185,7 @@ class PhillyStreetsErectStage extends Stage
 		mist0.setPosition(-650, -100);
 		mist0.scrollFactor.set(1.2, 1.2);
 		mist0.zIndex = 1000;
-	mist0.blend = 0;
+		mist0.blend = 0;
 		mist0.color = 0xFF5c5c5c;
 		mist0.alpha = 0.6;
 		mist0.velocity.x = 172;
@@ -203,7 +197,7 @@ class PhillyStreetsErectStage extends Stage
 		mist1.setPosition(-650, -100);
 		mist1.scrollFactor.set(1.1, 1.1);
 		mist1.zIndex = 1000;
-	mist1.blend = 0;
+		mist1.blend = 0;
 		mist1.color = 0xFF5c5c5c;
 		mist1.alpha = 0.6;
 		mist1.velocity.x = 150;
@@ -215,7 +209,7 @@ class PhillyStreetsErectStage extends Stage
 		mist2.setPosition(-650, -100);
 		mist2.scrollFactor.set(1.2, 1.2);
 		mist2.zIndex = 1001;
-	mist2.blend = 0;
+		mist2.blend = 0;
 		mist2.color = 0xFF5c5c5c;
 		mist2.alpha = 0.8;
 		mist2.velocity.x = -80;
@@ -227,7 +221,7 @@ class PhillyStreetsErectStage extends Stage
 		mist3.setPosition(-650, -100);
 		mist3.scrollFactor.set(0.95, 0.95);
 		mist3.zIndex = 99;
-	mist3.blend = 0;
+		mist3.blend = 0;
 		mist3.color = 0xFF5c5c5c;
 		mist3.alpha = 0.5;
 		mist3.velocity.x = -50;
@@ -240,7 +234,7 @@ class PhillyStreetsErectStage extends Stage
 		mist4.setPosition(-650, -100);
 		mist4.scrollFactor.set(0.8, 0.8);
 		mist4.zIndex = 88;
-	mist4.blend = 0;
+		mist4.blend = 0;
 		mist4.color = 0xFF5c5c5c;
 		mist4.alpha = 1;
 		mist4.velocity.x = 40;
@@ -253,7 +247,7 @@ class PhillyStreetsErectStage extends Stage
 		mist5.setPosition(-650, -100);
 		mist5.scrollFactor.set(0.5, 0.5);
 		mist5.zIndex = 39;
-	mist5.blend = 0;
+		mist5.blend = 0;
 		mist5.color = 0xFF5c5c5c;
 		mist5.alpha = 1;
 		mist5.velocity.x = 20;
@@ -267,9 +261,11 @@ class PhillyStreetsErectStage extends Stage
 		super.onDestroy();
 
 		var cars = getNamedProp('phillyCars');
-		if (cars != null) FlxTween.cancelTweensOf(cars);
+		if (cars != null)
+			FlxTween.cancelTweensOf(cars);
 		var cars2 = getNamedProp('phillyCars2');
-		if (cars2 != null) FlxTween.cancelTweensOf(cars2);
+		if (cars2 != null)
+			FlxTween.cancelTweensOf(cars2);
 
 		// Fully stop ambiance.
 		// if (rainSndAmbience != null) rainSndAmbience.stop();
@@ -277,10 +273,10 @@ class PhillyStreetsErectStage extends Stage
 	}
 
 	/**
- * Drive the car away from the lights to the end of the road.
-	* Used when the lights turn green and the car is waiting in position.
-*/
-	function finishCarLights(sprite:FlxSprite):Void{
+	 * Drive the car away from the lights to the end of the road.
+	 	* Used when the lights turn green and the car is waiting in position.
+	 */
+	function finishCarLights(sprite:FlxSprite):Void {
 		carWaiting = false;
 		var duration:Float = FlxG.random.float(1.8, 3);
 		var rotations:Array<Int> = [-5, 18];
@@ -293,30 +289,29 @@ class PhillyStreetsErectStage extends Stage
 			FlxPoint.get(3102 - offset[0], 1127 - offset[1] + 40)
 		];
 
-		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.sineIn, startDelay: startdelay} );
-		FlxTween.quadPath(sprite, path, duration, true,
-	{
-	ease: FlxEase.sineIn,
+		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.sineIn, startDelay: startdelay});
+		FlxTween.quadPath(sprite, path, duration, true, {
+			ease: FlxEase.sineIn,
 			startDelay: startdelay,
 			onComplete: function(_) {
-			carInterruptable = true;
-	}
-	});
+				carInterruptable = true;
+			}
+		});
 	}
 
 	/**
- * Drives a car towards the lights and stops.
-	* Used when a car tries to drive while the lights are red.
-*/
-	function driveCarLights(sprite:FlxSprite):Void{
+	 * Drives a car towards the lights and stops.
+	 	* Used when a car tries to drive while the lights are red.
+	 */
+	function driveCarLights(sprite:FlxSprite):Void {
 		carInterruptable = false;
 		FlxTween.cancelTweensOf(sprite);
-		var variant:Int = FlxG.random.int(1,4);
+		var variant:Int = FlxG.random.int(1, 4);
 		sprite.animation.play('car' + variant);
 		var extraOffset = [0, 0];
 		var duration:Float = 2;
 
-		switch(variant){
+		switch (variant) {
 			case 1:
 				duration = FlxG.random.float(1, 1.7);
 			case 2:
@@ -341,34 +336,34 @@ class PhillyStreetsErectStage extends Stage
 		// debug shit!!! keeping it here just in case
 		// for(point in path){
 		// 	var debug:FlxSprite = new FlxSprite(point.x - 5, point.y - 5).makeGraphic(10, 10, 0xFFFF0000);
-	// 	add(debug);
+		// 	add(debug);
 		// }
-		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.cubeOut} );
-		FlxTween.quadPath(sprite, path, duration, true,
-	{
-	ease: FlxEase.cubeOut,
+		FlxTween.angle(sprite, rotations[0], rotations[1], duration, {ease: FlxEase.cubeOut});
+		FlxTween.quadPath(sprite, path, duration, true, {
+			ease: FlxEase.cubeOut,
 			onComplete: function(_) {
-			carWaiting = true;
-						if(lightsStop == false) finishCarLights(getNamedProp('phillyCars'));
-	}
-	});
+				carWaiting = true;
+				if (lightsStop == false)
+					finishCarLights(getNamedProp('phillyCars'));
+			}
+		});
 	}
 
 	/**
- * Drives a car across the screen without stopping.
-	* Used when the lights are green.
-*/
-	function driveCar(sprite:FlxSprite):Void{
+	 * Drives a car across the screen without stopping.
+	 	* Used when the lights are green.
+	 */
+	function driveCar(sprite:FlxSprite):Void {
 		carInterruptable = false;
 		FlxTween.cancelTweensOf(sprite);
-		var variant:Int = FlxG.random.int(1,4);
+		var variant:Int = FlxG.random.int(1, 4);
 		sprite.animation.play('car' + variant);
 		// setting an offset here because the current implementation of stage prop offsets was not working at all for me
 		// if possible id love to not have to do this but im keeping this for now
 		var extraOffset = [0, 0];
 		var duration:Float = 2;
 		// set different values of speed for the car types (and the offset)
-		switch(variant){
+		switch (variant) {
 			case 1:
 				duration = FlxG.random.float(1, 1.7);
 			case 2:
@@ -389,32 +384,31 @@ class PhillyStreetsErectStage extends Stage
 		var rotations:Array<Int> = [-8, 18];
 		// the path to move the car on
 		var path:Array<FlxPoint> = [
-				FlxPoint.get(1570 - offset[0], 1049 - offset[1] - 30),
-				FlxPoint.get(2400 - offset[0], 980 - offset[1] - 50),
-				FlxPoint.get(3102 - offset[0], 1127 - offset[1] + 40)
+			FlxPoint.get(1570 - offset[0], 1049 - offset[1] - 30),
+			FlxPoint.get(2400 - offset[0], 980 - offset[1] - 50),
+			FlxPoint.get(3102 - offset[0], 1127 - offset[1] + 40)
 		];
 
-		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null );
-		FlxTween.quadPath(sprite, path, duration, true,
-	{
-		ease: null,
-				onComplete: function(_) {
-		carInterruptable = true;
-		}
-	});
+		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null);
+		FlxTween.quadPath(sprite, path, duration, true, {
+			ease: null,
+			onComplete: function(_) {
+				carInterruptable = true;
+			}
+		});
 	}
 
-	function driveCarBack(sprite:FlxSprite):Void{
+	function driveCarBack(sprite:FlxSprite):Void {
 		car2Interruptable = false;
 		FlxTween.cancelTweensOf(sprite);
-		var variant:Int = FlxG.random.int(1,4);
+		var variant:Int = FlxG.random.int(1, 4);
 		sprite.animation.play('car' + variant);
 		// setting an offset here because the current implementation of stage prop offsets was not working at all for me
 		// if possible id love to not have to do this but im keeping this for now
 		var extraOffset = [0, 0];
 		var duration:Float = 2;
 		// set different values of speed for the car types (and the offset)
-		switch(variant){
+		switch (variant) {
 			case 1:
 				duration = FlxG.random.float(1, 1.7);
 			case 2:
@@ -435,26 +429,25 @@ class PhillyStreetsErectStage extends Stage
 		var rotations:Array<Int> = [18, -8];
 		// the path to move the car on
 		var path:Array<FlxPoint> = [
-				FlxPoint.get(3102 - offset[0], 1127 - offset[1] + 60),
-				FlxPoint.get(2400 - offset[0], 980 - offset[1] - 30),
-				FlxPoint.get(1570 - offset[0], 1049 - offset[1] - 10)
+			FlxPoint.get(3102 - offset[0], 1127 - offset[1] + 60),
+			FlxPoint.get(2400 - offset[0], 980 - offset[1] - 30),
+			FlxPoint.get(1570 - offset[0], 1049 - offset[1] - 10)
 
 		];
 
-		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null );
-		FlxTween.quadPath(sprite, path, duration, true,
-	{
-		ease: null,
-				onComplete: function(_) {
-		car2Interruptable = true;
-		}
-	});
+		FlxTween.angle(sprite, rotations[0], rotations[1], duration, null);
+		FlxTween.quadPath(sprite, path, duration, true, {
+			ease: null,
+			onComplete: function(_) {
+				car2Interruptable = true;
+			}
+		});
 	}
 
 	/**
- * Resets the values tied to the lights that need to be accounted for on a restart.
- */
-	function resetStageValues():Void{
+	 * Resets the values tied to the lights that need to be accounted for on a restart.
+	 */
+	function resetStageValues():Void {
 		lastChange = 0;
 		changeInterval = 8;
 		var traffic = getNamedProp('phillyTraffic');
@@ -469,72 +462,66 @@ class PhillyStreetsErectStage extends Stage
 
 	var _timer:Float = 0;
 
-	override function onUpdate(event:UpdateScriptEvent)
-	{
+	override function onUpdate(event:UpdateScriptEvent) {
 		super.onUpdate(event);
 
 		_timer += event.elapsed;
-		mist0.y = 660 + (Math.sin(_timer*0.35)*70);
-		mist1.y = 500 + (Math.sin(_timer*0.3)*80);
-		mist2.y = 540 + (Math.sin(_timer*0.4)*60);
-		mist3.y = 230 + (Math.sin(_timer*0.3)*70);
-		mist4.y = 170 + (Math.sin(_timer*0.35)*50);
-		mist5.y = -80 + (Math.sin(_timer*0.08)*100);
+		mist0.y = 660 + (Math.sin(_timer * 0.35) * 70);
+		mist1.y = 500 + (Math.sin(_timer * 0.3) * 80);
+		mist2.y = 540 + (Math.sin(_timer * 0.4) * 60);
+		mist3.y = 230 + (Math.sin(_timer * 0.3) * 70);
+		mist4.y = 170 + (Math.sin(_timer * 0.35) * 50);
+		mist5.y = -80 + (Math.sin(_timer * 0.08) * 100);
 		// mist3.y = -20 + (Math.sin(_timer*0.5)*200);
 		// mist4.y = -180 + (Math.sin(_timer*0.4)*300);
 		// mist5.y = -450 + (Math.sin(_timer*0.2)*1xxx50);
-		//trace(mist1.y);
+		// trace(mist1.y);
 
-		if (FlxG.sound.music != null)
-		{
-			var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0,FlxG.sound.music.length, rainShaderStartIntensity, rainShaderEndIntensity);
+		if (FlxG.sound.music != null) {
+			var remappedIntensityValue:Float = FlxMath.remapToRange(Conductor.instance.songPosition, 0, FlxG.sound.music.length, rainShaderStartIntensity,
+				rainShaderEndIntensity);
 			rainShader.intensity = remappedIntensityValue;
 			rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
 			rainShader.update(event.elapsed);
-		}
-		else
-		{
-		rainShader.intensity = rainShaderStartIntensity;
-		rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
-		rainShader.update(event.elapsed);
+		} else {
+			rainShader.intensity = rainShaderStartIntensity;
+			rainShader.updateViewInfo(FlxG.width, FlxG.height, FlxG.camera);
+			rainShader.update(event.elapsed);
 		}
 
+		if (scrollingSky != null)
+			scrollingSky.scrollX -= FlxG.elapsed * 22;
 
-		if(scrollingSky != null) scrollingSky.scrollX -= FlxG.elapsed * 22;
-
-		if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null){
-		PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
-		PlayState.instance.currentStage.getGirlfriend().shader = colorShader;
-		PlayState.instance.currentStage.getDad().shader = colorShader;
-		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
-			PlayState.instance.currentStage.getNamedProp('spraycanPile').shader = colorShader;
-			if (PlayState.instance.currentStage.getNamedProp('spraycanPile') != null) {
+		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null) {
+			PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
+			PlayState.instance.currentStage.getGirlfriend().shader = colorShader;
+			PlayState.instance.currentStage.getDad().shader = colorShader;
+			if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
 				PlayState.instance.currentStage.getNamedProp('spraycanPile').shader = colorShader;
+				if (PlayState.instance.currentStage.getNamedProp('spraycanPile') != null) {
+					PlayState.instance.currentStage.getNamedProp('spraycanPile').shader = colorShader;
+				}
 			}
-		}
-		
 
-		colorShader.hue = -5;
-		colorShader.saturation = -40;
-		colorShader.contrast = -25;
-		colorShader.brightness = -20;
-	}
+			colorShader.hue = -5;
+			colorShader.saturation = -40;
+			colorShader.contrast = -25;
+			colorShader.brightness = -20;
+		}
 
 		// if (rainSndAmbience != null) {
 		// 	rainSndAmbience.volume = Math.min(0.3, remappedIntensityValue * 2);
 		// }
 	}
 
-	function onBeatHit(event:SongTimeScriptEvent)
-	{
+	function onBeatHit(event:SongTimeScriptEvent) {
 		super.onBeatHit(event);
 
 		// Try driving a car when its possible
-		if (FlxG.random.bool(10) && event.beat != (lastChange + changeInterval) && carInterruptable == true)
-		{
-			if(lightsStop == false){
+		if (FlxG.random.bool(10) && event.beat != (lastChange + changeInterval) && carInterruptable == true) {
+			if (lightsStop == false) {
 				driveCar(getNamedProp('phillyCars'));
-			}else{
+			} else {
 				driveCarLights(getNamedProp('phillyCars'));
 			}
 		}
@@ -554,26 +541,27 @@ class PhillyStreetsErectStage extends Stage
 		// }
 
 		// try driving one on the right too. in this case theres no red light logic, it just can only spawn on green lights
-		if(FlxG.random.bool(10) && event.beat != (lastChange + changeInterval) && car2Interruptable == true && lightsStop == false) driveCarBack(getNamedProp('phillyCars2'));
+		if (FlxG.random.bool(10) && event.beat != (lastChange + changeInterval) && car2Interruptable == true && lightsStop == false)
+			driveCarBack(getNamedProp('phillyCars2'));
 
 		// After the interval has been hit, change the light state.
-		if (event.beat == (lastChange + changeInterval)) changeLights(event.beat);
+		if (event.beat == (lastChange + changeInterval))
+			changeLights(event.beat);
 	}
 
-	override function setupFrameBuffers()
-	{
-		//frameBufferMan.createFrameBuffer("mask", 0xFF000000);
-		//frameBufferMan.createFrameBuffer("lightmap", 0xFF000000);
+	override function setupFrameBuffers() {
+		// frameBufferMan.createFrameBuffer("mask", 0xFF000000);
+		// frameBufferMan.createFrameBuffer("lightmap", 0xFF000000);
 	}
 
 	var screen:FixedBitmapData;
-	override function draw()
-	{
+
+	override function draw() {
 		super.draw();
 
-		//screen = grabScreen(false);
-		//BitmapDataUtil.applyFilter(screen, blurFilter);
-		//rainShader.blurredScreen = screen;
+		// screen = grabScreen(false);
+		// BitmapDataUtil.applyFilter(screen, blurFilter);
+		// rainShader.blurredScreen = screen;
 	}
 
 	public override function onPause(event:PauseScriptEvent) {
@@ -640,33 +628,24 @@ class PhillyStreetsErectStage extends Stage
 		FlxG.camera.filters = [rainShaderFilter];
 	}
 
-	override function addProp(prop:StageProp, ?name:String = null)
-	{
+	override function addProp(prop:StageProp, ?name:String = null) {
 		super.addProp(prop, name);
-		if (StringTools.endsWith(name, "_lightmap"))
-		{
+		if (StringTools.endsWith(name, "_lightmap")) {
 			prop.blend = 0; // 0 means ADD (see openfl.display.BlendMode)
 			prop.alpha = 0.6;
-			//frameBufferMan.moveSpriteTo("lightmap", prop);
-		}
-		else if (name == "grey1")
-		{
+			// frameBufferMan.moveSpriteTo("lightmap", prop);
+		} else if (name == "grey1") {
 			prop.blend = 0;
-			//frameBufferMan.copySpriteTo("mask", prop, 0xFFFFFF);
-		}
-		else if (name == "grey2")
-		{
+			// frameBufferMan.copySpriteTo("mask", prop, 0xFFFFFF);
+		} else if (name == "grey2") {
 			prop.blend = 9;
-			//frameBufferMan.copySpriteTo("mask", prop, 0xFFFFFF);
-		}
-		else
-		{
-			//frameBufferMan.copySpriteTo("mask", prop, 0x000000);
+			// frameBufferMan.copySpriteTo("mask", prop, 0xFFFFFF);
+		} else {
+			// frameBufferMan.copySpriteTo("mask", prop, 0x000000);
 		}
 	}
 
-override function addCharacter(character:BaseCharacter, charType:CharacterType)
-	{
+	override function addCharacter(character:BaseCharacter, charType:CharacterType) {
 		super.addCharacter(character, charType);
 		// add to the mask so that characters hide puddles
 		// frameBufferMan.copySpriteTo("mask", character, 0x000000);
@@ -714,12 +693,11 @@ override function addCharacter(character:BaseCharacter, charType:CharacterType)
 		for (img in loadImages) {
 			FunkinSprite.cacheTexture(Paths.image('phillyStreets/2hot/' + img));
 		}
-		
+
 		currentStage.refresh(); // Apply z-index.
 	}
 
-	function onStepHit(event:NoteHitScriptEvent):Void
-	{
+	function onStepHit(event:NoteHitScriptEvent):Void {
 		super.onStepHit(event);
 
 		currentStage = PlayState.instance.currentStage;

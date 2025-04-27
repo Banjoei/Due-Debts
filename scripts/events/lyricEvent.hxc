@@ -7,7 +7,6 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.FlxG;
 import funkin.modding.module.Module;
-import funkin.modding.module.ModuleHandler;
 import funkin.modding.events.ScriptEvent;
 
 class LyricsEvent extends SongEvent {
@@ -19,7 +18,7 @@ class LyricsEvent extends SongEvent {
 		return 'Lyrics';
 	}
 
-	public override function handleEvent(data) {}
+	override public function handleEvent(data) {}
 
 	override public function getEventSchema():Array<Dynamic> {
 		return [
@@ -50,11 +49,10 @@ class LyricsObject extends Module {
 	override function onSongLoaded(event:ScriptEvent) {
 		super.onSongLoaded(event);
 
-		if (event.events != null) {
-			shouldRun = event.events.filter(e -> return e.eventKind == 'lyrics').length > 0;
-		}
+		shouldRun = event.events != null && event.events.filter(e -> return e.eventKind == 'lyrics').length > 0;
 
-		if (!shouldRun) return;
+		if (!shouldRun)
+			return;
 
 		lyricText = new FlxText(0, 550, FlxG.width, '');
 		lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
@@ -65,23 +63,20 @@ class LyricsObject extends Module {
 
 	override function onSongEvent(event:SongEventScriptEvent) {
 		super.onSongEvent(event);
-		if (!shouldRun) return;
+		if (!shouldRun || event.eventData.eventKind != 'lyrics')
+			return;
 
-		if (event.eventData.eventKind == 'lyrics') {
-			var text:String = event.eventData.value.lyric;
-			var color:String = event.eventData.value.color;
-
-			showLyric(text, color);
-		}
+		showLyric(event.eventData.value.lyric, event.eventData.value.color);
 	}
 
-	public function showLyric(text:String, color:String) {
-		if (!shouldRun || lyricText == null) return;
+	function showLyric(text:String, color:String) {
+		if (lyricText == null)
+			return;
 
 		lyricText.text = text;
 		lyricText.scale.set(1.1, 1.1);
 
-		if (color != null && StringTools.trim(color) != '') {
+		if (StringTools.trim(color) != '') {
 			try {
 				lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
 			} catch (e:Dynamic) {
@@ -91,6 +86,71 @@ class LyricsObject extends Module {
 			lyricText.color = 0xFFFFFFFF;
 		}
 
-		FlxTween.tween(lyricText.scale, { x: 1, y: 1 }, 0.2, { ease: FlxEase.quartOut });
+		FlxTween.tween(lyricText.scale, {x: 1, y: 1}, 0.2, {ease: FlxEase.quartOut});
+	}
+
+	override function onStateChangeBegin(event:StateChangeScriptEvent) {
+		super.onStateChangeBegin(event);
+
+		if (!shouldRun)
+			return;
+
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			if (lyricText != null) {
+				lyricText.kill();
+				lyricText.destroy();
+				lyricText = null;
+			}
+		}
+	}
+
+	override function onSongRetry(event:ScriptEvent) {
+		super.onSongRetry(event);
+
+		if (!shouldRun || lyricText == null)
+			return;
+
+		FlxTween.cancelTweensOf(lyricText.scale);
+
+		FlxTween.tween(lyricText, {alpha: 0}, 0.5, {
+			ease: FlxEase.linear,
+			onComplete: (_) -> {
+				lyricText.text = "";
+				lyricText.alpha = 1;
+				lyricText.scale.set(1.1, 1.1);
+			}
+		});
+	}
+
+	override function onGameOver(event:ScriptEvent) {
+		super.onGameOver(event);
+
+		if (!shouldRun || lyricText == null)
+			return;
+
+		FlxTween.cancelTweensOf(lyricText.scale);
+		FlxTween.cancelTweensOf(lyricText);
+
+		lyricText.text = "";
+		lyricText.alpha = 1;
+		lyricText.scale.set(1.1, 1.1);
+	}
+
+	override function onPause(event:ScriptEvent) {
+		super.onPause(event);
+
+		if (!shouldRun)
+			return;
+
+		FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
+	}
+
+	override function onResume(event:ScriptEvent) {
+		super.onResume(event);
+
+		if (!shouldRun)
+			return;
+
+		FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
 	}
 }

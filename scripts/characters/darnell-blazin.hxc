@@ -3,10 +3,8 @@ import funkin.play.PlayState;
 import funkin.play.character.AnimateAtlasCharacter;
 import StringTools;
 
-class DarnellBlazinCharacter extends AnimateAtlasCharacter
-{
-	function new()
-	{
+class DarnellBlazinCharacter extends AnimateAtlasCharacter {
+	function new() {
 		super('darnell-blazin');
 	}
 
@@ -19,11 +17,11 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 
 	var cantUppercut = false;
 
-	function onNoteHit(event:HitNoteScriptEvent)
-	{
+	function onNoteHit(event:HitNoteScriptEvent) {
 		holdTimer = 0;
 
-		if (!StringTools.startsWith(event.note.kind, 'weekend-1-')) return;
+		if (!StringTools.startsWith(event.note.kind, 'weekend-1-'))
+			return;
 
 		// SPECIAL CASE: If Pico hits a poor note at low health (at 30% chance),
 		// Darnell may duck below Pico's punch to attempt an uppercut.
@@ -43,8 +41,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		var dir = event.note.noteData.getDirection();
 
 		// Override the hit note animation.
-		switch (event.note.kind)
-		{
+		switch (event.note.kind) {
 			case "weekend-1-bfnote":
 				if (dir == 0) {
 					playBlockAnim();
@@ -78,7 +75,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 					playPunchLowAnim();
 				}
 			case "weekend-1-bfuppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playSpinAnim();
 					} else if (dir == 1) {
@@ -90,7 +87,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 					playUppercutHitAnim();
 				}
 			case "weekend-1-darnelluppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playPunchHighAnim();
 					} else if (dir == 1) {
@@ -176,8 +173,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		cantUppercut = false;
 	}
 
-	function onNoteMiss(event:NoteScriptEvent)
-	{
+	function onNoteMiss(event:NoteScriptEvent) {
 		holdTimer = 0;
 
 		if (!StringTools.startsWith(event.note.kind, 'weekend-1-')) {
@@ -203,8 +199,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		var dir = event.note.noteData.getDirection();
 
 		// Override the hit note animation.
-		switch (event.note.kind)
-		{
+		switch (event.note.kind) {
 			case "weekend-1-bfnote":
 				lolGetFucked(dir);
 			case "weekend-1-bftaunt":
@@ -218,7 +213,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 			case "weekend-1-bfstylenote":
 				lolGetFucked(dir);
 			case "weekend-1-bfuppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playSpinAnim();
 					} else if (dir == 1) {
@@ -230,7 +225,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 					playUppercutHitAnim();
 				}
 			case "weekend-1-darnelluppercut":
-				if(PlayState.instance.currentVariation == 'bf') {
+				if (PlayState.instance.currentVariation == 'bf') {
 					if (dir == 0 || dir == 3) {
 						playPunchHighAnim();
 					} else if (dir == 1) {
@@ -320,8 +315,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		cantUppercut = false;
 	}
 
-	override function onSongRetry()
-	{
+	override function onSongRetry() {
 		super.onSongRetry();
 		cantUppercut = false;
 		playIdleAnim();
@@ -331,8 +325,7 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		return (PlayState.instance.health + event.healthChange) <= 0.0;
 	}
 
-	function onNoteGhostMiss(event:GhostMissNoteScriptEvent)
-	{
+	function onNoteGhostMiss(event:GhostMissNoteScriptEvent) {
 		if (willMissBeLethal(event)) {
 			// Darnell alternates a punch so that Pico dies.
 			playPunchLowAnim();
@@ -343,25 +336,24 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 				playDodgeAnim();
 			} else {
 				playBlockAnim();
-		}
+			}
 		}
 	}
 
-	override function onAnimationFinished(name:String)
-	{
+	override function onAnimationFinished(name:String) {
 		super.onAnimationFinished(name);
 	}
 
-	function moveToBack()
-	{
-		if (this.debug) return;
+	function moveToBack() {
+		if (this.debug)
+			return;
 		this.zIndex = 2000;
 		PlayState.instance.currentStage.refresh();
 	}
 
-	function moveToFront()
-	{
-		if (this.debug) return;
+	function moveToFront() {
+		if (this.debug)
+			return;
 		this.zIndex = 3000;
 		PlayState.instance.currentStage.refresh();
 	}
@@ -375,7 +367,6 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 	}
 
 	// ANIMATIONS
-
 	var alternate:Bool = false;
 
 	function doAlternate():String {
@@ -383,39 +374,33 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		return alternate ? '1' : '2';
 	}
 
-	function playBlockAnim()
-	{
+	function playBlockAnim() {
 		this.playAnimation('block', true, false);
 		PlayState.instance.camGame.shake(0.002, 0.1);
 		moveToBack();
 	}
 
-	function playCringeAnim()
-	{
+	function playCringeAnim() {
 		this.playAnimation('cringe', true, false);
 		moveToBack();
 	}
 
-	function playDodgeAnim()
-	{
+	function playDodgeAnim() {
 		this.playAnimation('dodge', true, false);
 		moveToBack();
 	}
 
-	function playIdleAnim()
-	{
+	function playIdleAnim() {
 		this.playAnimation('idle', false, false);
 		moveToBack();
 	}
 
-	function playFakeoutAnim()
-	{
+	function playFakeoutAnim() {
 		this.playAnimation('fakeout', true, false);
 		moveToBack();
 	}
 
-	function playPissedConditionalAnim()
-	{
+	function playPissedConditionalAnim() {
 		if (getCurrentAnimation() == "cringe") {
 			playPissedAnim();
 		} else {
@@ -423,64 +408,55 @@ class DarnellBlazinCharacter extends AnimateAtlasCharacter
 		}
 	}
 
-	function playPissedAnim()
-	{
+	function playPissedAnim() {
 		this.playAnimation('pissed', true, false);
 		moveToBack();
 	}
 
-	function playUppercutPrepAnim()
-	{
+	function playUppercutPrepAnim() {
 		this.playAnimation('uppercutPrep', true, false);
 		moveToFront();
 	}
 
-	function playUppercutAnim()
-	{
+	function playUppercutAnim() {
 		this.playAnimation('uppercut', true, false);
 		moveToFront();
 	}
 
-	function playUppercutHitAnim()
-	{
+	function playUppercutHitAnim() {
 		this.playAnimation('uppercutHit', true, false);
 		moveToBack();
 	}
 
-	function playHitHighAnim()
-	{
+	function playHitHighAnim() {
 		this.playAnimation('hitHigh', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
 
-	function playHitLowAnim()
-	{
+	function playHitLowAnim() {
 		this.playAnimation('hitLow', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
 
-	function playPunchHighAnim()
-	{
+	function playPunchHighAnim() {
 		this.playAnimation('punchHigh' + doAlternate(), true, false);
 		moveToFront();
 	}
 
-	function playPunchLowAnim()
-	{
+	function playPunchLowAnim() {
 		this.playAnimation('punchLow' + doAlternate(), true, false);
 		moveToFront();
 	}
 
-	function playSpinAnim()
-	{
+	function playSpinAnim() {
 		this.playAnimation('hitSpin', true, false);
 		PlayState.instance.camGame.shake(0.0025, 0.15);
 		moveToBack();
 	}
-	function lolGetFucked(dir:NoteDirection)
-	{
+
+	function lolGetFucked(dir:NoteDirection) {
 		if (dir == 1 || dir == 0) {
 			playPunchHighAnim();
 		} else if (dir == 2 || dir == 3) {

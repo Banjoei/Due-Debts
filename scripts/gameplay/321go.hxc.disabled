@@ -7,43 +7,39 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import funkin.graphics.FunkinSprite;
 
-class ThreeTwoOneGo extends Module
-{
-    var ready:FunkinSprite;
-    var set:FunkinSprite;
-    var go:FunkinSprite;
+class ThreeTwoOneGo extends Module {
+	var ready:FunkinSprite;
+	var set:FunkinSprite;
+	var go:FunkinSprite;
 
-    function new()
-    {
-        super('ThreeTwoOneGo');
-    }
+	function new() {
+		super('ThreeTwoOneGo');
+	}
 
-    override function onCreate(event:CountdownScriptEvent)
-    {
-        super.onCreate(event);
+	override function onCreate(event:CountdownScriptEvent) {
+		super.onCreate(event);
 
-        // Fetch the current NoteStyle from PlayState
-        var noteStyle:NoteStyle = PlayState.instance.currentChart.noteStyle;
+		// Fetch the current NoteStyle from PlayState
+		var noteStyle:NoteStyle = PlayState.instance.currentChart.noteStyle;
 
-        // Dynamically create sprites using NoteStyle
-        ready = noteStyle.buildCountdownSprite(TWO);
-        set = noteStyle.buildCountdownSprite(ONE);
-        go = noteStyle.buildCountdownSprite(GO);
+		// Dynamically create sprites using NoteStyle
+		ready = noteStyle.buildCountdownSprite(TWO);
+		set = noteStyle.buildCountdownSprite(ONE);
+		go = noteStyle.buildCountdownSprite(GO);
 
-        // Apply transformations
-        if (ready != null) {
-            ready.alpha = 0;
-        }
-        if (set != null) {
-            set.alpha = 0;
-        }
-        if (go != null) {
-            go.alpha = 0;
-        }
-    }
+		// Apply transformations
+		if (ready != null) {
+			ready.alpha = 0;
+		}
+		if (set != null) {
+			set.alpha = 0;
+		}
+		if (go != null) {
+			go.alpha = 0;
+		}
+	}
 
-    override function onCountdownStep(event:CountdownScriptEvent)
-    {
-        super.onCountdownStep(event);
-    }
+	override function onCountdownStep(event:CountdownScriptEvent) {
+		super.onCountdownStep(event);
+	}
 }

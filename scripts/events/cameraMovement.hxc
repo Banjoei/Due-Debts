@@ -35,20 +35,32 @@ class CameraMovementFixes extends ScriptedModule {
 		}
 	}
 
-	function follow(dir:NoteDirection):Void {
+	function resetTweens():Void {
+		if (camXTween != null) {
+			camXTween.cancel();
+			camXTween = null;
+		}
+		if (camYTween != null) {
+			camYTween.cancel();
+			camYTween = null;
+		}
+		for (tween in camTweens) {
+			if (tween != null)
+				tween.cancel();
+		}
+		camTweens = [];
+	}
+
+	function follow(dir:NoteDirection = null):Void {
 		if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null)
 			return;
+
 		var x:Float = 0;
 		var y:Float = 0;
 		var cameraSpeed:Float;
 		var bf = PlayState.instance.currentStage.getBoyfriend();
-
 		if (bf == null)
 			return;
-
-		if (coolCam != null)
-			coolCam.cancel();
-		coolCam = new FlxTimer();
 
 		if (dir != null) {
 			if (dir == 0)
@@ -57,29 +69,41 @@ class CameraMovementFixes extends ScriptedModule {
 				y = offset;
 			else if (dir == 2)
 				y = -offset;
-			else if (dir == 3)
+			else
 				x = offset;
 
-			coolCam.start(Conductor.instance.stepLengthMs * (0.0011) * bf.singTimeSteps, function(timer:FlxTimer):Void {
-				follow();
-			});
+			// Cancel previous timer if it exists
+			if (coolCam != null) {
+				coolCam.cancel();
+				coolCam = null;
+			}
+
 			cameraSpeed = sped;
-		} else {
-			coolCam.cancel();
-		}
+			var duration:Float = 1.7 / cameraSpeed + 0.25;
+			resetTweens();
 
-		var duration:Float = 1.7 / cameraSpeed + 0.25;
-		if (PlayState.instance.camGame != null) {
-			if (camXTween != null)
-				camXTween.cancel();
-			if (camYTween != null)
-				camYTween.cancel();
-
-			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.linear});
-			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.linear});
-
+			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.quintOut});
+			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.quintOut});
 			camTweens.push(camXTween);
 			camTweens.push(camYTween);
+
+			// Start a new timer to reset
+			coolCam = new FlxTimer();
+			coolCam.start(Conductor.instance.stepLengthMs * 0.0011 * bf.singTimeSteps, function(timer:FlxTimer):Void {
+				follow(); // Reset back to center after delay
+			});
+		} else {
+			cameraSpeed = sped;
+			var duration:Float = 1.7 / cameraSpeed + 0.25;
+			resetTweens();
+
+			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: 0}, duration, {ease: FlxEase.quintOut});
+			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: 0}, duration, {ease: FlxEase.quintOut});
+			camTweens.push(camXTween);
+			camTweens.push(camYTween);
+
+			// Clear the timer since we're back at center
+			coolCam = null;
 		}
 	}
 
@@ -134,8 +158,7 @@ class CameraMovementFixes extends ScriptedModule {
 			coolCam = null;
 		}
 
-		FlxTween.cancelTweensOf(cam.targetOffset);
-		camTweens = [];
+		resetTweens();
 
 		if (smooth) {
 			FlxTween.tween(cam.targetOffset, {x: 0, y: 0}, 0.5, {ease: FlxEase.quadOut});
@@ -217,7 +240,12 @@ class CameraMovementEvent extends ScriptedSongEvent {
 		var rawV2 = data.getString("v2");
 
 		speed = (rawV1 == null || rawV1 == "") ? 3.5 : Std.parseFloat(rawV1);
+		if (Math.isNaN(speed))
+			speed = 3.5;
+
 		position = (rawV2 == null || rawV2 == "") ? 10 : Std.parseFloat(rawV2);
+		if (Math.isNaN(position))
+			position = 10;
 
 		var fixes = ModuleHandler.getModule('CameraMovementFixes');
 		if (fixes != null) {

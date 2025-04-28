@@ -42,6 +42,7 @@ class PhillyStreetsErectStage extends Stage {
 	// these values are also used for the rain sound effect volume intensity!
 	var rainShaderStartIntensity:Float;
 	var rainShaderEndIntensity:Float;
+	var rainFadeInCheck:Bool = false;
 
 	// var rainSndAmbience:FunkinSound;
 	// var carSndAmbience:FunkinSound;
@@ -168,6 +169,10 @@ class PhillyStreetsErectStage extends Stage {
 				rainShaderEndIntensity = 0.04;
 		}
 
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			rainShader.rainColor = [168 / 255.0, 173 / 255.0, 181 / 255.0]; // soft blue
+		}
+
 		rainShaderFilter = new ShaderFilter(rainShader);
 		applyFilterToCamera(rainShaderFilter);
 
@@ -179,6 +184,49 @@ class PhillyStreetsErectStage extends Stage {
 			applyFilterToCamera(chromFilter);
 			applyFilterToHUD(chromFilter);
 			initializeProps();
+
+			var gradient1 = new StageProp();
+			gradient1.loadGraphic(Paths.image('phillyStreets/erect/greyGradient'));
+			gradient1.setPosition(118, 167);
+			gradient1.blend = 0;
+			gradient1.alpha = 0.3;
+			PlayState.instance.currentStage.addProp(gradient1, "gradient1");
+			PlayState.instance.currentStage.refresh();
+
+			var gradient2 = new StageProp();
+			gradient2.loadGraphic(Paths.image('phillyStreets/erect/greyGradient'));
+			gradient2.setPosition(118, 167);
+			gradient2.blend = 9;
+			gradient2.alpha = 0.8;
+			PlayState.instance.currentStage.addProp(gradient2, "gradient2");
+			PlayState.instance.currentStage.refresh();
+
+			var highwayLightMap = new StageProp();
+			highwayLightMap.loadGraphic(Paths.image('phillyStreets/phillyHighwayLights_lightmap'));
+			highwayLightMap.setPosition(284, 305);
+			highwayLightMap.blend = 0;
+			highwayLightMap.alpha = 0.6;
+			PlayState.instance.currentStage.addProp(highwayLightMap, "highwayLightMap");
+			PlayState.instance.currentStage.refresh();
+
+			var trafficLightMap = new StageProp();
+			trafficLightMap.loadGraphic(Paths.image('phillyStreets/erect/phillyTraffic_lightmap'));
+			trafficLightMap.setPosition(1840, 608);
+			trafficLightMap.blend = 0;
+			trafficLightMap.alpha = 0.6;
+			PlayState.instance.currentStage.addProp(trafficLightMap, "trafficLightMap");
+			PlayState.instance.currentStage.refresh();
+
+			var fakeHitCan = new StageProp();
+			fakeHitCan.loadSparrow('phillyStreets/fakeCan');
+			fakeHitCan.setPosition(1020, 750);
+			fakeHitCan.animation.addByPrefix('hitUp', 'can kicked up', 24, false);
+			fakeHitCan.animation.addByPrefix('hitAway', 'canFlies', 12, false);
+			fakeHitCan.visible = false;
+			fakeHitCan.name = 'fakeHitCan';
+			fakeHitCan.zIndex = 9999;
+			currentStage.addProp(fakeHitCan, 'fakeHitCan');
+			currentStage.refresh();
 		}
 	}
 
@@ -511,8 +559,21 @@ class PhillyStreetsErectStage extends Stage {
 			rainShader.update(event.elapsed);
 		}
 
-		if (scrollingSky != null)
-			scrollingSky.scrollX -= FlxG.elapsed * 22;
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			if (scrollingSky != null) {
+				scrollingSky.scrollX -= FlxG.elapsed * 22;
+				if (scrollingSky.x <= -(scrollingSky.width * 0.65) * 2) {
+					scrollingSky.x += (scrollingSky.width * 0.65) * 3;
+				}
+				var paper = PlayState.instance.currentStage.getNamedProp('paper');
+				if (paper != null) {
+					paper.y += Math.sin(_timer * 0.5) * 0.5;
+				}
+			}
+		} else {
+			if (scrollingSky != null)
+				scrollingSky.scrollX -= FlxG.elapsed * 22;
+		}
 
 		if (PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null) {
 			PlayState.instance.currentStage.getBoyfriend().shader = colorShader;
@@ -537,10 +598,12 @@ class PhillyStreetsErectStage extends Stage {
 		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
 			var curStep = Conductor.instance.currentStep;
 
+			var lerpAmount = event.elapsed * (chromSpeed * 0.666);
+
 			if (curStep >= 2464 && curStep <= 2472) {
-				chromStrength = FlxMath.lerp(chromStrength, 0.3, event.elapsed * chromSpeed);
+				chromStrength = FlxMath.lerp(chromStrength, 0.3, lerpAmount);
 			} else {
-				chromStrength = FlxMath.lerp(chromStrength, 0.0, event.elapsed * chromSpeed);
+				chromStrength = FlxMath.lerp(chromStrength, 0.0, lerpAmount);
 			}
 
 			chromShader.setFloat('force', chromStrength * chromMult);
@@ -559,19 +622,22 @@ class PhillyStreetsErectStage extends Stage {
 			}
 		}
 
-		// var paper = getNamedProp('paper');
-		// if (FlxG.random.bool(0.6) && paperInterruptable == true)
-		// {
-		// 	paper.alpha = 1;
-		// 	paper.animation.play('paperBlow');
-		// 	paper.y = 608 + FlxG.random.float(-150,150);
-		// 	paperInterruptable = false;
-		// 	new FlxTimer().start(2, function(tmr:FlxTimer)
-		// 	{
-		// 		paperInterruptable = true;
-		// 		paper.alpha = 0;
-		// 	});
-		// }
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			var paper = PlayState.instance.currentStage.getNamedProp('paper');
+			if (paper != null && FlxG.random.bool(0.6) && paperInterruptable) {
+				paper.alpha = 1;
+				paper.animation.play('paperBlow');
+				paper.y = 608 + FlxG.random.float(-150, 150);
+				paper.velocity.x = FlxG.random.float(40, 80);
+				paper.velocity.y = FlxG.random.float(-10, 10);
+				paperInterruptable = false;
+
+				new FlxTimer().start(2, function(tmr:FlxTimer) {
+					paperInterruptable = true;
+					paper.alpha = 0;
+				});
+			}
+		}
 
 		// try driving one on the right too. in this case theres no red light logic, it just can only spawn on green lights
 		if (FlxG.random.bool(10) && event.beat != (lastChange + changeInterval) && car2Interruptable == true && lightsStop == false)
@@ -592,7 +658,7 @@ class PhillyStreetsErectStage extends Stage {
 						PlayState.instance.camHUD.zoom += 0.03;
 					}
 
-					chromStrength += 0.2;
+					chromStrength += 0.1;
 				}
 			}
 		}
@@ -664,7 +730,7 @@ class PhillyStreetsErectStage extends Stage {
 	override function onGameOver(event:ScriptEvent):Void {
 		super.onGameOver(event);
 		// Make it so the rain shader doesn't show over the game over screen
-		FlxG.camera.filters = [];
+		fullResetStage();
 	}
 
 	override function onSongRetry(event:ScriptEvent):Void {
@@ -672,14 +738,7 @@ class PhillyStreetsErectStage extends Stage {
 		// Make it so the rain shader doesn't show over the game over screen
 		// FlxG.camera.setFilters([rainShaderFilter]);
 
-		resetCar(true, true);
-		resetStageValues();
-		applyFilterToCamera(rainShaderFilter);
-
-		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
-			applyFilterToCamera(chromFilter);
-			applyFilterToHUD(chromFilter);
-		}
+		fullResetStage();
 	}
 
 	override function addProp(prop:StageProp, ?name:String = null) {
@@ -751,6 +810,64 @@ class PhillyStreetsErectStage extends Stage {
 		currentStage.refresh(); // Apply z-index.
 	}
 
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
+
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			fullResetStage();
+		}
+	}
+
+	function fullResetStage():Void {
+		resetCar(true, true);
+
+		resetStageValues();
+
+		rainShader.intensity = rainShaderStartIntensity;
+		rainFadeInCheck = false;
+
+		chromStrength = 0;
+		if (chromShader != null)
+			chromShader.setFloat('force', 0);
+
+		var prop = currentStage.getNamedProp('phillyForeground');
+		if (prop != null)
+			prop.loadGraphic(Paths.image('phillyStreets/erect/phillyForeground'));
+
+		prop = currentStage.getNamedProp('phillyForegroundCity');
+		if (prop != null)
+			prop.loadGraphic(Paths.image('phillyStreets/erect/phillyForegroundCity'));
+
+		prop = currentStage.getNamedProp('phillyConstruction2');
+		if (prop != null)
+			prop.loadGraphic(Paths.image('phillyStreets/erect/phillyConstruction'));
+
+		prop = currentStage.getNamedProp('phillyHighway2');
+		if (prop != null)
+			prop.loadGraphic(Paths.image('phillyStreets/erect/phillyHighway'));
+
+		prop = currentStage.getNamedProp('phillyTraffic');
+		if (prop != null)
+			prop.loadGraphic(Paths.image('phillyStreets/erect/phillyTraffic'));
+
+		var fakeCan = currentStage.getNamedProp('fakeHitCan');
+		if (fakeCan != null) {
+			fakeCan.visible = false;
+			FlxTween.cancelTweensOf(fakeCan);
+		}
+
+		FlxG.camera.filters = [];
+		PlayState.instance.camHUD.filters = [];
+
+		applyFilterToCamera(rainShaderFilter);
+		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
+			if (chromFilter != null) {
+				applyFilterToCamera(chromFilter);
+				applyFilterToHUD(chromFilter);
+			}
+		}
+	}
+
 	function onStepHit(event:NoteHitScriptEvent):Void {
 		super.onStepHit(event);
 
@@ -758,6 +875,40 @@ class PhillyStreetsErectStage extends Stage {
 
 		if (PlayState.instance.currentVariation == 'bf' && PlayState.instance.currentSong.id == '2hot') {
 			var step = Conductor.instance.currentStep;
+
+			if (step >= 2224 && step <= 2255) {
+				rainShader.intensity = Math.max(0, rainShader.intensity - 0.005);
+			}
+
+			if (step == 1736) {
+				rainShader.intensity = 0;
+			}
+
+			if (step >= 1750 && step <= 1855 && rainFadeInCheck == false) {
+				if (rainShader.intensity < rainShaderEndIntensity) {
+					rainShader.intensity += 0.002;
+				} else {
+					rainFadeInCheck = true;
+				}
+			}
+
+			if (step == 1743) {
+				var car1 = currentStage.getNamedProp('phillyCars');
+				var car2 = currentStage.getNamedProp('phillyCars2');
+
+				if (car1 != null)
+					currentStage.remove(car1);
+				if (car2 != null)
+					currentStage.remove(car2);
+
+				FlxTween.cancelTweensOf(car1);
+				FlxTween.cancelTweensOf(car2);
+
+				var trafficLight = currentStage.getNamedProp('phillyTraffic');
+				if (trafficLight != null) {
+					trafficLight.loadGraphic(Paths.image('phillyStreets/erect/imLazy'));
+				}
+			}
 
 			if (step >= 1743 && step <= 2256) {
 				var visualTextureRando:Int = FlxG.random.int(1, 10);
@@ -801,6 +952,42 @@ class PhillyStreetsErectStage extends Stage {
 					var prop = currentStage.getNamedProp('phillyTraffic');
 					if (prop != null)
 						prop.loadGraphic(Paths.image('phillyStreets/erect/imLazy'));
+				}
+			}
+
+			if (step == 2256 || step == 1584 || step == 2748) {
+				FlxG.camera.filters = [];
+				PlayState.instance.camHUD.filters = [];
+			}
+
+			if (step == 2384 || step == 1744 || step == 1040) {
+				applyFilterToCamera(rainShaderFilter);
+				if (chromFilter != null) {
+					applyFilterToCamera(chromFilter);
+					applyFilterToHUD(chromFilter);
+				}
+			}
+
+			if (step == 2736) {
+				FunkinSound.playOnce(Paths.sound('2hot/Darnell_Lighter'));
+			} else if (step == 2740) {
+				var can = currentStage.getNamedProp('fakeHitCan');
+				if (can != null) {
+					can.visible = true;
+					can.animation.play('hitUp');
+					FunkinSound.playOnce(Paths.sound('2hot/Kick_Can_UP'));
+					FunkinSound.playOnce(Paths.sound('Gun_Prep'));
+				}
+			} else if (step == 2744) {
+				var can = currentStage.getNamedProp('fakeHitCan');
+				if (can != null) {
+					can.animation.play('hitAway');
+					FunkinSound.playOnce(Paths.sound('2hot/Kick_Can_FORWARD'));
+				}
+			} else if (step == 2747) {
+				var can = currentStage.getNamedProp('fakeHitCan');
+				if (can != null) {
+					currentStage.remove(can);
 				}
 			}
 		}

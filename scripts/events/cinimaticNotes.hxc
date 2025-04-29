@@ -17,7 +17,6 @@ class CinematicNoteModule extends ScriptedModule {
 
 	public var cinematicEnabled:Bool = false;
 	public var cinematicEase:Dynamic = FlxEase.quadOut;
-	public var deltaX:Float = 0;
 	public var noteStyle:NoteStyle;
 	public var shouldRun:Bool = false;
 
@@ -34,6 +33,20 @@ class CinematicNoteModule extends ScriptedModule {
 		}
 	}
 
+	override function onSongStart(event:ScriptEvent):Void {
+		super.onSongStart(event);
+
+		if (!shouldRun)
+			return;
+		if (PlayState.instance == null || PlayState.instance.playerStrumline == null)
+			return;
+
+		var player = PlayState.instance.playerStrumline;
+		if (player != null && Math.isNaN(originalPlayerX)) {
+			originalPlayerX = player.x;
+		}
+	}
+
 	public function applyCinematic(enable:Bool, ease:String):Void {
 		var game = PlayState.instance;
 		if (game == null || game.currentStage == null)
@@ -43,9 +56,6 @@ class CinematicNoteModule extends ScriptedModule {
 		var opp:Strumline = game.opponentStrumline;
 		if (player == null || opp == null)
 			return;
-
-		if (Math.isNaN(originalPlayerX))
-			originalPlayerX = player.x;
 
 		this.cinematicEnabled = enable;
 
@@ -100,25 +110,7 @@ class CinematicNoteModule extends ScriptedModule {
 
 		var targetX:Float = enable ? (FlxG.width * 0.5 - player.width * 0.5) : originalPlayerX;
 
-		this.deltaX = targetX - player.x;
-
-		FlxTween.tween(player, {x: targetX}, 0.5, {ease: cinematicEase});
-
-		if (player.strumlineNotes != null && player.strumlineNotes.members != null) {
-			for (note in player.strumlineNotes.members) {
-				if (note != null)
-					FlxTween.tween(note, {x: note.x + deltaX}, 0.5, {ease: cinematicEase});
-			}
-		}
-
 		var goalAlpha:Float = enable ? 0 : 1;
-
-		if (player.notes != null && player.notes.members != null) {
-			for (n in player.notes.members) {
-				if (n != null && n.alive)
-					FlxTween.tween(n, {x: n.x + deltaX}, 0.5, {ease: cinematicEase});
-			}
-		}
 
 		if (opp.background != null)
 			opp.background.visible = false;
@@ -128,72 +120,36 @@ class CinematicNoteModule extends ScriptedModule {
 			opp.alpha = 0;
 		}
 
-		FlxTween.tween(opp, {alpha: goalAlpha}, 0.5, {ease: FlxEase.linear});
+		cinematicTweens.push(FlxTween.tween(player, {x: targetX}, 0.5, {ease: cinematicEase}));
+		cinematicTweens.push(FlxTween.tween(opp, {alpha: goalAlpha}, 0.5, {ease: FlxEase.linear}));
 
 		var hideOpp:Bool = enable;
 
-		new FlxTimer().start(0.5, function(_:FlxTimer):Void {
+		var timer = new FlxTimer().start(0.5, function(_:FlxTimer):Void {
 			if (opp != null)
 				opp.visible = hideOpp ? false : true;
 		});
+		cinematicTimers.push(timer);
 	}
 
 	override function onUpdate(delta:Float):Void {
 		super.onUpdate(delta);
 		if (!shouldRun)
 			return;
+		if (PlayState.instance == null)
+			return;
 
-		var goalAlpha:Float = cinematicEnabled ? 0 : 1;
+		var player = PlayState.instance.playerStrumline;
+		if (player == null)
+			return;
 
-		if (cinematicEnabled) {
-			if (PlayState.instance == null || PlayState.instance.currentStage == null)
-				return;
-			var player:Strumline = PlayState.instance.playerStrumline;
-			if (player == null)
-				return;
-
-			if (player.noteHoldCovers != null && player.noteHoldCovers.members != null) {
-				for (n in player.noteHoldCovers.members) {
-					if (n != null && n.alive)
-						n.alpha = goalAlpha;
-				}
-			}
+		for (covers in player.noteHoldCovers) {
+			var alpha = covers.alpha;
+			var visible = covers.visible;
+			covers.revive();
+			covers.alpha = alpha;
+			covers.visible = visible;
 		}
-	}
-
-	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
-		super.onStateChangeBegin(event);
-
-		if (!shouldRun)
-			return;
-		if (PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
-
-		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
-			resetCinematic();
-		}
-	}
-
-	override function onSongRetry(event:ScriptEvent):Void {
-		super.onSongRetry(event);
-
-		if (!shouldRun)
-			return;
-		if (PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
-
-		resetCinematic(true);
-	}
-
-	override function onGameOver(event:ScriptEvent):Void {
-		super.onGameOver(event);
-
-		if (!shouldRun)
-			return;
-		if (PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
-
-		resetCinematic(false);
 	}
 
 	function resetCinematic(smooth:Bool = false):Void {
@@ -202,49 +158,21 @@ class CinematicNoteModule extends ScriptedModule {
 		if (player == null || opp == null)
 			return;
 
-		for (tween in cinematicTweens) {
-			if (tween != null)
-				tween.cancel();
-		}
+		for (tween in cinematicTweens)
+			tween?.cancel();
 		cinematicTweens = [];
 
-		for (timer in cinematicTimers) {
-			if (timer != null)
-				timer.cancel();
-		}
+		for (timer in cinematicTimers)
+			timer?.cancel();
 		cinematicTimers = [];
 
 		var easeFunc = FlxEase.quadOut;
 
-		if (!Math.isNaN(originalPlayerX)) {
+		if (!Math.isNaN(originalPlayerX) || player.x != originalPlayerX) {
 			if (smooth) {
 				cinematicTweens.push(FlxTween.tween(player, {x: originalPlayerX}, 0.5, {ease: easeFunc}));
 			} else {
 				player.x = originalPlayerX;
-			}
-		}
-
-		if (player.notes != null && player.notes.members != null) {
-			for (note in player.notes.members) {
-				if (note != null) {
-					if (smooth) {
-						cinematicTweens.push(FlxTween.tween(note, {x: note.x - deltaX}, 0.5, {ease: easeFunc}));
-					} else {
-						note.x -= deltaX;
-					}
-				}
-			}
-		}
-
-		if (player.strumlineNotes != null && player.strumlineNotes.members != null) {
-			for (note in player.strumlineNotes.members) {
-				if (note != null) {
-					if (smooth) {
-						cinematicTweens.push(FlxTween.tween(note, {x: note.x - deltaX}, 0.5, {ease: easeFunc}));
-					} else {
-						note.x -= deltaX;
-					}
-				}
 			}
 		}
 
@@ -259,34 +187,49 @@ class CinematicNoteModule extends ScriptedModule {
 
 	override function onPause(event:ScriptEvent):Void {
 		super.onPause(event);
-
 		if (!shouldRun)
 			return;
 
-		for (tween in cinematicTweens) {
-			if (tween != null)
-				tween.active = false;
-		}
-		for (timer in cinematicTimers) {
-			if (timer != null)
-				timer.active = false;
-		}
+		for (tween in cinematicTweens)
+			tween.active = false;
+		for (timer in cinematicTimers)
+			timer.active = false;
 	}
 
 	override function onResume(event:ScriptEvent):Void {
 		super.onResume(event);
-
 		if (!shouldRun)
 			return;
 
-		for (tween in cinematicTweens) {
-			if (tween != null)
-				tween.active = true;
+		for (tween in cinematicTweens)
+			tween.active = true;
+		for (timer in cinematicTimers)
+			timer.active = true;
+	}
+
+	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
+		super.onStateChangeBegin(event);
+		if (!shouldRun)
+			return;
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
+			resetCinematic(false);
 		}
-		for (timer in cinematicTimers) {
-			if (timer != null)
-				timer.active = true;
-		}
+	}
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+		if (!shouldRun)
+			return;
+		resetCinematic(true);
+	}
+
+	override function onGameOver(event:ScriptEvent):Void {
+		super.onGameOver(event);
+		if (!shouldRun)
+			return;
+		resetCinematic(false);
 	}
 }
 

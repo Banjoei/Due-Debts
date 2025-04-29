@@ -72,7 +72,6 @@ class CameraMovementFixes extends ScriptedModule {
 			else
 				x = offset;
 
-			// Cancel previous timer if it exists
 			if (coolCam != null) {
 				coolCam.cancel();
 				coolCam = null;
@@ -87,10 +86,9 @@ class CameraMovementFixes extends ScriptedModule {
 			camTweens.push(camXTween);
 			camTweens.push(camYTween);
 
-			// Start a new timer to reset
 			coolCam = new FlxTimer();
 			coolCam.start(Conductor.instance.stepLengthMs * 0.0011 * bf.singTimeSteps, function(timer:FlxTimer):Void {
-				follow(); // Reset back to center after delay
+				follow();
 			});
 		} else {
 			cameraSpeed = sped;
@@ -102,7 +100,6 @@ class CameraMovementFixes extends ScriptedModule {
 			camTweens.push(camXTween);
 			camTweens.push(camYTween);
 
-			// Clear the timer since we're back at center
 			coolCam = null;
 		}
 	}

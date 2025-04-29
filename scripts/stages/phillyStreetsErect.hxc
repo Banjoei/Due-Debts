@@ -807,13 +807,6 @@ class PhillyStreetsErectStage extends Stage {
 			FunkinSprite.cacheTexture(Paths.image('phillyStreets/2hot/' + img));
 		}
 
-		var traffic = currentStage.getNamedProp('phillyTraffic');
-		if (traffic != null) {
-			traffic.visible = true;
-			traffic.alpha = 1;
-			return;
-		}
-
 		currentStage.refresh(); // Apply z-index.
 	}
 

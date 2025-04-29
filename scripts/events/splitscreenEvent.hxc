@@ -418,6 +418,10 @@ class SplitScreenEvent extends SongEvent {
 		return "SplitScreen";
 	}
 
+	public override function getIconPath() {
+		return 'ui/chart-editor/events/SplitScreen';
+	}
+
 	override function getEventSchema():Array<Dynamic> {
 		return [
 			{

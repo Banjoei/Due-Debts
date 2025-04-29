@@ -671,14 +671,6 @@ class PhillyStreetsErectStage extends Stage {
 
 	var screen:FixedBitmapData;
 
-	override function draw() {
-		super.draw();
-
-		// screen = grabScreen(false);
-		// BitmapDataUtil.applyFilter(screen, blurFilter);
-		// rainShader.blurredScreen = screen;
-	}
-
 	public override function onPause(event:PauseScriptEvent) {
 		super.onPause(event);
 
@@ -834,7 +826,7 @@ class PhillyStreetsErectStage extends Stage {
 			for (propName in extraProps) {
 				var prop = currentStage.getNamedProp(propName);
 				if (prop != null) {
-					currentStage.remove(prop);
+					currentStage.kill(prop);
 				}
 			}
 

@@ -44,7 +44,7 @@ class SplitScreenModule extends ScriptedModule {
 
 	override function onSongLoaded(event) {
 		if (event.events != null) {
-			shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen").length > 0;
+			shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen");
 		}
 
 		if (shouldRun) {

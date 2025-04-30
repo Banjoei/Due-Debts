@@ -15,7 +15,9 @@ import funkin.play.GameOverSubState;
 import funkin.play.PlayState;
 import funkin.play.PlayStatePlaylist;
 import funkin.play.song.Song;
+import funkin.play.notes.Strumline;
 import funkin.play.stage.StageProp;
+import funkin.modding.module.ModuleHandler;
 import funkin.save.Save;
 
 // We have to use FlxBasePoint in scripts because FlxPoint is inlined and not available in scripts
@@ -156,8 +158,8 @@ class TwoHOTSong extends Song {
 				fakeDeath.animation.play('BF dies', false);
 				darkness.alpha = 1;
 				boomdark.alpha = 0.6;
+				PlayState.instance.disableKeys = true;
 				PlayState.instance.isInCutscene = true;
-				FlxG.state.controls.active = false;
 			case 1616:
 				var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
 				fakeDeath.animation.play('BF Dead Loop', true);
@@ -171,11 +173,49 @@ class TwoHOTSong extends Song {
 				PlayState.instance.currentStage.getNamedProp('fakeDeath').kill();
 				PlayState.instance.currentStage.getNamedProp('fakeExp').kill();
 				PlayState.instance.camHUD.visible = true;
+				var keysHeld:Array<Bool> = [];
+				for (i in 0...Strumline.KEY_COUNT)
+					keysHeld.push(false);
+				for (i in 0...Strumline.KEY_COUNT) {
+					keysHeld[i] = false;
+					PlayState.instance.playerStrumline.releaseKey(i);
+				}
+				PlayState.instance.disableKeys = false;
 				PlayState.instance.isInCutscene = false;
-				FlxG.state.controls.active = true;
 			case 1744:
-				FlxTween.tween(FlxG.camera, {zoom: 0.65}, 10, {ease: FlxEase.sineInOut});
-				FlxTween.tween(darkness, {alpha: 0}, 10);
+				FlxTween.tween(darkness, {alpha: 0}, 10, {ease: FlxEase.linear});
+			case 2224:
+				FlxTween.tween(darkness, {alpha: 1}, 2.5, {ease: FlxEase.linear});
+				FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 4, {
+					ease: FlxEase.linear,
+					onUpdate: function(twn:FlxTween) {
+						for (holdNote in PlayState.instance.playerStrumline.holdNotes) {
+							holdNote.alpha = PlayState.instance.camHUD.alpha;
+						}
+					}
+				});
+				var lyricsModule = ModuleHandler.getModule('LyricsObject');
+				if (lyricsModule != null && lyricsModule.lyricText != null) {
+					var lyricText = lyricsModule.lyricText;
+					FlxTween.tween(lyricText, {y: lyricText.y + 100}, 0.1, {ease: FlxEase.quadOut});
+				}
+			case 2320:
+				FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 5, {
+					ease: FlxEase.linear,
+					onUpdate: function(twn:FlxTween) {
+						for (holdNote in PlayState.instance.playerStrumline.holdNotes) {
+							holdNote.alpha = PlayState.instance.camHUD.alpha;
+						}
+					}
+				});
+			case 2384:
+				darkness.alpha = 0;
+			case 2385:
+				var lyricsModule = ModuleHandler.getModule('LyricsObject');
+				if (lyricsModule != null && lyricsModule.lyricText != null) {
+					var lyricText = lyricsModule.lyricText;
+					FlxTween.tween(lyricText, {y: lyricText.y - 100}, 5, {ease: FlxEase.quadOut});
+				}
 		}
 	}
 

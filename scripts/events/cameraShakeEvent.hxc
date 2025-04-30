@@ -1,0 +1,127 @@
+import funkin.play.PlayState;
+import funkin.Conductor;
+import flixel.FlxG;
+import flixel.FlxCamera;
+import funkin.modding.PolymodErrorHandler;
+import funkin.play.event.SongEvent;
+import funkin.play.event.ScriptedSongEvent;
+import funkin.modding.module.ModuleHandler;
+import funkin.modding.module.ScriptedModule;
+
+class CameraShakeFixes extends ScriptedModule {
+	public function new() {
+		super('cameraShakeFixes');
+	}
+
+	public var isShakeEnabled:Bool = false;
+
+	override function onSongLoaded(event:SongLoadScriptEvent):Void {
+		if (event.events != null) {
+			isShakeEnabled = event.events.filter(data -> data.eventKind == "cameraShakeEvent");
+		}
+	}
+
+	function onGameOver(event:ScriptEvent) {
+		super.onGameOver(event);
+		if (PlayState.instance.camGame != null)
+			PlayState.instance.camGame.stopShake();
+		if (PlayState.instance.camHUD != null)
+			PlayState.instance.camHUD.stopShake();
+	}
+
+	function onSongRetry(event:ScriptEvent) {
+		super.onSongRetry(event);
+		if (PlayState.instance.camGame != null)
+			PlayState.instance.camGame.stopShake();
+		if (PlayState.instance.camHUD != null)
+			PlayState.instance.camHUD.stopShake();
+	}
+}
+
+class CameraShakeEvent extends ScriptedSongEvent {
+	function new() {
+		super("cameraShakeEvent");
+	}
+
+	public var eventTitle:String = "Camera Shake";
+	public var isEnabled:Bool;
+
+	public var DEFAULT_CAMGAME_INTENSITY:Float = 0.02;
+	public var DEFAULT_CAMHUD_INTENSITY:Float = 0.01;
+	public var DEFAULT_DURATION:Float = 1.0;
+	public var DEFAULT_DIRECTION:Int = 2;
+
+	override function handleEvent(data):Void {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+
+		var shakeManager = ModuleHandler.getModule("cameraShakeFixes");
+		isEnabled = shakeManager.scriptGet("isShakeEnabled");
+		if (shakeManager == null || !isEnabled)
+			return;
+
+		var intensityCamGame:Float = data.getFloat('intensityCamGame') ?? DEFAULT_CAMGAME_INTENSITY;
+		var intensityCamHUD:Float = data.getFloat('intensityCamHUD') ?? DEFAULT_CAMHUD_INTENSITY;
+		var duration:Float = data.getFloat('duration') ?? DEFAULT_DURATION;
+		var direction:Int = data.getInt('direction') ?? DEFAULT_DIRECTION;
+
+		var durSeconds = Conductor.instance.stepLengthMs * duration / 1000;
+
+		switch (direction) {
+			case 0:
+				direction = 0x01; // X
+			case 1:
+				direction = 0x10; // Y
+			case 2:
+				direction = 0x11; // Both
+		}
+
+		if (duration <= 0) {
+			PolymodErrorHandler.showAlert("Event execution error for " + eventTitle,
+				"Duration cannot be less or equal to 0.\nDuration must be greater than 0.");
+		}
+
+		if (intensityCamGame != 0)
+			FlxG.camera.shake(intensityCamGame, durSeconds, direction);
+		if (intensityCamHUD != 0)
+			PlayState.instance.camHUD.shake(intensityCamHUD, durSeconds, direction);
+	}
+
+	override function getTitle() {
+		return eventTitle;
+	}
+
+	override function getEventSchema() {
+		return [
+			{
+				name: 'intensityCamGame',
+				title: 'CamGame Intensity',
+				defaultValue: 0.02,
+				step: 0.01,
+				type: "float"
+			},
+			{
+				name: 'intensityCamHUD',
+				title: 'CamHUD Intensity',
+				defaultValue: 0.01,
+				step: 0.01,
+				type: "float"
+			},
+			{
+				name: 'duration',
+				title: 'Duration',
+				defaultValue: 1.0,
+				step: 0.1,
+				type: "float",
+				units: 'steps'
+			},
+			{
+				name: 'direction',
+				title: 'Direction',
+				defaultValue: 2,
+				type: "enum",
+				keys: ["Horizontal" => 0, "Vertical" => 1, "Both" => 2]
+			}
+		];
+	}
+}

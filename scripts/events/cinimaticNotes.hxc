@@ -120,7 +120,18 @@ class CinematicNoteModule extends ScriptedModule {
 			opp.alpha = 0;
 		}
 
-		cinematicTweens.push(FlxTween.tween(player, {x: targetX}, 0.5, {ease: cinematicEase}));
+		cinematicTweens.push(FlxTween.tween(player, {x: targetX}, 0.5, {
+			ease: cinematicEase,
+			onUpdate: function(twn:FlxTween) {
+				for (covers in player.noteHoldCovers) {
+					var alpha = covers.alpha;
+					var visible = covers.visible;
+					covers.revive();
+					covers.alpha = alpha;
+					covers.visible = visible;
+				}
+			}
+		}));
 		cinematicTweens.push(FlxTween.tween(opp, {alpha: goalAlpha}, 0.5, {ease: FlxEase.linear}));
 
 		var hideOpp:Bool = enable;
@@ -142,14 +153,6 @@ class CinematicNoteModule extends ScriptedModule {
 		var player = PlayState.instance.playerStrumline;
 		if (player == null)
 			return;
-
-		for (covers in player.noteHoldCovers) {
-			var alpha = covers.alpha;
-			var visible = covers.visible;
-			covers.revive();
-			covers.alpha = alpha;
-			covers.visible = visible;
-		}
 	}
 
 	function resetCinematic(smooth:Bool = false):Void {

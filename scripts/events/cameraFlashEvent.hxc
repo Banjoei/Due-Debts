@@ -1,0 +1,101 @@
+import funkin.play.PlayState;
+import funkin.Conductor;
+import flixel.FlxG;
+import funkin.play.event.SongEvent;
+import funkin.data.event.SongEventSchema;
+import funkin.modding.PolymodErrorHandler;
+import funkin.play.event.ScriptedSongEvent;
+import funkin.modding.module.ModuleHandler;
+import funkin.modding.module.ScriptedModule;
+import funkin.data.event.SongEventRegistry;
+
+class CameraFlashFixes extends ScriptedModule {
+	public function new() {
+		super('cameraFlashFixes');
+	}
+
+	var isFlashEnabled:Bool = false;
+
+	override function onSongLoaded(event:SongLoadScriptEvent):Void {
+		if (event.events != null) {
+			isFlashEnabled = event.events.filter(data -> return data.eventKind == "CameraMovement").length > 0;
+		}
+	}
+
+	function onGameOver(event:ScriptEvent) {
+		super.onGameOver(event);
+		if (PlayState.instance.camGame != null)
+			PlayState.instance.camGame.stopFlash();
+		if (PlayState.instance.camHUD != null)
+			PlayState.instance.camHUD.stopFlash();
+	}
+
+	function onSongRetry(event:ScriptEvent) {
+		super.onSongRetry(event);
+		if (PlayState.instance.camGame != null)
+			PlayState.instance.camGame.stopFlash();
+		if (PlayState.instance.camHUD != null)
+			PlayState.instance.camHUD.stopFlash();
+	}
+}
+
+class CameraFlashEvent extends ScriptedSongEvent {
+	function new() {
+		super("cameraFlashEvent");
+	}
+
+	public var eventTitle:String = "Camera Flash";
+	public var isEnabled:Bool;
+
+	public var DEFAULT_DURATION:Float = 1.0;
+	public var DEFAULT_APPLYTOHUD:Bool = false;
+
+	override function handleEvent(data):Void {
+		if (PlayState.instance == null || PlayState.instance.currentStage == null)
+			return;
+
+		var flashManager = ModuleHandler.getModule("cameraFlashFixes");
+		isEnabled = flashManager.scriptGet('isFlashEnabled');
+		if (flashManager == null || !isEnabled)
+			return;
+
+		var duration:Float = data.getFloat('duration') != null ? data.getFloat('duration') : DEFAULT_DURATION;
+		var applyToHud:Bool = data.getBool('applyToHud') != null ? data.getBool('applyToHud') : DEFAULT_APPLYTOHUD;
+
+		var durSeconds = Conductor.instance.stepLengthMs * duration / 1000;
+
+		if (duration <= 0) {
+			PolymodErrorHandler.showAlert("Event execution error for " + eventTitle,
+				"Duration cannot be less or equal to 0.\nDuration must be greater than 0.");
+		}
+
+		if (!applyToHud) {
+			FlxG.camera.flash(0xFFFFFFFF, durSeconds);
+		} else {
+			PlayState.instance.camHUD.flash(0xFFFFFFFF, durSeconds);
+		}
+	}
+
+	public override function getTitle() {
+		return eventTitle;
+	}
+
+	override function getEventSchema() {
+		return [
+			{
+				name: 'duration',
+				title: 'Duration',
+				defaultValue: 0.8,
+				step: 0.1,
+				type: "float",
+				units: 'steps'
+			},
+			{
+				name: 'applyToHud',
+				title: 'Apply to camHUD',
+				defaultValue: false,
+				type: "bool"
+			}
+		];
+	}
+}

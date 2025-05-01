@@ -56,7 +56,7 @@ class CameraShakeEvent extends ScriptedSongEvent {
 			return;
 
 		var shakeManager = ModuleHandler.getModule("cameraShakeFixes");
-		isEnabled = shakeManager.scriptGet("isShakeEnabled");
+		isEnabled = shakeManager.isShakeEnabled;
 		if (shakeManager == null || !isEnabled)
 			return;
 

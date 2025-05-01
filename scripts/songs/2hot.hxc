@@ -159,7 +159,6 @@ class TwoHOTSong extends Song {
 				darkness.alpha = 1;
 				boomdark.alpha = 0.6;
 				PlayState.instance.disableKeys = true;
-				PlayState.instance.isInCutscene = true;
 			case 1616:
 				var fakeDeath = PlayState.instance.currentStage.getNamedProp('fakeDeath');
 				fakeDeath.animation.play('BF Dead Loop', true);
@@ -173,15 +172,7 @@ class TwoHOTSong extends Song {
 				PlayState.instance.currentStage.getNamedProp('fakeDeath').kill();
 				PlayState.instance.currentStage.getNamedProp('fakeExp').kill();
 				PlayState.instance.camHUD.visible = true;
-				var keysHeld:Array<Bool> = [];
-				for (i in 0...Strumline.KEY_COUNT)
-					keysHeld.push(false);
-				for (i in 0...Strumline.KEY_COUNT) {
-					keysHeld[i] = false;
-					PlayState.instance.playerStrumline.releaseKey(i);
-				}
 				PlayState.instance.disableKeys = false;
-				PlayState.instance.isInCutscene = false;
 			case 1744:
 				FlxTween.tween(darkness, {alpha: 0}, 10, {ease: FlxEase.linear});
 			case 2224:

@@ -104,7 +104,7 @@ class BotplayNotesModule extends Module {
 
 			var keysHeld:Array<Bool> = [];
 			for (i in 0...Strumline.KEY_COUNT)
-				keysHeld.push(false);
+				keysHeld = false;
 
 			for (holdNote in PlayState.instance.playerStrumline.holdNotes.members) {
 				if (holdNote == null)

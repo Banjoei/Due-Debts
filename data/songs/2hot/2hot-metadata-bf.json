@@ -14,6 +14,7 @@
   "playData": {
     "songVariations": [    ],
     "difficulties": [
+      "easy",
       "normal",
       "hard"
     ],
@@ -29,7 +30,8 @@
     "stage": "phillyStreetsErect",
     "noteStyle": "funkin",
     "ratings": {
-      "normal": 7,
+      "easy": 5,
+      "normal": 6,
       "hard": 8
     },
     "previewStart": 0,

@@ -55,7 +55,7 @@ class CameraFlashEvent extends ScriptedSongEvent {
 			return;
 
 		var flashManager = ModuleHandler.getModule("cameraFlashFixes");
-		isEnabled = flashManager.scriptGet('isFlashEnabled');
+		isEnabled = flashManager.isFlashEnabled;
 		if (flashManager == null || !isEnabled)
 			return;
 

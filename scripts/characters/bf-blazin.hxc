@@ -149,6 +149,8 @@ class BoyfriendBlazinCharacter extends SparrowCharacter {
 				playIdleAnim(); // TODO: Which anim?
 			default:
 				playSingingAnims(dir, false, '');
+			case "nothing":
+				return;
 		}
 	}
 

@@ -42,188 +42,200 @@ import funkin.util.Constants;
 import funkin.input.Controls;
 import openfl.Lib;
 
-class blazinDeathCutscene extends Module {
-	function new() {
-		super('blazinDeathCutscene');
-	}
+class blazinDeathCutscene extends Module
+{
+  function new()
+  {
+    super('blazinDeathCutscene');
+  }
 
-	public static var finished:Bool = false;
+  public static var finished:Bool = false;
 
-	public function onUpdate(event:UpdateScriptEvent):Void {
-		super.onUpdate(event);
-		var game = PlayState.instance;
-		if (game == null || game.currentStage == null)
-			return;
+  public function onUpdate(event:UpdateScriptEvent):Void
+  {
+    super.onUpdate(event);
+    var game = PlayState.instance;
+    if (game == null || game.currentStage == null) return;
 
-		// Only run this module if the current variation is "bf" and current song is "blazin"
-		if (game.currentVariation != "bf" || game.currentSong.id != "blazin")
-			return;
+    // Only run this module if the current variation is "bf" and current song is "blazin"
+    if (game.currentVariation != "bf" || game.currentSong.id != "blazin") return;
 
-		if (PlayerSettings.player1.controls.RESET) {
-			var health = game.health;
-			game.isPlayerDying = true;
-			new FlxTimer().start(0.01, function(tmr:FlxTimer) {
-				game.health = health;
-				game.isPlayerDying = false;
-			});
-			Countdown.pauseCountdown();
-		}
+    if (PlayerSettings.player1.controls.RESET)
+    {
+      var health = game.health;
+      game.isPlayerDying = true;
+      new FlxTimer().start(0.01, function(tmr:FlxTimer) {
+        game.health = health;
+        game.isPlayerDying = false;
+      });
+      Countdown.pauseCountdown();
+    }
 
-		if (game.health <= 0) {
-			game.health = 1;
+    if (game.health <= 0)
+    {
+      game.health = 1;
 
-			// pause gameplay updates/draws, pause music and vocals, and stop scrolling tweens
-			game.persistentUpdate = false;
-			game.persistentDraw = true;
+      // pause gameplay updates/draws, pause music and vocals, and stop scrolling tweens
+      game.persistentUpdate = false;
+      game.persistentDraw = true;
 
-			if (FlxG.sound.music != null) {
-				FlxG.sound.music.stop();
-			}
-			if (game.vocals != null) {
-				game.vocals.stop();
-			}
+      if (FlxG.sound.music != null)
+      {
+        FlxG.sound.music.stop();
+      }
+      if (game.vocals != null)
+      {
+        game.vocals.stop();
+      }
 
-			for (tween in game.scrollSpeedTweens) {
-				if (tween != null && tween.active) {
-					tween.active = false;
-					game.cameraTweensPausedBySubState.add(tween);
-				}
-			}
+      for (tween in game.scrollSpeedTweens)
+      {
+        if (tween != null && tween.active)
+        {
+          tween.active = false;
+          game.cameraTweensPausedBySubState.add(tween);
+        }
+      }
 
-			// Initialize the death substate to handle the video cutscene / death sequence.
-			var deathSubState = ScriptedMusicBeatSubState.init('blazinDeathSubState');
+      // Initialize the death substate to handle the video cutscene / death sequence.
+      var deathSubState = ScriptedMusicBeatSubState.init('blazinDeathSubState');
 
-			// Set the substate to use the cutscene camera.
-			deathSubState.camera = game.camCutscene;
-			game.camCutscene.visible = true;
+      // Set the substate to use the cutscene camera.
+      deathSubState.camera = game.camCutscene;
+      game.camCutscene.visible = true;
 
-			// Open the death substate.
-			game.openSubState(deathSubState);
-		}
-	}
+      // Open the death substate.
+      game.openSubState(deathSubState);
+    }
+  }
 }
 
-class blazinDeathSubState extends MusicBeatSubState {
-	var video:FunkinVideoSprite;
-	var sound:FlxSound;
-	var game = PlayState.instance;
+class blazinDeathSubState extends MusicBeatSubState
+{
+  var video:FunkinVideoSprite;
+  var sound:FlxSound;
+  var game = PlayState.instance;
 
-	function scaleAndCenter(video:FunkinVideoSprite) {
-		var scale = Math.min(FlxG.width / video.bitmap.bitmapData.width, FlxG.height / video.bitmap.bitmapData.height);
-		video.setGraphicSize((video.bitmap.bitmapData.width * scale) + 10, video.bitmap.bitmapData.height * scale);
-		video.updateHitbox();
-		video.screenCenter();
-	}
+  function scaleAndCenter(video:FunkinVideoSprite)
+  {
+    var scale = Math.min(FlxG.width / video.bitmap.bitmapData.width, FlxG.height / video.bitmap.bitmapData.height);
+    video.setGraphicSize((video.bitmap.bitmapData.width * scale) + 10, video.bitmap.bitmapData.height * scale);
+    video.updateHitbox();
+    video.screenCenter();
+  }
 
-	public function new() {
-		super();
+  public function new()
+  {
+    super();
 
-		video = new FunkinVideoSprite(0, 0, Paths.videos("BlazinGameOver"));
-		sound = FlxG.sound.load(Paths.sound("Mornin"));
-		var module = ModuleHandler.getModule('blazinDeathCutscene');
+    video = new FunkinVideoSprite(0, 0, Paths.videos("BlazinGameOver"));
+    sound = FlxG.sound.load(Paths.sound("Mornin"));
+    var module = ModuleHandler.getModule('blazinDeathCutscene');
 
-		module.scriptSet("finished", false);
+    module.scriptSet("finished", false);
 
-		video.camera = game.camCutscene;
+    video.camera = game.camCutscene;
 
-		game.add(video);
-		game.refresh();
+    game.add(video);
+    game.refresh();
 
-		video.bitmap.onFormatSetup.add(() -> scaleAndCenter(video));
+    video.bitmap.onFormatSetup.add(() -> scaleAndCenter(video));
 
-		// When the video ends, exit the cutscene.
-		video.bitmap.onEndReached.add(() -> {
-			exitCutscene();
-		}, true);
+    // When the video ends, exit the cutscene.
+    video.bitmap.onEndReached.add(() -> {
+      exitCutscene();
+    }, true);
 
-		if (video.load(Assets.getBytes(Paths.videos("BlazinGameOver")))) {
-			video.play();
-			sound.play();
-		} else {
-			// If video fails to load, exit the cutscene immediately.
-			exitCutscene();
-		}
-	}
+    if (video.load(Assets.getBytes(Paths.videos("BlazinGameOver"))))
+    {
+      video.play();
+      sound.play();
+    }
+    else
+    {
+      // If video fails to load, exit the cutscene immediately.
+      exitCutscene();
+    }
+  }
 
-	override function update(elapsed:Float):Void {
-		super.update(elapsed);
-		if (controls.BACK) {
-			exitToMenu();
-		}
-		if (controls.ACCEPT) {
-			exitCutscene();
-		}
-	}
+  override function update(elapsed:Float):Void
+  {
+    super.update(elapsed);
+    if (controls.BACK)
+    {
+      exitToMenu();
+    }
+    if (controls.ACCEPT)
+    {
+      exitCutscene();
+    }
+  }
 
-	function exitToMenu():Void {
-		if (PlayState.instance == null)
-			return;
-		if (video != null)
-			video.destroy();
-		if (sound != null)
-			sound.destroy();
+  function exitToMenu():Void
+  {
+    if (PlayState.instance == null) return;
+    if (video != null) video.destroy();
+    if (sound != null) sound.destroy();
 
-		isEnding = true;
-		blueballed = false;
-		PlayState.instance.deathCounter = 0;
+    isEnding = true;
+    blueballed = false;
+    PlayState.instance.deathCounter = 0;
 
-		if (GameOverSubState.isChartingMode) {
-			this.close();
-			if (FlxG.sound.music != null)
-				FlxG.sound.music.pause(); // Don't reset song position!
-			PlayState.instance.close(); // This only works because PlayState is a substate!
-			return;
-		} else {
-			var targetState:StickerSubState->FlxState = (PlayStatePlaylist.isStoryMode) ? (sticker) -> new StoryMenuState(sticker) : (sticker) ->
-				FreeplayState.build(sticker);
+    if (GameOverSubState.isChartingMode)
+    {
+      this.close();
+      if (FlxG.sound.music != null) FlxG.sound.music.pause(); // Don't reset song position!
+      PlayState.instance.close(); // This only works because PlayState is a substate!
+      return;
+    }
+    else
+    {
+      var targetState:StickerSubState->FlxState = (PlayStatePlaylist.isStoryMode) ? (sticker) -> new StoryMenuState(sticker) : (sticker) ->
+        FreeplayState.build(sticker);
 
-			if (PlayStatePlaylist.isStoryMode) {
-				PlayStatePlaylist.reset();
-			}
+      if (PlayStatePlaylist.isStoryMode)
+      {
+        PlayStatePlaylist.reset();
+      }
 
-			var stickerPackId:Null<String> = PlayState.instance.currentChart.stickerPack;
+      var stickerPackId:Null<String> = PlayState.instance.currentChart.stickerPack;
 
-			if (stickerPackId == null) {
-				var playerCharacterId = PlayerRegistry.instance.getCharacterOwnerId(PlayState.instance.currentChart.characters.player);
-				var playerCharacter = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? Constants.DEFAULT_CHARACTER);
+      if (stickerPackId == null)
+      {
+        var playerCharacterId = PlayerRegistry.instance.getCharacterOwnerId(PlayState.instance.currentChart.characters.player);
+        var playerCharacter = PlayerRegistry.instance.fetchEntry(playerCharacterId ?? Constants.DEFAULT_CHARACTER);
 
-				if (playerCharacter != null) {
-					stickerPackId = playerCharacter.getStickerPackID();
-				}
-			}
+        if (playerCharacter != null)
+        {
+          stickerPackId = playerCharacter.getStickerPackID();
+        }
+      }
 
-			if (PlayState.instance.playerStrumline != null)
-				PlayState.instance.playerStrumline.clean();
-			if (PlayState.instance.opponentStrumline != null)
-				PlayState.instance.opponentStrumline.clean();
+      if (PlayState.instance.playerStrumline != null) PlayState.instance.playerStrumline.clean();
+      if (PlayState.instance.opponentStrumline != null) PlayState.instance.opponentStrumline.clean();
 
-			openSubState(new StickerSubState({targetState: targetState, stickerPack: stickerPackId}));
-		}
-	}
+      openSubState(new StickerSubState({targetState: targetState, stickerPack: stickerPackId}));
+    }
+  }
 
-	function exitCutscene():Void {
-		if (video != null)
-			video.destroy();
-		if (sound != null)
-			sound.destroy();
+  function exitCutscene():Void
+  {
+    if (video != null) video.destroy();
+    if (sound != null) sound.destroy();
 
-		var module = ModuleHandler.getModule('blazinDeathCutscene');
+    var module = ModuleHandler.getModule('blazinDeathCutscene');
 
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-		if (game.vocals != null)
-			game.vocals.stop();
-		game.musicPausedBySubState = false;
+    if (FlxG.sound.music != null) FlxG.sound.music.stop();
+    if (game.vocals != null) game.vocals.stop();
+    game.musicPausedBySubState = false;
 
-		game.deathCounter++;
+    game.deathCounter++;
 
-		if (game.playerStrumline != null)
-			game.playerStrumline.clean();
-		if (game.opponentStrumline != null)
-			game.opponentStrumline.clean();
+    if (game.playerStrumline != null) game.playerStrumline.clean();
+    if (game.opponentStrumline != null) game.opponentStrumline.clean();
 
-		game.needsReset = true;
-		module.scriptSet("finished", true);
-		this.close();
-	}
+    game.needsReset = true;
+    module.scriptSet("finished", true);
+    this.close();
+  }
 }

@@ -3,95 +3,99 @@ import funkin.play.PlayState;
 import funkin.modding.module.ScriptedModule;
 import funkin.modding.module.ModuleHandler;
 
-class GFSpeedFixes extends ScriptedModule {
-	public var defaultDanceEvery:Float;
-	public var divisor:Float = 1;
-	public var shouldRun:Bool = false;
-	public var gf:Dynamic = null;
+class GFSpeedFixes extends ScriptedModule
+{
+  public var defaultDanceEvery:Float;
+  public var divisor:Float = 1;
+  public var shouldRun:Bool = false;
+  public var gf:Dynamic = null;
 
-	override function onSongLoaded(event:ScriptEvent):Void {
-		if (PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
+  override function onSongLoaded(event:ScriptEvent):Void
+  {
+    if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
-		if (event.events != null) {
-			shouldRun = event.events.filter(e -> return e.eventKind == "SetGFSpeed").length > 0;
-		}
-		if (!shouldRun)
-			return;
+    if (event.events != null)
+    {
+      shouldRun = event.events.filter(e -> return e.eventKind == "SetGFSpeed").length > 0;
+    }
+    if (!shouldRun) return;
 
-		gf = PlayState.instance.currentStage.getGirlfriend();
-		if (gf == null)
-			return;
+    gf = PlayState.instance.currentStage.getGirlfriend();
+    if (gf == null) return;
 
-		defaultDanceEvery = gf.danceEvery;
-	}
+    defaultDanceEvery = gf.danceEvery;
+  }
 
-	override function onSongRetry(event:ScriptEvent):Void {
-		if (!shouldRun || gf == null)
-			return;
+  override function onSongRetry(event:ScriptEvent):Void
+  {
+    if (!shouldRun || gf == null) return;
 
-		gf.danceEvery = defaultDanceEvery;
-	}
+    gf.danceEvery = defaultDanceEvery;
+  }
 
-	override function onGameOver(event:ScriptEvent):Void {
-		super.onGameOver(event);
+  override function onGameOver(event:ScriptEvent):Void
+  {
+    super.onGameOver(event);
 
-		if (!shouldRun || gf == null)
-			return;
+    if (!shouldRun || gf == null) return;
 
-		gf.danceEvery = defaultDanceEvery;
-	}
+    gf.danceEvery = defaultDanceEvery;
+  }
 
-	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
-		super.onStateChangeBegin(event);
+  override function onStateChangeBegin(event:StateChangeScriptEvent):Void
+  {
+    super.onStateChangeBegin(event);
 
-		if (!shouldRun || gf == null)
-			return;
+    if (!shouldRun || gf == null) return;
 
-		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
-			gf.danceEvery = defaultDanceEvery;
-		}
-	}
+    if (event.targetState != null && !Std.isOfType(event.targetState, PlayState))
+    {
+      gf.danceEvery = defaultDanceEvery;
+    }
+  }
 
-	public function applyDivisor(newDiv:Float) {
-		if (!shouldRun || gf == null)
-			return;
+  public function applyDivisor(newDiv:Float)
+  {
+    if (!shouldRun || gf == null) return;
 
-		divisor = newDiv;
-		gf.danceEvery = defaultDanceEvery * divisor;
-	}
+    divisor = newDiv;
+    gf.danceEvery = defaultDanceEvery * divisor;
+  }
 }
 
-class SetGFSpeedEvent extends SongEvent {
-	function new() {
-		super('SetGFSpeed');
-	}
+class SetGFSpeedEvent extends SongEvent
+{
+  function new()
+  {
+    super('SetGFSpeed');
+  }
 
-	override function handleEvent(data) {
-		if (PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
-		if (PlayState.instance.isMinimalMode)
-			return;
+  override function handleEvent(data)
+  {
+    if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
+    if (PlayState.instance.isMinimalMode) return;
 
-		var speed = Math.round(data.getFloat('divisor'));
-		var fixes = ModuleHandler.getModule('GFSpeedFixes');
+    var speed = Math.round(data.getFloat('divisor'));
+    var fixes = ModuleHandler.getModule('GFSpeedFixes');
 
-		fixes.scriptCall('applyDivisor', [speed]);
-	}
+    fixes.scriptCall('applyDivisor', [speed]);
+  }
 
-	override function getEventSchema() {
-		return [
-			{
-				name: "divisor",
-				title: "Divisor",
-				defaultValue: 1,
-				step: 1,
-				type: "float"
-			}
-		];
-	}
+  override function getEventSchema()
+  {
+    return [
+      {
+        name: "divisor",
+        title: "Divisor",
+        defaultValue: 1,
+        step: 1,
+        type: "float"
+      }
+    ];
+  }
 
-	override function getTitle() {
-		return "Set GF Speed";
-	}
+  override function getTitle()
+  {
+    return "Set GF Speed";
+  }
 }

@@ -13,461 +13,497 @@ import funkin.Conductor;
 import funkin.play.event.SongEvent;
 import funkin.modding.module.ModuleHandler;
 
-class SplitScreenModule extends ScriptedModule {
-	var camLeft:FunkinCamera = null;
-	var camRight:FunkinCamera = null;
-	var camFollowDad:FlxObject = null;
-	var camFollowBf:FlxObject = null;
+class SplitScreenModule extends ScriptedModule
+{
+  var camLeft:FunkinCamera = null;
+  var camRight:FunkinCamera = null;
+  var camFollowDad:FlxObject = null;
+  var camFollowBf:FlxObject = null;
 
-	var dual:Bool = false;
-	var swapped:Bool = false;
+  var dual:Bool = false;
+  var swapped:Bool = false;
 
-	var camLeftZoom:Float = 1;
-	var camRightZoom:Float = 1;
+  var camLeftZoom:Float = 1;
+  var camRightZoom:Float = 1;
 
-	var offsetX:Array<String> = [];
-	var offsetY:Array<String> = [];
+  var offsetX:Array<String> = [];
+  var offsetY:Array<String> = [];
 
-	var leftX:Float = 0;
-	var rightX:Float = 0;
-	var leftY:Float = 0;
-	var rightY:Float = 0;
+  var leftX:Float = 0;
+  var rightX:Float = 0;
+  var leftY:Float = 0;
+  var rightY:Float = 0;
 
-	var shouldRun:Bool = false;
-	var splitTweens:Array<FlxTween> = [];
-	var initialized:Bool = false;
-	var justReset:Bool = false;
+  var shouldRun:Bool = false;
+  var splitTweens:Array<FlxTween> = [];
+  var initialized:Bool = false;
+  var justReset:Bool = false;
 
-	public function new() {
-		super("SplitScreenModule");
-	}
+  public function new()
+  {
+    super("SplitScreenModule");
+  }
 
-	override function onSongLoaded(event) {
-		if (event.events != null) {
-			shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen").length > 0;
-		}
+  override function onSongLoaded(event)
+  {
+    if (event.events != null)
+    {
+      shouldRun = event.events.filter(data -> return data.eventKind == "SplitScreen").length > 0;
+    }
 
-		if (shouldRun) {
-			initializeCams();
-		}
+    if (shouldRun)
+    {
+      initializeCams();
+    }
 
-		if (justReset) {
-			new FlxTimer().start(0.5, function(_) {
-				for (spr in PlayState.instance.members) {
-					if (spr != null && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene) {
-						spr.cameras = [PlayState.instance.camGame];
-					}
-				}
-			});
-			justReset = false;
-		} else {
-			for (spr in PlayState.instance.members) {
-				if (spr != null && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene) {
-					spr.cameras = [PlayState.instance.camGame];
-				}
-			}
-		}
-	}
+    if (justReset)
+    {
+      new FlxTimer().start(0.5, function(_) {
+        for (spr in PlayState.instance.members)
+        {
+          if (spr != null && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene)
+          {
+            spr.cameras = [PlayState.instance.camGame];
+          }
+        }
+      });
+      justReset = false;
+    }
+    else
+    {
+      for (spr in PlayState.instance.members)
+      {
+        if (spr != null && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene)
+        {
+          spr.cameras = [PlayState.instance.camGame];
+        }
+      }
+    }
+  }
 
-	function initializeCams():Void {
-		if (PlayState.instance == null)
-			return;
+  function initializeCams():Void
+  {
+    if (PlayState.instance == null) return;
 
-		if (camLeft == null || !FlxG.cameras.list.contains(camLeft)) {
-			camLeft = new FunkinCamera();
-			camLeft.width = FlxG.width / 2;
-			camLeft.alpha = 0.001;
-			FlxG.cameras.insert(camLeft, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
-		}
+    if (camLeft == null || !FlxG.cameras.list.contains(camLeft))
+    {
+      camLeft = new FunkinCamera();
+      camLeft.width = FlxG.width / 2;
+      camLeft.alpha = 0.001;
+      FlxG.cameras.insert(camLeft, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+    }
 
-		if (camRight == null || !FlxG.cameras.list.contains(camRight)) {
-			camRight = new FunkinCamera();
-			camRight.x = FlxG.width / 2;
-			camRight.width = FlxG.width / 2;
-			camRight.alpha = 0.001;
-			FlxG.cameras.insert(camRight, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
-		}
+    if (camRight == null || !FlxG.cameras.list.contains(camRight))
+    {
+      camRight = new FunkinCamera();
+      camRight.x = FlxG.width / 2;
+      camRight.width = FlxG.width / 2;
+      camRight.alpha = 0.001;
+      FlxG.cameras.insert(camRight, FlxG.cameras.list.indexOf(PlayState.instance.camCutscene) - 1, false);
+    }
 
-		var dad = PlayState.instance.currentStage.getDad();
-		var bf = PlayState.instance.currentStage.getBoyfriend();
+    var dad = PlayState.instance.currentStage.getDad();
+    var bf = PlayState.instance.currentStage.getBoyfriend();
 
-		if (camFollowDad == null) {
-			camFollowDad = new FlxObject();
-			PlayState.instance.add(camFollowDad);
-		}
+    if (camFollowDad == null)
+    {
+      camFollowDad = new FlxObject();
+      PlayState.instance.add(camFollowDad);
+    }
 
-		if (camFollowBf == null) {
-			camFollowBf = new FlxObject();
-			PlayState.instance.add(camFollowBf);
-		}
+    if (camFollowBf == null)
+    {
+      camFollowBf = new FlxObject();
+      PlayState.instance.add(camFollowBf);
+    }
 
-		camLeft.follow(camFollowDad);
-		camRight.follow(camFollowBf);
+    camLeft.follow(camFollowDad);
+    camRight.follow(camFollowBf);
 
-		if (dad != null) {
-			var dadMidX = dad.x + (dad.width / 2);
-			var dadMidY = dad.y + (dad.height / 2);
-		}
-		if (bf != null) {
-			var bfMidX = bf.x + (bf.width / 2);
-			var bfMidY = bf.y + (bf.height / 2);
-		}
+    if (dad != null)
+    {
+      var dadMidX = dad.x + (dad.width / 2);
+      var dadMidY = dad.y + (dad.height / 2);
+    }
+    if (bf != null)
+    {
+      var bfMidX = bf.x + (bf.width / 2);
+      var bfMidY = bf.y + (bf.height / 2);
+    }
 
-		initialized = (camLeft != null && camRight != null && camFollowDad != null && camFollowBf != null);
-	}
+    initialized = (camLeft != null && camRight != null && camFollowDad != null && camFollowBf != null);
+  }
 
-	override function onSongEvent(event:SongEventScriptEvent) {
-		super.onSongEvent(event);
+  override function onSongEvent(event:SongEventScriptEvent)
+  {
+    super.onSongEvent(event);
 
-		if (event.eventData.eventKind == 'SplitScreen') {
-			if (shouldRun) {
-				initializeCams();
-				if (camLeft != null && camRight != null && camFollowDad != null && camFollowBf != null) {
-					applySplit(event.eventData.value);
-				}
-			}
-		}
-		if (event.eventData.eventKind == 'ZoomCamera') {
-			if (shouldRun && camLeft != null && camRight != null)
-				applySplitZoom(event.eventData.value);
-		}
-	}
+    if (event.eventData.eventKind == 'SplitScreen')
+    {
+      if (shouldRun)
+      {
+        initializeCams();
+        if (camLeft != null && camRight != null && camFollowDad != null && camFollowBf != null)
+        {
+          applySplit(event.eventData.value);
+        }
+      }
+    }
+    if (event.eventData.eventKind == 'ZoomCamera')
+    {
+      if (shouldRun && camLeft != null && camRight != null) applySplitZoom(event.eventData.value);
+    }
+  }
 
-	function applySplit(data:Dynamic) {
-		initializeCams();
+  function applySplit(data:Dynamic)
+  {
+    initializeCams();
 
-		if (camLeft == null || camRight == null || camFollowDad == null || camFollowBf == null)
-			return;
+    if (camLeft == null || camRight == null || camFollowDad == null || camFollowBf == null) return;
 
-		var duration = data.duration;
-		var ease = data.ease;
-		var leftZoom = data.leftZoom;
-		var rightZoom = data.rightZoom;
-		var swap = data.swap;
+    var duration = data.duration;
+    var ease = data.ease;
+    var leftZoom = data.leftZoom;
+    var rightZoom = data.rightZoom;
+    var swap = data.swap;
 
-		offsetX = data.offsetX.split(",");
-		offsetY = data.offsetY.split(",");
+    offsetX = data.offsetX.split(",");
+    offsetY = data.offsetY.split(",");
 
-		leftX = Std.parseFloat(offsetX[0]);
-		rightX = Std.parseFloat(offsetX[1]);
-		leftY = Std.parseFloat(offsetY[0]);
-		rightY = Std.parseFloat(offsetY[1]);
+    leftX = Std.parseFloat(offsetX[0]);
+    rightX = Std.parseFloat(offsetX[1]);
+    leftY = Std.parseFloat(offsetY[0]);
+    rightY = Std.parseFloat(offsetY[1]);
 
-		dual = true;
-		if (dual)
-			swapped = swap;
+    dual = true;
+    if (dual) swapped = swap;
 
-		var easeFunc = getEaseFunction(ease);
+    var easeFunc = getEaseFunction(ease);
 
-		for (spr in PlayState.instance.members) {
-			if (spr != null && spr.exists && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene) {
-				spr.cameras = [PlayState.instance.camGame, camLeft, camRight];
-			}
-		}
+    for (spr in PlayState.instance.members)
+    {
+      if (spr != null && spr.exists && spr.camera != PlayState.instance.camHUD && spr.camera != PlayState.instance.camCutscene)
+      {
+        spr.cameras = [PlayState.instance.camGame, camLeft, camRight];
+      }
+    }
 
-		camLeft.alpha = camRight.alpha = 1;
-		FlxTween.cancelTweensOf(camLeft);
-		FlxTween.cancelTweensOf(camRight);
+    camLeft.alpha = camRight.alpha = 1;
+    FlxTween.cancelTweensOf(camLeft);
+    FlxTween.cancelTweensOf(camRight);
 
-		if (!swapped) {
-			camLeft.x = -(FlxG.width / 2);
-			camRight.x = FlxG.width;
-		} else {
-			camRight.x = -(FlxG.width / 2);
-			camLeft.x = FlxG.width;
-		}
+    if (!swapped)
+    {
+      camLeft.x = -(FlxG.width / 2);
+      camRight.x = FlxG.width;
+    }
+    else
+    {
+      camRight.x = -(FlxG.width / 2);
+      camLeft.x = FlxG.width;
+    }
 
-		var camA = swapped ? camRight : camLeft;
-		var camB = swapped ? camLeft : camRight;
+    var camA = swapped ? camRight : camLeft;
+    var camB = swapped ? camLeft : camRight;
 
-		FlxTween.tween(camA, {x: dual ? 0 : -(FlxG.width / 2)}, duration, {ease: easeFunc});
-		FlxTween.tween(camB, {x: dual ? FlxG.width / 2 : FlxG.width}, duration, {ease: easeFunc});
+    FlxTween.tween(camA, {x: dual ? 0 : -(FlxG.width / 2)}, duration, {ease: easeFunc});
+    FlxTween.tween(camB, {x: dual ? FlxG.width / 2 : FlxG.width}, duration, {ease: easeFunc});
 
-		if (!dual)
-			return;
+    if (!dual) return;
 
-		var dad = PlayState.instance.currentStage.getDad();
-		var bf = PlayState.instance.currentStage.getBoyfriend();
+    var dad = PlayState.instance.currentStage.getDad();
+    var bf = PlayState.instance.currentStage.getBoyfriend();
 
-		camLeftZoom = leftZoom;
-		camRightZoom = rightZoom;
-	}
+    camLeftZoom = leftZoom;
+    camRightZoom = rightZoom;
+  }
 
-	function applySplitZoom(data:Dynamic) {
-		if (!shouldRun || camLeft == null || camRight == null)
-			return;
-		var zoom:Float = data.zoom ?? 1.0;
-		var durationSteps:Float = data.duration ?? 4.0;
-		var easeName:String = data.ease ?? 'linear';
-		var mode:String = data.mode ?? 'stage';
-		var stageZoom = FlxCamera.defaultZoom;
-		var targetZoom:Float = zoom * (mode == "direct" ? 1.0 : stageZoom);
+  function applySplitZoom(data:Dynamic)
+  {
+    if (!shouldRun || camLeft == null || camRight == null) return;
+    var zoom:Float = data.zoom ?? 1.0;
+    var durationSteps:Float = data.duration ?? 4.0;
+    var easeName:String = data.ease ?? 'linear';
+    var mode:String = data.mode ?? 'stage';
+    var stageZoom = FlxCamera.defaultZoom;
+    var targetZoom:Float = zoom * (mode == "direct" ? 1.0 : stageZoom);
 
-		var easeFunction = getEaseFunction(easeName);
+    var easeFunction = getEaseFunction(easeName);
 
-		var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
+    var durationSeconds:Float = Conductor.instance.stepLengthMs * durationSteps / 1000;
 
-		FlxTween.cancelTweensOf(camLeft);
-		FlxTween.cancelTweensOf(camRight);
-		FlxTween.tween(camLeft, {zoom: targetZoom}, durationSeconds, {ease: easeFunction});
-		FlxTween.tween(camRight, {zoom: targetZoom}, durationSeconds, {ease: easeFunction});
-		camLeftZoom = targetZoom;
-		camRightZoom = targetZoom;
-	}
+    FlxTween.cancelTweensOf(camLeft);
+    FlxTween.cancelTweensOf(camRight);
+    FlxTween.tween(camLeft, {zoom: targetZoom}, durationSeconds, {ease: easeFunction});
+    FlxTween.tween(camRight, {zoom: targetZoom}, durationSeconds, {ease: easeFunction});
+    camLeftZoom = targetZoom;
+    camRightZoom = targetZoom;
+  }
 
-	override function onUpdate(elapsed:Float) {
-		if (!shouldRun
-			|| PlayState.instance == null
-			|| PlayState.instance.currentStage == null
-			|| camLeft == null
-			|| camRight == null
-			|| camFollowDad == null
-			|| camFollowBf == null)
-			return;
-		var dad = PlayState.instance.currentStage.getDad();
-		var bf = PlayState.instance.currentStage.getBoyfriend();
-		if (dad != null) {
-			var dadMidX = dad.x + (dad.width / 2);
-			var dadMidY = dad.y + (dad.height / 2);
-			camFollowDad.setPosition(dadMidX + 0 + leftX, dadMidY - 100 + leftY);
-			camLeft.follow(camFollowDad);
-		}
+  override function onUpdate(elapsed:Float)
+  {
+    if (!shouldRun
+      || PlayState.instance == null
+      || PlayState.instance.currentStage == null
+      || camLeft == null
+      || camRight == null
+      || camFollowDad == null
+      || camFollowBf == null) return;
+    var dad = PlayState.instance.currentStage.getDad();
+    var bf = PlayState.instance.currentStage.getBoyfriend();
+    if (dad != null)
+    {
+      var dadMidX = dad.x + (dad.width / 2);
+      var dadMidY = dad.y + (dad.height / 2);
+      camFollowDad.setPosition(dadMidX + 0 + leftX, dadMidY - 100 + leftY);
+      camLeft.follow(camFollowDad);
+    }
 
-		if (bf != null) {
-			var bfMidX = bf.x + (bf.width / 2);
-			var bfMidY = bf.y + (bf.height / 2);
-			camFollowBf.setPosition(bfMidX - 100 - rightX, bfMidY - 100 + rightY);
-			camRight.follow(camFollowBf);
-		}
-	}
+    if (bf != null)
+    {
+      var bfMidX = bf.x + (bf.width / 2);
+      var bfMidY = bf.y + (bf.height / 2);
+      camFollowBf.setPosition(bfMidX - 100 - rightX, bfMidY - 100 + rightY);
+      camRight.follow(camFollowBf);
+    }
+  }
 
-	function resetSplitScreen(smooth:Bool = false, forceDestroy:Bool = false):Void {
-		if (PlayState.instance == null)
-			return;
-		if (camLeft == null || camRight == null)
-			return;
+  function resetSplitScreen(smooth:Bool = false, forceDestroy:Bool = false):Void
+  {
+    if (PlayState.instance == null) return;
+    if (camLeft == null || camRight == null) return;
 
-		for (tween in splitTweens) {
-			if (tween != null)
-				tween.cancel();
-		}
-		splitTweens = [];
+    for (tween in splitTweens)
+    {
+      if (tween != null) tween.cancel();
+    }
+    splitTweens = [];
 
-		if (smooth) {
-			var dur = 0.5;
-			splitTweens.push(FlxTween.tween(camLeft, {x: -FlxG.width / 2}, dur, {ease: FlxEase.quadOut}));
-			splitTweens.push(FlxTween.tween(camRight, {x: FlxG.width}, dur, {ease: FlxEase.quadOut}));
-		} else if (!smooth) {
-			FlxG.cameras.remove(camLeft, true);
-			FlxG.cameras.remove(camRight, true);
-			camLeft = null;
-			camRight = null;
-		}
+    if (smooth)
+    {
+      var dur = 0.5;
+      splitTweens.push(FlxTween.tween(camLeft, {x: -FlxG.width / 2}, dur, {ease: FlxEase.quadOut}));
+      splitTweens.push(FlxTween.tween(camRight, {x: FlxG.width}, dur, {ease: FlxEase.quadOut}));
+    }
+    else if (!smooth)
+    {
+      FlxG.cameras.remove(camLeft, true);
+      FlxG.cameras.remove(camRight, true);
+      camLeft = null;
+      camRight = null;
+    }
 
-		if (forceDestroy) {
-			if (camFollowDad != null)
-				PlayState.instance.remove(camFollowDad);
-			if (camFollowBf != null)
-				PlayState.instance.remove(camFollowBf);
-			camFollowDad = null;
-			camFollowBf = null;
-			initialized = false;
-			dual = false;
-		}
-	}
+    if (forceDestroy)
+    {
+      if (camFollowDad != null) PlayState.instance.remove(camFollowDad);
+      if (camFollowBf != null) PlayState.instance.remove(camFollowBf);
+      camFollowDad = null;
+      camFollowBf = null;
+      initialized = false;
+      dual = false;
+    }
+  }
 
-	function getEaseFunction(name:String):Float->Float {
-		switch (name.toLowerCase()) {
-			case "linear":
-				return FlxEase.linear;
-			case "quadin":
-				return FlxEase.quadIn;
-			case "quadout":
-				return FlxEase.quadOut;
-			case "quadinout":
-				return FlxEase.quadInOut;
-			case "cubein":
-				return FlxEase.cubeIn;
-			case "cubeout":
-				return FlxEase.cubeOut;
-			case "cubeinout":
-				return FlxEase.cubeInOut;
-			case "quartin":
-				return FlxEase.quartIn;
-			case "quartout":
-				return FlxEase.quartOut;
-			case "quartinout":
-				return FlxEase.quartInOut;
-			case "quintin":
-				return FlxEase.quintIn;
-			case "quintout":
-				return FlxEase.quintOut;
-			case "quintinout":
-				return FlxEase.quintInOut;
-			case "sinein":
-				return FlxEase.sineIn;
-			case "sineout":
-				return FlxEase.sineOut;
-			case "sineinout":
-				return FlxEase.sineInOut;
-			case "expoin":
-				return FlxEase.expoIn;
-			case "expoout":
-				return FlxEase.expoOut;
-			case "expoinout":
-				return FlxEase.expoInOut;
-			case "circin":
-				return FlxEase.circIn;
-			case "circout":
-				return FlxEase.circOut;
-			case "circinout":
-				return FlxEase.circInOut;
-			case "backin":
-				return FlxEase.backIn;
-			case "backout":
-				return FlxEase.backOut;
-			case "backinout":
-				return FlxEase.backInOut;
-			case "bouncein":
-				return FlxEase.bounceIn;
-			case "bounceout":
-				return FlxEase.bounceOut;
-			case "bounceinout":
-				return FlxEase.bounceInOut;
-			case "elasticin":
-				return FlxEase.elasticIn;
-			case "elasticout":
-				return FlxEase.elasticOut;
-			case "elasticinout":
-				return FlxEase.elasticInOut;
-			case "smoothstepin":
-				return FlxEase.smoothStepIn;
-			case "smoothstepout":
-				return FlxEase.smoothStepOut;
-			case "smoothstepinout":
-				return FlxEase.smoothStepInOut;
-			case "smootherstepin":
-				return FlxEase.smootherStepIn;
-			case "smootherstepout":
-				return FlxEase.smootherStepOut;
-			case "smootherstepinout":
-				return FlxEase.smootherStepInOut;
-			default:
-				trace('[SplitScreenModule] Unknown easing "$name", defaulting to sineOut.');
-				return FlxEase.sineOut;
-		}
-	}
+  function getEaseFunction(name:String):Float->Float
+  {
+    switch (name.toLowerCase())
+    {
+      case "linear":
+        return FlxEase.linear;
+      case "quadin":
+        return FlxEase.quadIn;
+      case "quadout":
+        return FlxEase.quadOut;
+      case "quadinout":
+        return FlxEase.quadInOut;
+      case "cubein":
+        return FlxEase.cubeIn;
+      case "cubeout":
+        return FlxEase.cubeOut;
+      case "cubeinout":
+        return FlxEase.cubeInOut;
+      case "quartin":
+        return FlxEase.quartIn;
+      case "quartout":
+        return FlxEase.quartOut;
+      case "quartinout":
+        return FlxEase.quartInOut;
+      case "quintin":
+        return FlxEase.quintIn;
+      case "quintout":
+        return FlxEase.quintOut;
+      case "quintinout":
+        return FlxEase.quintInOut;
+      case "sinein":
+        return FlxEase.sineIn;
+      case "sineout":
+        return FlxEase.sineOut;
+      case "sineinout":
+        return FlxEase.sineInOut;
+      case "expoin":
+        return FlxEase.expoIn;
+      case "expoout":
+        return FlxEase.expoOut;
+      case "expoinout":
+        return FlxEase.expoInOut;
+      case "circin":
+        return FlxEase.circIn;
+      case "circout":
+        return FlxEase.circOut;
+      case "circinout":
+        return FlxEase.circInOut;
+      case "backin":
+        return FlxEase.backIn;
+      case "backout":
+        return FlxEase.backOut;
+      case "backinout":
+        return FlxEase.backInOut;
+      case "bouncein":
+        return FlxEase.bounceIn;
+      case "bounceout":
+        return FlxEase.bounceOut;
+      case "bounceinout":
+        return FlxEase.bounceInOut;
+      case "elasticin":
+        return FlxEase.elasticIn;
+      case "elasticout":
+        return FlxEase.elasticOut;
+      case "elasticinout":
+        return FlxEase.elasticInOut;
+      case "smoothstepin":
+        return FlxEase.smoothStepIn;
+      case "smoothstepout":
+        return FlxEase.smoothStepOut;
+      case "smoothstepinout":
+        return FlxEase.smoothStepInOut;
+      case "smootherstepin":
+        return FlxEase.smootherStepIn;
+      case "smootherstepout":
+        return FlxEase.smootherStepOut;
+      case "smootherstepinout":
+        return FlxEase.smootherStepInOut;
+      default:
+        trace('[SplitScreenModule] Unknown easing "$name", defaulting to sineOut.');
+        return FlxEase.sineOut;
+    }
+  }
 
-	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
-		super.onStateChangeBegin(event);
+  override function onStateChangeBegin(event:StateChangeScriptEvent):Void
+  {
+    super.onStateChangeBegin(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
-			resetSplitScreen(false, true);
-		}
-	}
+    if (event.targetState != null && !Std.isOfType(event.targetState, PlayState))
+    {
+      resetSplitScreen(false, true);
+    }
+  }
 
-	override function onSongRetry(event:ScriptEvent):Void {
-		super.onSongRetry(event);
+  override function onSongRetry(event:ScriptEvent):Void
+  {
+    super.onSongRetry(event);
 
-		if (!shouldRun)
-			return;
-		resetSplitScreen(true, false);
-		justReset = true;
-	}
+    if (!shouldRun) return;
+    resetSplitScreen(true, false);
+    justReset = true;
+  }
 
-	override function onGameOver(event:ScriptEvent):Void {
-		super.onGameOver(event);
+  override function onGameOver(event:ScriptEvent):Void
+  {
+    super.onGameOver(event);
 
-		if (!shouldRun)
-			return;
-		resetSplitScreen(false, false);
-	}
+    if (!shouldRun) return;
+    resetSplitScreen(false, false);
+  }
 
-	override function onPause(event:ScriptEvent):Void {
-		super.onPause(event);
+  override function onPause(event:ScriptEvent):Void
+  {
+    super.onPause(event);
 
-		if (!shouldRun)
-			return;
-		for (tween in splitTweens) {
-			if (tween != null)
-				tween.active = false;
-		}
-	}
+    if (!shouldRun) return;
+    for (tween in splitTweens)
+    {
+      if (tween != null) tween.active = false;
+    }
+  }
 
-	override function onResume(event:ScriptEvent):Void {
-		super.onResume(event);
+  override function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
 
-		if (!shouldRun)
-			return;
-		for (tween in splitTweens) {
-			if (tween != null)
-				tween.active = true;
-		}
-	}
+    if (!shouldRun) return;
+    for (tween in splitTweens)
+    {
+      if (tween != null) tween.active = true;
+    }
+  }
 }
 
-class SplitScreenEvent extends SongEvent {
-	public function new() {
-		super("SplitScreen");
-	}
+class SplitScreenEvent extends SongEvent
+{
+  public function new()
+  {
+    super("SplitScreen");
+  }
 
-	override function getTitle():String {
-		return "SplitScreen";
-	}
+  override function getTitle():String
+  {
+    return "SplitScreen";
+  }
 
-	public override function getIconPath() {
-		return 'ui/chart-editor/events/SplitScreen';
-	}
+  public override function getIconPath()
+  {
+    return 'ui/chart-editor/events/SplitScreen';
+  }
 
-	override function getEventSchema():Array<Dynamic> {
-		return [
-			{
-				name: "duration",
-				title: "Tween Duration",
-				type: "float",
-				defaultValue: 0.2
-			},
-			{
-				name: "ease",
-				title: "Tween Easing",
-				type: "string",
-				defaultValue: "quadOut"
-			},
-			{
-				name: "leftZoom",
-				title: "Left Zoom",
-				type: "float",
-				defaultValue: 1.0
-			},
-			{
-				name: "rightZoom",
-				title: "Right Zoom",
-				type: "float",
-				defaultValue: 1.0
-			},
-			{
-				name: "swap",
-				title: "Swap Sides",
-				type: "bool",
-				defaultValue: false
-			},
-			{
-				name: "offsetX",
-				title: "Cam X Offsets (L,R)",
-				type: "string",
-				defaultValue: "0,0"
-			},
-			{
-				name: "offsetY",
-				title: "Cam Y Offsets (L,R)",
-				type: "string",
-				defaultValue: "0,0"
-			}
-		];
-	}
+  override function getEventSchema():Array<Dynamic>
+  {
+    return [
+      {
+        name: "duration",
+        title: "Tween Duration",
+        type: "float",
+        defaultValue: 0.2
+      },
+      {
+        name: "ease",
+        title: "Tween Easing",
+        type: "string",
+        defaultValue: "quadOut"
+      },
+      {
+        name: "leftZoom",
+        title: "Left Zoom",
+        type: "float",
+        defaultValue: 1.0
+      },
+      {
+        name: "rightZoom",
+        title: "Right Zoom",
+        type: "float",
+        defaultValue: 1.0
+      },
+      {
+        name: "swap",
+        title: "Swap Sides",
+        type: "bool",
+        defaultValue: false
+      },
+      {
+        name: "offsetX",
+        title: "Cam X Offsets (L,R)",
+        type: "string",
+        defaultValue: "0,0"
+      },
+      {
+        name: "offsetY",
+        title: "Cam Y Offsets (L,R)",
+        type: "string",
+        defaultValue: "0,0"
+      }
+    ];
+  }
 
-	override function handleEvent(data) {}
+  override function handleEvent(data) {}
 }

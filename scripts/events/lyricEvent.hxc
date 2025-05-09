@@ -9,148 +9,163 @@ import flixel.FlxG;
 import funkin.modding.module.Module;
 import funkin.modding.events.ScriptEvent;
 
-class LyricsEvent extends SongEvent {
-	public function new() {
-		super('lyrics');
-	}
+class LyricsEvent extends SongEvent
+{
+  public function new()
+  {
+    super('lyrics');
+  }
 
-	override public function getTitle():String {
-		return 'Lyrics';
-	}
+  override public function getTitle():String
+  {
+    return 'Lyrics';
+  }
 
-	override public function handleEvent(data) {}
+  override public function handleEvent(data) {}
 
-	override public function getEventSchema():Array<Dynamic> {
-		return [
-			{
-				name: 'lyric',
-				title: 'Text',
-				defaultValue: '',
-				type: 'string'
-			},
-			{
-				name: 'color',
-				title: 'Hex Color',
-				defaultValue: 'FFFFFF',
-				type: 'string'
-			}
-		];
-	}
+  override public function getEventSchema():Array<Dynamic>
+  {
+    return [
+      {
+        name: 'lyric',
+        title: 'Text',
+        defaultValue: '',
+        type: 'string'
+      },
+      {
+        name: 'color',
+        title: 'Hex Color',
+        defaultValue: 'FFFFFF',
+        type: 'string'
+      }
+    ];
+  }
 }
 
-class LyricsObject extends Module {
-	var lyricText:FlxText;
-	var shouldRun:Bool = false;
+class LyricsObject extends Module
+{
+  var lyricText:FlxText;
+  var shouldRun:Bool = false;
 
-	public function new() {
-		super('LyricsObject');
-	}
+  public function new()
+  {
+    super('LyricsObject');
+  }
 
-	override function onSongLoaded(event:ScriptEvent) {
-		super.onSongLoaded(event);
+  override function onSongLoaded(event:ScriptEvent)
+  {
+    super.onSongLoaded(event);
 
-		shouldRun = event.events != null && event.events.filter(e -> return e.eventKind == 'lyrics').length > 0;
+    shouldRun = event.events != null && event.events.filter(e -> return e.eventKind == 'lyrics').length > 0;
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		lyricText = new FlxText(0, 550, FlxG.width, '');
-		lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
-		lyricText.borderSize = 5;
-		lyricText.cameras = [PlayState.instance.camCutscene];
-		PlayState.instance.add(lyricText);
-	}
+    lyricText = new FlxText(0, 550, FlxG.width, '');
+    lyricText.setFormat(Paths.font('FridayNight.ttf'), 25, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
+    lyricText.borderSize = 5;
+    lyricText.cameras = [PlayState.instance.camCutscene];
+    PlayState.instance.add(lyricText);
+  }
 
-	override function onSongEvent(event:SongEventScriptEvent) {
-		super.onSongEvent(event);
-		if (!shouldRun || event.eventData.eventKind != 'lyrics')
-			return;
+  override function onSongEvent(event:SongEventScriptEvent)
+  {
+    super.onSongEvent(event);
+    if (!shouldRun || event.eventData.eventKind != 'lyrics') return;
 
-		showLyric(event.eventData.value.lyric, event.eventData.value.color);
-	}
+    showLyric(event.eventData.value.lyric, event.eventData.value.color);
+  }
 
-	function showLyric(text:String, color:String) {
-		if (lyricText == null)
-			return;
+  function showLyric(text:String, color:String)
+  {
+    if (lyricText == null) return;
 
-		lyricText.text = text;
-		lyricText.scale.set(1.1, 1.1);
+    lyricText.text = text;
+    lyricText.scale.set(1.1, 1.1);
 
-		if (StringTools.trim(color) != '') {
-			try {
-				lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
-			} catch (e:Dynamic) {
-				lyricText.color = 0xFFFFFFFF;
-			}
-		} else {
-			lyricText.color = 0xFFFFFFFF;
-		}
+    if (StringTools.trim(color) != '')
+    {
+      try
+      {
+        lyricText.color = Std.parseInt('0xFF' + color.toUpperCase());
+      }
+      catch (e:Dynamic)
+      {
+        lyricText.color = 0xFFFFFFFF;
+      }
+    }
+    else
+    {
+      lyricText.color = 0xFFFFFFFF;
+    }
 
-		FlxTween.tween(lyricText.scale, {x: 1, y: 1}, 0.2, {ease: FlxEase.quartOut});
-	}
+    FlxTween.tween(lyricText.scale, {x: 1, y: 1}, 0.2, {ease: FlxEase.quartOut});
+  }
 
-	override function onStateChangeBegin(event:StateChangeScriptEvent) {
-		super.onStateChangeBegin(event);
+  override function onStateChangeBegin(event:StateChangeScriptEvent)
+  {
+    super.onStateChangeBegin(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
-			if (lyricText != null) {
-				lyricText.kill();
-				lyricText.destroy();
-				lyricText = null;
-			}
-		}
-	}
+    if (event.targetState != null && !Std.isOfType(event.targetState, PlayState))
+    {
+      if (lyricText != null)
+      {
+        lyricText.kill();
+        lyricText.destroy();
+        lyricText = null;
+      }
+    }
+  }
 
-	override function onSongRetry(event:ScriptEvent) {
-		super.onSongRetry(event);
+  override function onSongRetry(event:ScriptEvent)
+  {
+    super.onSongRetry(event);
 
-		if (!shouldRun || lyricText == null)
-			return;
+    if (!shouldRun || lyricText == null) return;
 
-		FlxTween.cancelTweensOf(lyricText.scale);
+    FlxTween.cancelTweensOf(lyricText.scale);
 
-		FlxTween.tween(lyricText, {alpha: 0}, 0.5, {
-			ease: FlxEase.linear,
-			onComplete: (_) -> {
-				lyricText.text = "";
-				lyricText.alpha = 1;
-				lyricText.scale.set(1.1, 1.1);
-			}
-		});
-	}
+    FlxTween.tween(lyricText, {alpha: 0}, 0.5,
+      {
+        ease: FlxEase.linear,
+        onComplete: (_) -> {
+          lyricText.text = "";
+          lyricText.alpha = 1;
+          lyricText.scale.set(1.1, 1.1);
+        }
+      });
+  }
 
-	override function onGameOver(event:ScriptEvent) {
-		super.onGameOver(event);
+  override function onGameOver(event:ScriptEvent)
+  {
+    super.onGameOver(event);
 
-		if (!shouldRun || lyricText == null)
-			return;
+    if (!shouldRun || lyricText == null) return;
 
-		FlxTween.cancelTweensOf(lyricText.scale);
-		FlxTween.cancelTweensOf(lyricText);
+    FlxTween.cancelTweensOf(lyricText.scale);
+    FlxTween.cancelTweensOf(lyricText);
 
-		lyricText.text = "";
-		lyricText.alpha = 1;
-		lyricText.scale.set(1.1, 1.1);
-	}
+    lyricText.text = "";
+    lyricText.alpha = 1;
+    lyricText.scale.set(1.1, 1.1);
+  }
 
-	override function onPause(event:ScriptEvent) {
-		super.onPause(event);
+  override function onPause(event:ScriptEvent)
+  {
+    super.onPause(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
-	}
+    FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
+  }
 
-	override function onResume(event:ScriptEvent) {
-		super.onResume(event);
+  override function onResume(event:ScriptEvent)
+  {
+    super.onResume(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
-	}
+    FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
+  }
 }

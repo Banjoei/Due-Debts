@@ -23,7 +23,7 @@
       "girlfriend": "gf",
       "opponent": "darnell",
       "instrumental": "bf",
-      "altInstrumentals": [      ],
+      "altInstrumentals": [],
       "opponentVocals": [],
       "playerVocals": []
     },
@@ -37,7 +37,7 @@
     "previewStart": 0,
     "previewEnd": 0
   },
-  "generatedBy": "Friday Night Funkin' - v0.6.3",
+  "generatedBy": "Friday Night Funkin' - v0.6.4",
   "timeFormat": "ms",
   "timeChanges": [
     {

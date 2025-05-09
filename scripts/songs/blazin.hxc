@@ -8,6 +8,7 @@ import funkin.play.cutscene.VideoCutscene;
 import funkin.modding.base.ScriptedMusicBeatSubState;
 import funkin.modding.module.ModuleHandler;
 import funkin.graphics.FunkinSprite;
+import funkin.graphics.FunkinCamera;
 import funkin.play.GameOverSubState;
 import funkin.play.cutscene.CutsceneType;
 import funkin.play.PlayStatePlaylist;
@@ -16,305 +17,318 @@ import funkin.save.Save;
 /**
  * Apply middlescroll to the song.
  */
-class BlazinSong extends Song {
-	public function new() {
-		super('blazin');
+class BlazinSong extends Song
+{
+  public function new()
+  {
+    super('blazin');
 
-		this.hasHidden = false;
-		this.hasPlayedCutscene = false;
-	}
+    this.hasHidden = false;
+    this.hasPlayedCutscene = false;
+  }
 
-	var startblack:FunkinSprite;
+  var startblack:FunkinSprite;
+  var camStrums:FunkinCamera = null;
 
-	function onCreate(event:ScriptEvent):Void {
-		super.onCreate(event);
+  function onCreate(event:ScriptEvent):Void
+  {
+    super.onCreate(event);
 
-		this.hasHidden = false;
-		this.hasPlayedCutscene = false;
+    this.hasHidden = false;
+    this.hasPlayedCutscene = false;
 
-		if (PlayState.instance.currentVariation == "bf") {
-			for (element in getHudElements()) {
-				try {
-					element.alpha = 0;
-					element.visible = false;
-				} catch (e:Dynamic) {}
-			}
-			// Create first black sprite (HUD Layer)
-			startblack = new FunkinSprite(0, 0);
-			startblack.makeSolidColor(FlxG.width + 10, FlxG.height + 10, 0xFF000000);
-			startblack.updateHitbox();
-			startblack.scrollFactor.set(); // Lock sprite to the screen
-			startblack.cameras = [PlayState.instance.camHUD]; // Draw over HUD
-			startblack.screenCenter();
-			startblack.alpha = 1;
-			PlayState.instance.add(startblack);
-		}
-	}
+    if (PlayState.instance.currentVariation == "bf")
+    {
+      // Create first black sprite (HUD Layer)
+      startblack = new FunkinSprite(0, 0);
+      startblack.makeSolidColor(FlxG.width + 10, FlxG.height + 10, 0xFF000000);
+      startblack.updateHitbox();
+      startblack.scrollFactor.set(); // Lock sprite to the screen
+      startblack.cameras = [PlayState.instance.camHUD]; // Draw over HUD
+      startblack.screenCenter();
+      startblack.alpha = 1;
+      PlayState.instance.add(startblack);
 
-	override function onGameOver() {
-		if (PlayState.instance.currentVariation == "bf") {
-			for (element in getHudElements()) {
-				try {
-					element.alpha = 0;
-					element.visible = false;
-				} catch (e:Dynamic) {}
-			}
+      // Create camStrums and move strumlines into it
+      camStrums = new FunkinCamera();
+      camStrums.bgColor = 0;
+      FlxG.cameras.insert(camStrums, FlxG.cameras.list.indexOf(PlayState.instance.camGame) + 1, false);
 
-			startblack.alpha = 1;
-		}
-	}
+      startblack.cameras = [camStrums];
+      PlayState.instance.playerStrumline.cameras = [camStrums];
+      PlayState.instance.opponentStrumline.cameras = [camStrums];
 
-	function onDestroy(event:ScriptEvent):Void {
-		super.onDestroy(event);
+      PlayState.instance.camHUD.alpha = 0;
+    }
+  }
 
-		this.hasHidden = false;
-	}
+  override function onGameOver()
+  {
+    if (PlayState.instance.currentVariation == "bf")
+    {
+      startblack.cameras = [camStrums];
+      PlayState.instance.playerStrumline.cameras = [camStrums];
+      PlayState.instance.opponentStrumline.cameras = [camStrums];
+      PlayState.instance.camHUD.alpha = 0;
 
-	public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String> {
-		if (showLocked || Save.instance.hasBeatenLevel('weekend1')) {
-			return super.listDifficulties(variationId, variationIds);
-		}
+      startblack.alpha = 1;
+    }
+  }
 
-		// Hide all difficulties if the player has not beaten the week.
-		return [];
-	}
+  function onDestroy(event:ScriptEvent):Void
+  {
+    super.onDestroy(event);
 
-	var hasHidden = false;
-	var hasPlayedCutscene:Bool = false;
-	var needsRestart:Bool;
+    this.hasHidden = false;
+  }
 
-	function onUpdate(event:ScriptEvent):Void {
-		super.onUpdate(event);
+  public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String>
+  {
+    if (showLocked || Save.instance.hasBeatenLevel('weekend1'))
+    {
+      return super.listDifficulties(variationId, variationIds);
+    }
 
-		var module = ModuleHandler.getModule('blazinDeathCutscene');
+    // Hide all difficulties if the player has not beaten the week.
+    return [];
+  }
 
-		if (!this.hasHidden) {
-			this.hasHidden = true;
-			hideOpponentStrumline();
-			centerPlayerStrumline();
-		}
+  var hasHidden = false;
+  var hasPlayedCutscene:Bool = false;
+  var needsRestart:Bool;
 
-		if (module.scriptGet("finished") == true) {
-			module.scriptSet("finished", false);
+  function onUpdate(event:ScriptEvent):Void
+  {
+    super.onUpdate(event);
 
-			var darnell = PlayState.instance.currentStage.getDad();
-			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
+    trace('Does Coundown exist?: ' + PlayState.instance.countdown != null);
 
-			for (element in getHudElements()) {
-				try {
-					FlxTween.cancelTweensOf(element);
-					element.alpha = 0;
-					element.visible = false;
-				} catch (e:Dynamic) {}
-			}
+    var module = ModuleHandler.getModule('blazinDeathCutscene');
 
-			if (startblack.alpha != 1) {
-				FlxTween.cancelTweensOf(startblack);
-				startblack.alpha = 1;
-			}
+    if (!this.hasHidden)
+    {
+      this.hasHidden = true;
+      hideOpponentStrumline();
+      centerPlayerStrumline();
+    }
 
-			if (!darnell.visible) {
-				darnell.visible = true;
-				fakeDarnell.visible = false;
-			}
+    if (module.scriptGet("finished") == true)
+    {
+      module.scriptSet("finished", false);
 
-			if (PlayState.instance.cameraFollowPoint.x != 1403 || PlayState.instance.cameraFollowPoint.y != 731) {
-				PlayState.instance.cancelCameraFollowTween();
-				PlayState.instance.cameraFollowPoint.setPosition(1403, 731);
-			}
+      var darnell = PlayState.instance.currentStage.getDad();
+      var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
 
-			if (PlayState.instance.currentCameraZoom != 0.75) {
-				PlayState.instance.cancelAllCameraTweens();
-				PlayState.instance.tweenCameraZoom(0.75, 0.5, FlxEase.linear);
-			}
-		}
-	}
+      startblack.cameras = [camStrums];
+      PlayState.instance.playerStrumline.cameras = [camStrums];
+      PlayState.instance.opponentStrumline.cameras = [camStrums];
+      PlayState.instance.camHUD.alpha = 0;
 
-	function onPause(event:ScriptEvent):Void {
-		super.onPause(event);
+      if (startblack.alpha != 1)
+      {
+        FlxTween.cancelTweensOf(startblack);
+        startblack.alpha = 1;
+      }
 
-		if (PlayState.instance.currentVariation == "bf") {
-			FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
-			FlxTimer.globalManager.forEach((timer:FlxTimer) -> timer.active = false);
-		}
-	}
+      if (!darnell.visible)
+      {
+        darnell.visible = true;
+        fakeDarnell.visible = false;
+      }
 
-	function onResume(event:ScriptEvent):Void {
-		super.onResume(event);
+      if (PlayState.instance.cameraFollowPoint.x != 1403 || PlayState.instance.cameraFollowPoint.y != 731)
+      {
+        PlayState.instance.cancelCameraFollowTween();
+        PlayState.instance.cameraFollowPoint.setPosition(1403, 731);
+      }
 
-		if (PlayState.instance.currentVariation == "bf") {
-			FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
-			FlxTimer.globalManager.forEach((timer:FlxTimer) -> timer.active = true);
-		}
-	}
+      if (PlayState.instance.currentCameraZoom != 0.75)
+      {
+        PlayState.instance.cancelAllCameraTweens();
+        PlayState.instance.tweenCameraZoom(0.75, 0.5, FlxEase.linear);
+      }
+    }
+  }
 
-	override function onSongRetry(event):Void {
-		super.onSongRetry(event);
+  function onPause(event:ScriptEvent):Void
+  {
+    super.onPause(event);
 
-		if (PlayState.instance.currentVariation == "bf") {
-			var darnell = PlayState.instance.currentStage.getDad();
-			var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
+    if (PlayState.instance.currentVariation == "bf")
+    {
+      FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = false);
+    }
+  }
 
-			for (element in getHudElements()) {
-				if (element != null) {
-					try {
-						if (element.alpha != 0) {
-							FlxTween.cancelTweensOf(element);
-							FlxTween.tween(element, {alpha: 0}, 0.5, {ease: FlxEase.linear});
-							new FlxTimer().start(0.5, () -> {
-								try {
-									element.visible = false;
-								} catch (e:Dynamic) {}
-							});
-						}
-					} catch (e:Dynamic) {}
-				}
-			}
+  function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
 
-			if (startblack.alpha != 1) {
-				FlxTween.cancelTweensOf(startblack);
-				FlxTween.tween(startblack, {alpha: 1}, 0.5, {ease: FlxEase.linear});
-				new FlxTimer().start(0.5, () -> {
-					startblack.alpha = 1;
-				});
-			}
+    if (PlayState.instance.currentVariation == "bf")
+    {
+      FlxTween.globalManager.forEach((tween:FlxTween) -> tween.active = true);
+    }
+  }
 
-			if (darnell.visible != true) {
-				new FlxTimer().start(0.5, () -> {
-					darnell.visible = true;
-					fakeDarnell.visible = false;
-				});
-			}
+  override function onSongRetry(event):Void
+  {
+    super.onSongRetry(event);
 
-			if (PlayState.instance.cameraFollowPoint.x != 1403 || PlayState.instance.cameraFollowPoint.y != 731) {
-				PlayState.instance.cancelCameraFollowTween();
-				PlayState.instance.cameraFollowPoint.setPosition(1403, 731);
-			}
+    if (PlayState.instance.currentVariation == "bf")
+    {
+      var darnell = PlayState.instance.currentStage.getDad();
+      var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
+      if (camStrums == null)
+      {
+        startblack.cameras = [camStrums];
+        PlayState.instance.playerStrumline.cameras = [camStrums];
+        PlayState.instance.opponentStrumline.cameras = [camStrums];
+      }
+      if (PlayState.instance.camHUD.alpha != 0)
+      {
+        FlxTween.cancelTweensOf(PlayState.instance.camHUD);
+        FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 0.5,
+          {
+            ease: FlxEase.linear,
+            onComplete: (_) -> {
+              PlayState.instance.camHUD.visible = false;
 
-			if (PlayState.instance.currentCameraZoom != 0.75) {
-				PlayState.instance.cancelAllCameraTweens();
-				PlayState.instance.tweenCameraZoom(0.75, 0.5, FlxEase.linear);
-			}
-		}
-	}
+              if (startblack.alpha != 1)
+              {
+                FlxTween.cancelTweensOf(startblack);
+                FlxTween.tween(startblack, {alpha: 1}, 0.5, {ease: FlxEase.linear});
+                startblack.alpha = 1;
+              }
 
-	public function onSongEvent(event):Void {
-		super.onSongEvent(event);
+              if (darnell.visible != true)
+              {
+                darnell.visible = true;
+                fakeDarnell.visible = false;
+              }
+            }
+          });
+      }
+      PlayState.instance.camHUD.alpha = 0;
 
-		var darnell = PlayState.instance.currentStage.getDad();
-		var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
-		var boyfriend = PlayState.instance.currentStage.getBoyfriend();
+      if (PlayState.instance.cameraFollowPoint.x != 1403 || PlayState.instance.cameraFollowPoint.y != 731)
+      {
+        PlayState.instance.cancelCameraFollowTween();
+        PlayState.instance.cameraFollowPoint.setPosition(1403, 731);
+      }
 
-		if (event.eventData.eventKind == 'BlazinEvent') {
-			var ev = event.eventData.value;
+      if (PlayState.instance.currentCameraZoom != 0.75)
+      {
+        PlayState.instance.cancelAllCameraTweens();
+        PlayState.instance.tweenCameraZoom(0.75, 0.5, FlxEase.linear);
+      }
+    }
+  }
 
-			switch (Std.int(ev.blazinType)) {
-				case 0: // begin song fully black, tween to clear
-					FlxTween.tween(startblack, {alpha: 0}, 10, {ease: FlxEase.linear});
-				case 1: // fade HUD in
-					for (element in getHudElements()) {
-						try {
-							element.alpha = 0;
-							element.visible = true;
-							FlxTween.cancelTweensOf(element);
-							FlxTween.tween(element, {alpha: 1}, 3, {ease: FlxEase.linear});
-						} catch (e:Dynamic) {}
-					}
-				case 2: // fade out game
-					FlxTween.tween(startblack, {alpha: 1}, 5, {ease: FlxEase.linear});
-				case 3: // swap fake Darnell
-					startblack.alpha = 1;
-					darnell.visible = false;
-					fakeDarnell.visible = true;
-				case 4: // fade in
-					FlxTween.tween(startblack, {alpha: 0}, 4, {ease: FlxEase.linear});
-				case 5: // restore Darnell
-					darnell.visible = true;
-					fakeDarnell.visible = false;
-			}
-		}
-	}
+  public function onSongEvent(event):Void
+  {
+    super.onSongEvent(event);
 
-	function hideOpponentStrumline() {
-		var opponentStrumline:FlxSprite = PlayState.instance.opponentStrumline;
-		if (opponentStrumline != null) {
-			for (arrow in opponentStrumline.members) {
-				arrow.visible = false;
-			}
-		}
-	}
+    var darnell = PlayState.instance.currentStage.getDad();
+    var fakeDarnell = PlayState.instance.currentStage.getNamedProp('fakeDarnell');
+    var boyfriend = PlayState.instance.currentStage.getBoyfriend();
 
-	function centerPlayerStrumline() {
-		// This is a song gimmick we are never making middlescroll an option.
+    if (event.eventData.eventKind == 'BlazinEvent')
+    {
+      var ev = event.eventData.value;
 
-		var playerStrumline:FlxSprite = PlayState.instance.playerStrumline;
-		if (playerStrumline != null) {
-			playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;
-		}
-	}
+      switch (Std.int(ev.blazinType))
+      {
+        case 0: // begin song fully black, tween to clear
+          FlxTween.tween(startblack, {alpha: 0}, 10, {ease: FlxEase.linear});
+        case 1: // fade HUD in
+          FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 3,
+            {
+              ease: FlxEase.linear,
+              onComplete: (_) -> {
+                startblack.cameras = [PlayState.instance.camHUD];
+                PlayState.instance.playerStrumline.cameras = [PlayState.instance.camHUD];
+                PlayState.instance.opponentStrumline.cameras = [PlayState.instance.camHUD];
+              }
+            });
+        case 2: // fade out game
+          FlxTween.tween(startblack, {alpha: 1}, 5, {ease: FlxEase.linear});
+        case 3: // swap fake Darnell
+          startblack.alpha = 1;
+          darnell.visible = false;
+          fakeDarnell.visible = true;
+        case 4: // fade in
+          FlxTween.tween(startblack, {alpha: 0}, 4, {ease: FlxEase.linear});
+        case 5: // restore Darnell
+          darnell.visible = true;
+          fakeDarnell.visible = false;
+      }
+    }
+  }
 
-	public override function onSongEnd(event:CountdownScriptEvent):Void {
-		super.onSongEnd(event);
+  function hideOpponentStrumline()
+  {
+    if (PlayState.instance == null || PlayState.instance.opponentStrumline == null) return;
 
-		// Keep the cutscene from playing outside of story mode.
-		if (!PlayStatePlaylist.isStoryMode)
-			hasPlayedCutscene = true;
+    var opponentStrumline:FlxSprite = PlayState.instance.opponentStrumline;
+    if (opponentStrumline != null)
+    {
+      for (arrow in opponentStrumline.members)
+      {
+        arrow.visible = false;
+      }
+    }
+  }
 
-		if (!hasPlayedCutscene) {
-			trace('Pausing ending to play a video cutscene (`blazin`)');
+  function centerPlayerStrumline()
+  {
+    // This is a song gimmick we are never making middlescroll an option.
 
-			hasPlayedCutscene = true;
+    if (PlayState.instance == null || PlayState.instance.playerStrumline == null) return;
 
-			// Add a black background behind the cutscene to fix a transition bug!
-			trace('Adding black background behind cutscene over UI');
-			var bgSprite = new FunkinSprite(-100, -100);
-			bgSprite.makeSolidColor(2000, 2500, 0xFF000000);
-			bgSprite.cameras = [PlayState.instance.camHUD]; // Show over the HUD.
-			bgSprite.zIndex = 1000000;
-			PlayState.instance.add(bgSprite);
-			PlayState.instance.refresh();
+    var playerStrumline:FlxSprite = PlayState.instance.playerStrumline;
+    if (playerStrumline != null)
+    {
+      playerStrumline.x = FlxG.width / 2 - playerStrumline.width / 2;
+    }
+  }
 
-			event.cancel(); // CANCEL THE COUNTDOWN!
+  public override function onSongEnd(event:CountdownScriptEvent):Void
+  {
+    super.onSongEnd(event);
 
-			startVideo();
-		} else {
-			// Make sure the cutscene can play again next time!
-			hasPlayedCutscene = false;
-			// DO NOT CANCEL THE EVENT!
-		}
-	}
+    // Keep the cutscene from playing outside of story mode.
+    if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+    if (!hasPlayedCutscene)
+    {
+      trace('Pausing ending to play a video cutscene (`blazin`)');
 
-	function startVideo() {
-		VideoCutscene.play(Paths.videos('blazinCutscene'), CutsceneType.ENDING);
-		// This will call onSongEnd() again so make sure the flag is set!
-		hasPlayedCutscene = true;
-	}
+      hasPlayedCutscene = true;
 
-	function getHudElements():Array<Dynamic> {
-		var elements:Array<Dynamic> = [];
+      // Add a black background behind the cutscene to fix a transition bug!
+      trace('Adding black background behind cutscene over UI');
+      var bgSprite = new FunkinSprite(-100, -100);
+      bgSprite.makeSolidColor(2000, 2500, 0xFF000000);
+      bgSprite.cameras = [PlayState.instance.camHUD]; // Show over the HUD.
+      bgSprite.zIndex = 1000000;
+      PlayState.instance.add(bgSprite);
+      PlayState.instance.refresh();
 
-		for (spr in PlayState.instance.members) {
-			if (spr != null
-				&& spr.camera == PlayState.instance.camHUD
-				&& spr != startblack
-				&& spr != PlayState.instance.playerStrumline
-				&& spr != PlayState.instance.opponentStrumline
-				&& (PlayState.instance.playerStrumline != null
-					&& (!PlayState.instance.playerStrumline.strumlineNotes.members.contains(spr)
-						&& !PlayState.instance.playerStrumline.notes.members.contains(spr)
-						&& !PlayState.instance.playerStrumline.holdNotes.members.contains(spr)))
-				&& (PlayState.instance.opponentStrumline != null
-					&& (!PlayState.instance.opponentStrumline.strumlineNotes.members.contains(spr)
-						&& !PlayState.instance.opponentStrumline.notes.members.contains(spr)
-						&& !PlayState.instance.opponentStrumline.holdNotes.members.contains(spr)))) {
-				try {
-					if (spr.alpha != null) {
-						elements.push(spr);
-					}
-				} catch (e:Dynamic) {}
-			}
-		}
+      event.cancel(); // CANCEL THE COUNTDOWN!
 
-		return elements;
-	}
+      startVideo();
+    }
+    else
+    {
+      // Make sure the cutscene can play again next time!
+      hasPlayedCutscene = false;
+      // DO NOT CANCEL THE EVENT!
+    }
+  }
+
+  function startVideo()
+  {
+    VideoCutscene.play(Paths.videos('blazinCutscene'), CutsceneType.ENDING);
+    // This will call onSongEnd() again so make sure the flag is set!
+    hasPlayedCutscene = true;
+  }
 }

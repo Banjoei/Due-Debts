@@ -14,264 +14,281 @@ import funkin.modding.module.ModuleHandler;
 import funkin.modding.module.ScriptedModule;
 import funkin.data.event.SongEventRegistry;
 
-class CameraMovementFixes extends ScriptedModule {
-	public function new() {
-		super('CameraMovementFixes');
-	}
+class CameraMovementFixes extends ScriptedModule
+{
+  public function new()
+  {
+    super('CameraMovementFixes');
+  }
 
-	public var offset:Float = 0;
-	public var sped:Float = 0;
-	public var active:Bool = false;
-	public var shouldRun:Bool = false;
+  public var offset:Float = 0;
+  public var sped:Float = 0;
+  public var active:Bool = false;
+  public var shouldRun:Bool = false;
 
-	var coolCam:FlxTimer = null;
-	var camTweens:Array<FlxTween> = [];
-	var camXTween:FlxTween = null;
-	var camYTween:FlxTween = null;
+  var coolCam:FlxTimer = null;
+  var camTweens:Array<FlxTween> = [];
+  var camXTween:FlxTween = null;
+  var camYTween:FlxTween = null;
 
-	override function onSongLoaded(event:SongLoadScriptEvent):Void {
-		if (event.events != null) {
-			shouldRun = event.events.filter(data -> return data.eventKind == "CameraMovement").length > 0;
-		}
-	}
+  override function onSongLoaded(event:SongLoadScriptEvent):Void
+  {
+    if (event.events != null)
+    {
+      shouldRun = event.events.filter(data -> return data.eventKind == "CameraMovement").length > 0;
+    }
+  }
 
-	function resetTweens():Void {
-		if (camXTween != null) {
-			camXTween.cancel();
-			camXTween = null;
-		}
-		if (camYTween != null) {
-			camYTween.cancel();
-			camYTween = null;
-		}
-		for (tween in camTweens) {
-			if (tween != null)
-				tween.cancel();
-		}
-		camTweens = [];
-	}
+  function resetTweens():Void
+  {
+    if (camXTween != null)
+    {
+      camXTween.cancel();
+      camXTween = null;
+    }
+    if (camYTween != null)
+    {
+      camYTween.cancel();
+      camYTween = null;
+    }
+    for (tween in camTweens)
+    {
+      if (tween != null) tween.cancel();
+    }
+    camTweens = [];
+  }
 
-	function follow(dir:NoteDirection = null):Void {
-		if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null)
-			return;
+  function follow(dir:NoteDirection = null):Void
+  {
+    if (!shouldRun || !active || PlayState.instance == null || PlayState.instance.currentStage == null) return;
 
-		var x:Float = 0;
-		var y:Float = 0;
-		var cameraSpeed:Float;
-		var bf = PlayState.instance.currentStage.getBoyfriend();
-		if (bf == null)
-			return;
+    var x:Float = 0;
+    var y:Float = 0;
+    var cameraSpeed:Float;
+    var bf = PlayState.instance.currentStage.getBoyfriend();
+    if (bf == null) return;
 
-		if (dir != null) {
-			if (dir == 0)
-				x = -offset;
-			else if (dir == 1)
-				y = offset;
-			else if (dir == 2)
-				y = -offset;
-			else
-				x = offset;
+    if (dir != null)
+    {
+      if (dir == 0) x = -offset;
+      else if (dir == 1) y = offset;
+      else if (dir == 2) y = -offset;
+      else
+        x = offset;
 
-			if (coolCam != null) {
-				coolCam.cancel();
-				coolCam = null;
-			}
+      if (coolCam != null)
+      {
+        coolCam.cancel();
+        coolCam = null;
+      }
 
-			cameraSpeed = sped;
-			var duration:Float = 1.7 / cameraSpeed + 0.25;
-			resetTweens();
+      cameraSpeed = sped;
+      var duration:Float = 1.7 / cameraSpeed + 0.25;
+      resetTweens();
 
-			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.quintOut});
-			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.quintOut});
-			camTweens.push(camXTween);
-			camTweens.push(camYTween);
+      camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: x}, duration, {ease: FlxEase.quintOut});
+      camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: y}, duration, {ease: FlxEase.quintOut});
+      camTweens.push(camXTween);
+      camTweens.push(camYTween);
 
-			coolCam = new FlxTimer();
-			coolCam.start(Conductor.instance.stepLengthMs * 0.0011 * bf.singTimeSteps, function(timer:FlxTimer):Void {
-				follow();
-			});
-		} else {
-			cameraSpeed = sped;
-			var duration:Float = 1.7 / cameraSpeed + 0.25;
-			resetTweens();
+      coolCam = new FlxTimer();
+      coolCam.start(Conductor.instance.stepLengthMs * 0.0011 * bf.singTimeSteps, function(timer:FlxTimer):Void {
+        follow();
+      });
+    }
+    else
+    {
+      cameraSpeed = sped;
+      var duration:Float = 1.7 / cameraSpeed + 0.25;
+      resetTweens();
 
-			camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: 0}, duration, {ease: FlxEase.quintOut});
-			camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: 0}, duration, {ease: FlxEase.quintOut});
-			camTweens.push(camXTween);
-			camTweens.push(camYTween);
+      camXTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {x: 0}, duration, {ease: FlxEase.quintOut});
+      camYTween = FlxTween.tween(PlayState.instance.camGame.targetOffset, {y: 0}, duration, {ease: FlxEase.quintOut});
+      camTweens.push(camXTween);
+      camTweens.push(camYTween);
 
-			coolCam = null;
-		}
-	}
+      coolCam = null;
+    }
+  }
 
-	public function onSubStateOpenBegin(event):Void {
-		super.onSubStateOpenBegin(event);
+  public function onSubStateOpenBegin(event):Void
+  {
+    super.onSubStateOpenBegin(event);
 
-		if (Std.isOfType(event.targetState, StickerSubState)) {
-			active = false;
-			offset = 0;
-			sped = 0;
-		}
-	}
+    if (Std.isOfType(event.targetState, StickerSubState))
+    {
+      active = false;
+      offset = 0;
+      sped = 0;
+    }
+  }
 
-	override function onNoteHit(event:HitNoteScriptEvent) {
-		if (!shouldRun)
-			return;
-		if (event.note != null && event.note.noteData != null) {
-			var dir = event.note.noteData.getDirection();
-			follow(dir);
-		}
-	}
+  override function onNoteHit(event:HitNoteScriptEvent)
+  {
+    if (!shouldRun) return;
+    if (event.note != null && event.note.noteData != null)
+    {
+      var dir = event.note.noteData.getDirection();
+      follow(dir);
+    }
+  }
 
-	override function onNoteMiss(event:HitNoteScriptEvent) {
-		if (!shouldRun)
-			return;
-		if (event.note != null && event.note.noteData != null) {
-			var dir = event.note.noteData.getDirection();
-			follow(dir);
-		}
-	}
+  override function onNoteMiss(event:HitNoteScriptEvent)
+  {
+    if (!shouldRun) return;
+    if (event.note != null && event.note.noteData != null)
+    {
+      var dir = event.note.noteData.getDirection();
+      follow(dir);
+    }
+  }
 
-	override function onNoteGhostMiss(event:HitNoteScriptEvent) {
-		if (!shouldRun)
-			return;
-		var dir = event.dir;
-		follow(dir);
-	}
+  override function onNoteGhostMiss(event:HitNoteScriptEvent)
+  {
+    if (!shouldRun) return;
+    var dir = event.dir;
+    follow(dir);
+  }
 
-	function resetCameraMovement(smooth:Bool = false):Void {
-		if (PlayState.instance == null)
-			return;
-		var cam = PlayState.instance.camGame;
-		if (cam == null)
-			return;
+  function resetCameraMovement(smooth:Bool = false):Void
+  {
+    if (PlayState.instance == null) return;
+    var cam = PlayState.instance.camGame;
+    if (cam == null) return;
 
-		active = false;
-		offset = 0;
-		sped = 0;
+    active = false;
+    offset = 0;
+    sped = 0;
 
-		if (coolCam != null) {
-			coolCam.cancel();
-			coolCam = null;
-		}
+    if (coolCam != null)
+    {
+      coolCam.cancel();
+      coolCam = null;
+    }
 
-		resetTweens();
+    resetTweens();
 
-		if (smooth) {
-			FlxTween.tween(cam.targetOffset, {x: 0, y: 0}, 0.5, {ease: FlxEase.quadOut});
-		} else {
-			cam.targetOffset.set(0, 0);
-		}
-	}
+    if (smooth)
+    {
+      FlxTween.tween(cam.targetOffset, {x: 0, y: 0}, 0.5, {ease: FlxEase.quadOut});
+    }
+    else
+    {
+      cam.targetOffset.set(0, 0);
+    }
+  }
 
-	override function onStateChangeBegin(event:StateChangeScriptEvent):Void {
-		super.onStateChangeBegin(event);
+  override function onStateChangeBegin(event:StateChangeScriptEvent):Void
+  {
+    super.onStateChangeBegin(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		if (event.targetState != null && !Std.isOfType(event.targetState, PlayState)) {
-			resetCameraMovement(false);
-		}
-	}
+    if (event.targetState != null && !Std.isOfType(event.targetState, PlayState))
+    {
+      resetCameraMovement(false);
+    }
+  }
 
-	override function onSongRetry(event:ScriptEvent):Void {
-		super.onSongRetry(event);
+  override function onSongRetry(event:ScriptEvent):Void
+  {
+    super.onSongRetry(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		resetCameraMovement(true);
-	}
+    resetCameraMovement(true);
+  }
 
-	override function onGameOver(event:ScriptEvent):Void {
-		super.onGameOver(event);
+  override function onGameOver(event:ScriptEvent):Void
+  {
+    super.onGameOver(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		resetCameraMovement(false);
-	}
+    resetCameraMovement(false);
+  }
 
-	override function onPause(event:ScriptEvent):Void {
-		super.onPause(event);
+  override function onPause(event:ScriptEvent):Void
+  {
+    super.onPause(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		for (tween in camTweens) {
-			if (tween != null)
-				tween.active = false;
-		}
-		if (coolCam != null)
-			coolCam.active = false;
-	}
+    for (tween in camTweens)
+    {
+      if (tween != null) tween.active = false;
+    }
+    if (coolCam != null) coolCam.active = false;
+  }
 
-	override function onResume(event:ScriptEvent):Void {
-		super.onResume(event);
+  override function onResume(event:ScriptEvent):Void
+  {
+    super.onResume(event);
 
-		if (!shouldRun)
-			return;
+    if (!shouldRun) return;
 
-		for (tween in camTweens) {
-			if (tween != null)
-				tween.active = true;
-		}
-		if (coolCam != null)
-			coolCam.active = true;
-	}
+    for (tween in camTweens)
+    {
+      if (tween != null) tween.active = true;
+    }
+    if (coolCam != null) coolCam.active = true;
+  }
 }
 
-class CameraMovementEvent extends ScriptedSongEvent {
-	function new() {
-		super('CameraMovement');
-	}
+class CameraMovementEvent extends ScriptedSongEvent
+{
+  function new()
+  {
+    super('CameraMovement');
+  }
 
-	public var eventTitle:String = "Camera Movement";
+  public var eventTitle:String = "Camera Movement";
 
-	public var position:Float = 3.5;
-	public var speed:Float = 10;
+  public var position:Float = 3.5;
+  public var speed:Float = 10;
 
-	override function handleEvent(data) {
-		var rawV1 = data.getString("v1");
-		var rawV2 = data.getString("v2");
+  override function handleEvent(data)
+  {
+    var rawV1 = data.getString("v1");
+    var rawV2 = data.getString("v2");
 
-		speed = (rawV1 == null || rawV1 == "") ? 3.5 : Std.parseFloat(rawV1);
-		if (Math.isNaN(speed))
-			speed = 3.5;
+    speed = (rawV1 == null || rawV1 == "") ? 3.5 : Std.parseFloat(rawV1);
+    if (Math.isNaN(speed)) speed = 3.5;
 
-		position = (rawV2 == null || rawV2 == "") ? 10 : Std.parseFloat(rawV2);
-		if (Math.isNaN(position))
-			position = 10;
+    position = (rawV2 == null || rawV2 == "") ? 10 : Std.parseFloat(rawV2);
+    if (Math.isNaN(position)) position = 10;
 
-		var fixes = ModuleHandler.getModule('CameraMovementFixes');
-		if (fixes != null) {
-			fixes.scriptSet('sped', speed);
-			fixes.scriptSet('offset', position);
-			fixes.scriptSet('active', true);
-		}
-	}
+    var fixes = ModuleHandler.getModule('CameraMovementFixes');
+    if (fixes != null)
+    {
+      fixes.scriptSet('sped', speed);
+      fixes.scriptSet('offset', position);
+      fixes.scriptSet('active', true);
+    }
+  }
 
-	override function getTitle() {
-		return eventTitle;
-	}
+  override function getTitle()
+  {
+    return eventTitle;
+  }
 
-	override function getEventSchema() {
-		return [
-			{
-				name: 'v1',
-				title: 'Camera Speed',
-				defaultValue: 3.5,
-				step: 0.25,
-				type: "float"
-			},
-			{
-				name: 'v2',
-				title: 'Camera Movement Offset',
-				defaultValue: 10,
-				step: 0.5,
-				type: "float"
-			}
-		];
-	}
+  override function getEventSchema()
+  {
+    return [
+      {
+        name: 'v1',
+        title: 'Camera Speed',
+        defaultValue: 3.5,
+        step: 0.25,
+        type: "float"
+      },
+      {
+        name: 'v2',
+        title: 'Camera Movement Offset',
+        defaultValue: 10,
+        step: 0.5,
+        type: "float"
+      }
+    ];
+  }
 }
